@@ -16,7 +16,7 @@ import {
 import { BMC_WARDS } from '../data/bmcWards';
 
 const DEFAULT_API_URL = import.meta.env.PROD 
-  ? 'https://nivaran-ai-10j7.onrender.com' 
+  ? 'https://nivaranai-10j7.onrender.com' 
   : 'http://127.0.0.1:5000';
 
 const rawBaseUrl = import.meta.env.VITE_API_BASE_URL || DEFAULT_API_URL;
