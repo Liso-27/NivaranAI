@@ -775,6 +775,44 @@ def fetch_open_meteo(lat, lon):
         return {}
 
 
+def fetch_open_meteo_batch(coords_list, max_workers=10):
+    """
+    Deduplicates coordinates and fetches Open-Meteo data concurrently using ThreadPoolExecutor.
+    Preserves in-memory TTL caching per coordinate pair.
+    """
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+
+    now = time.time()
+    results = {}
+    uncached = []
+
+    for lat, lon in coords_list:
+        cache_key = (round(lat, 2), round(lon, 2))
+        if cache_key in _open_meteo_cache and (now - _open_meteo_cache[cache_key]["ts"]) < 300:
+            results[cache_key] = _open_meteo_cache[cache_key]["data"]
+        else:
+            if not any(u[0] == cache_key for u in uncached):
+                uncached.append((cache_key, lat, lon))
+
+    if uncached:
+        def _fetch_one(item):
+            c_key, l_lat, l_lon = item
+            data = fetch_open_meteo(l_lat, l_lon)
+            return c_key, data
+
+        workers = min(max_workers, len(uncached))
+        with ThreadPoolExecutor(max_workers=workers) as executor:
+            futures = [executor.submit(_fetch_one, item) for item in uncached]
+            for future in as_completed(futures):
+                try:
+                    c_key, data = future.result()
+                    results[c_key] = data
+                except Exception as e:
+                    print(f"Warning: concurrent fetch_open_meteo error: {e}")
+
+    return results
+
+
 _tomorrow_cache = {}
 
 
@@ -1099,12 +1137,21 @@ def score_all_wards():
     # Fetched once for the city area and reused across all 67 wards to respect API rate limits.
     tm_data = fetch_tomorrow(BHUBANESWAR_LAT, BHUBANESWAR_LON)
 
+    # Concurrently prefetch weather for all unique ward coordinates
+    all_coords = [(ward["lat"] or BHUBANESWAR_LAT, ward["lon"] or BHUBANESWAR_LON) for ward in WARD_DATA.values()]
+    weather_batch = fetch_open_meteo_batch(all_coords, max_workers=10)
+
+    # Prefetch all citizen reports in 1 single batched Appwrite query
+    reports_batch = fetch_all_recent_citizen_reports()
+
     for ward_id, ward in WARD_DATA.items():
         lat = ward["lat"] or BHUBANESWAR_LAT
         lon = ward["lon"] or BHUBANESWAR_LON
+        c_key = (round(lat, 2), round(lon, 2))
 
-        om_data = fetch_open_meteo(lat, lon)
-        citizen_reports = fetch_citizen_reports_for_ward(ward_id)
+        om_data = weather_batch.get(c_key, {})
+        rep_entry = reports_batch.get(ward_id, {}) if isinstance(reports_batch, dict) else {}
+        citizen_reports = rep_entry.get("data", []) if isinstance(rep_entry, dict) else (rep_entry if isinstance(rep_entry, list) else [])
 
         signals = extract_raw_signals(om_data, tm_data)
         confidence = compute_confidence(om_data, tm_data, citizen_reports)

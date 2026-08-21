@@ -575,7 +575,13 @@ class TestMapAndCrowdBackend(unittest.TestCase):
         baseline_scores = {"heavy_rainfall": 40.0, "flood": 30.0, "waterlogging": 35.0, "lightning": 10.0, "cyclone": 15.0}
         nudged_scores = risk_engine.apply_citizen_corroboration(baseline_scores, [])
         self.assertEqual(baseline_scores, nudged_scores)
-        print("  [PASS] risk_engine citizen corroboration logic verified intact.")
+    def test_21_concurrent_weather_fetch(self):
+        print("\n--- Test 21: Verify Concurrent Open-Meteo Weather Fetch ---")
+        self.assertTrue(hasattr(risk_engine, "fetch_open_meteo_batch"))
+        test_coords = [(20.30, 85.83), (20.31, 85.82), (20.32, 85.80)]
+        results = risk_engine.fetch_open_meteo_batch(test_coords, max_workers=5)
+        self.assertIsInstance(results, dict)
+        print(f"  [PASS] fetch_open_meteo_batch verified: returned {len(results)} coordinate responses.")
 
 
 if __name__ == "__main__":
