@@ -94,13 +94,14 @@ export const LoginPage: React.FC = () => {
   // Refs for 6-digit OTP inputs
   const otpInputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
-  // Clear states when role or step changes
+  // Clear states when role, step, or tab changes
   useEffect(() => {
     setIsOtpSent(false);
     setOtpDigits(['', '', '', '', '', '']);
     setErrorMessage(null);
+    setSuccessMessage(null);
     setResendTimer(0);
-  }, [selectedRole, authStep]);
+  }, [selectedRole, authStep, authTab]);
 
   // Resend OTP Countdown Timer
   useEffect(() => {

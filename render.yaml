@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: nivaran-ai-10j7
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn api:app
+    envVars:
+      - key: ALLOWED_ORIGINS
+        value: https://nivaran-ai-delta.vercel.app,http://localhost:3000,http://127.0.0.1:3000
