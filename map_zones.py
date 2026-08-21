@@ -25,6 +25,8 @@ CRITICAL ARCHITECTURAL CONSTRAINTS:
 from datetime import datetime, timezone
 import math
 import os
+import threading
+import time
 from typing import Any, Dict, List, Optional, Set, Tuple, Union
 from dotenv import load_dotenv
 
@@ -346,6 +348,46 @@ def fetch_risk_zones_from_db(
     return map_zones
 
 
+# In-memory thread-safe TTL cache for map zones
+_CACHE_LOCK = threading.Lock()
+_MAP_ENGINE_RESULTS_CACHE: Dict[str, Any] = {
+    "timestamp": 0.0,
+    "results": None
+}
+CACHE_TTL_SECONDS = 300  # 5 minutes cache TTL for web requests
+
+
+def set_map_zones_cache(engine_results: List[Dict[str, Any]]) -> None:
+    """Updates the thread-safe map zones cache with fresh engine results."""
+    with _CACHE_LOCK:
+        _MAP_ENGINE_RESULTS_CACHE["timestamp"] = time.time()
+        _MAP_ENGINE_RESULTS_CACHE["results"] = engine_results
+
+
+def _get_cached_engine_results() -> List[Dict[str, Any]]:
+    """Retrieves cached engine results if within TTL, else calculates fresh results."""
+    with _CACHE_LOCK:
+        now = time.time()
+        ts = _MAP_ENGINE_RESULTS_CACHE.get("timestamp", 0.0)
+        res = _MAP_ENGINE_RESULTS_CACHE.get("results")
+        if res is not None and (now - ts) < CACHE_TTL_SECONDS:
+            return res
+
+    try:
+        engine_results = risk_engine.score_all_wards()
+        if engine_results:
+            set_map_zones_cache(engine_results)
+            return engine_results
+    except Exception as e:
+        print(f"Warning: risk_engine.score_all_wards failed: {e}")
+        with _CACHE_LOCK:
+            stale_res = _MAP_ENGINE_RESULTS_CACHE.get("results")
+            if stale_res is not None:
+                return stale_res
+
+    return []
+
+
 # ==============================================================================
 # MAIN MAP ZONES QUERY & FILTER PIPELINE
 # ==============================================================================
@@ -392,14 +434,14 @@ def get_map_zones(
             zones = db_zones
         else:
             # Fallback to engine if DB is empty / offline
-            engine_results = risk_engine.score_all_wards()
+            engine_results = _get_cached_engine_results()
             zones = transform_engine_results_to_map_zones(
                 engine_results,
                 worst_hazard_only=worst_hazard_only,
             )
     else:
-        # Default: evaluate via risk_engine.py
-        engine_results = risk_engine.score_all_wards()
+        # Default: evaluate via risk_engine.py with in-memory TTL caching
+        engine_results = _get_cached_engine_results()
         zones = transform_engine_results_to_map_zones(
             engine_results,
             worst_hazard_only=worst_hazard_only,

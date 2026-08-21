@@ -341,6 +341,9 @@ def run_pipeline(
             record_execution_health(health)
             return health
 
+        # Update live map_zones cache with fresh analytical results
+        map_zones.set_map_zones_cache(all_ward_results)
+
         # 3. Change detection
         has_changed, changed_wards, unchanged_wards = detect_meaningful_changes(all_ward_results)
         print(f"[SCHEDULER] Evaluated {len(all_ward_results)} wards. Meaningful changes detected in {len(changed_wards)} wards.")

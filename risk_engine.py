@@ -16,6 +16,7 @@ Users are only notified based on the worst hazard severity per ward (see NOTIFIC
 
 import requests
 import os
+import time
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -744,7 +745,17 @@ WARD_DATA = {
 }
 
 
+_open_meteo_cache = {}
+
+
 def fetch_open_meteo(lat, lon):
+    cache_key = (round(lat, 2), round(lon, 2))
+    now = time.time()
+    if cache_key in _open_meteo_cache:
+        entry = _open_meteo_cache[cache_key]
+        if now - entry["ts"] < 300:  # 5 min TTL
+            return entry["data"]
+
     url = (
         "https://api.open-meteo.com/v1/forecast"
         f"?latitude={lat}&longitude={lon}"
@@ -752,9 +763,16 @@ def fetch_open_meteo(lat, lon):
         "&hourly=precipitation,rain,wind_speed_10m,wind_gusts_10m,relative_humidity_2m"
         "&forecast_days=3&timezone=Asia/Kolkata"
     )
-    r = requests.get(url, timeout=10)
-    r.raise_for_status()
-    return r.json()
+    try:
+        r = requests.get(url, timeout=3)
+        r.raise_for_status()
+        data = r.json()
+        _open_meteo_cache[cache_key] = {"ts": now, "data": data}
+        return data
+    except Exception as e:
+        if cache_key in _open_meteo_cache:
+            return _open_meteo_cache[cache_key]["data"]
+        return {}
 
 
 _tomorrow_cache = {}
@@ -811,7 +829,7 @@ def get_severity(score):
 
 def extract_raw_signals(om_data, tm_data):
     """Pull the raw numbers each hazard formula needs, once per ward."""
-    current = om_data["current"]
+    current = om_data.get("current", {}) if isinstance(om_data, dict) else {}
     signals = {
         "rain_now_mm": current.get("precipitation", 0),
         "wind_now_kmh": current.get("wind_speed_10m", 0),
@@ -877,7 +895,7 @@ def score_hazards(signals, static_layers):
 
 
 def compute_confidence(om_data, tm_data, citizen_reports=None):
-    om_rain = om_data["current"].get("precipitation", 0)
+    om_rain = om_data.get("current", {}).get("precipitation", 0) if isinstance(om_data, dict) else 0
     try:
         tm_rain = tm_data["data"]["timelines"][0]["intervals"][0]["values"].get("precipitationIntensity", 0)
     except (KeyError, IndexError):
@@ -925,12 +943,16 @@ def apply_citizen_corroboration(hazard_scores, citizen_reports):
     return boosted
 
 
-def fetch_citizen_reports_for_ward(ward_id, hours_back=3):
-    """
-    Queries Appwrite's citizen_reports database / reports table for reports
-    matching this ward, within the last `hours_back` hours.
-    Requires: pip install appwrite --break-system-packages
-    """
+_citizen_reports_cache = {}
+_all_reports_cache_ts = 0.0
+
+
+def fetch_all_recent_citizen_reports(hours_back=3):
+    global _all_reports_cache_ts, _citizen_reports_cache
+    now = time.time()
+    if (now - _all_reports_cache_ts) < 180 and _citizen_reports_cache:
+        return _citizen_reports_cache
+
     from appwrite.client import Client
     from appwrite.query import Query
     from datetime import datetime, timedelta, timezone
@@ -939,9 +961,10 @@ def fetch_citizen_reports_for_ward(ward_id, hours_back=3):
     client = Client()
     client.set_endpoint("https://sgp.cloud.appwrite.io/v1")
     client.set_project(os.environ.get("APPWRITE_PROJECT_ID", "6a842a71002b825e7612"))
-    client.set_key(os.environ.get("APPWRITE_API_KEY"))  # never hardcode this - env var only
+    client.set_key(os.environ.get("APPWRITE_API_KEY"))
 
     cutoff = (datetime.now(timezone.utc) - timedelta(hours=hours_back)).isoformat()
+    new_cache = {}
 
     try:
         try:
@@ -951,9 +974,9 @@ def fetch_citizen_reports_for_ward(ward_id, hours_back=3):
                 database_id="6a842ad90015884d7d96",
                 table_id="reports",
                 queries=[
-                    Query.equal("ward_id", ward_id),
                     Query.greater_than("$createdAt", cutoff),
                     Query.equal("status", "active"),
+                    Query.limit(500),
                 ],
             )
             items = getattr(response, "rows", [])
@@ -964,22 +987,26 @@ def fetch_citizen_reports_for_ward(ward_id, hours_back=3):
                 database_id="6a842ad90015884d7d96",
                 collection_id="reports",
                 queries=[
-                    Query.equal("ward_id", ward_id),
                     Query.greater_than("$createdAt", cutoff),
                     Query.equal("status", "active"),
+                    Query.limit(500),
                 ],
             )
             items = getattr(response, "documents", [])
 
-        reports = []
         for item in items:
             data = getattr(item, "data", {}) if hasattr(item, "data") else (
                 item.to_dict().get("data", {}) if hasattr(item, "to_dict") else (
                     item if isinstance(item, dict) else {}
                 )
             )
-            reports.append({
-                "ward_id": data.get("ward_id", ward_id),
+            w_id = data.get("ward_id")
+            if not w_id:
+                continue
+            if w_id not in new_cache:
+                new_cache[w_id] = []
+            new_cache[w_id].append({
+                "ward_id": w_id,
                 "hazard_type": data.get("hazard_type"),
                 "description": data.get("description", ""),
                 "photo_url": data.get("photo_url"),
@@ -988,10 +1015,33 @@ def fetch_citizen_reports_for_ward(ward_id, hours_back=3):
                 "status": data.get("status", "active"),
                 "confirm_count": data.get("confirm_count", 0),
             })
-        return reports
+
+        for w_id, r_list in new_cache.items():
+            _citizen_reports_cache[w_id] = {"ts": now, "data": r_list}
+        _all_reports_cache_ts = now
     except Exception as e:
-        print(f"Warning: could not fetch citizen reports for {ward_id}: {e}")
-        return []
+        print(f"Warning: could not fetch recent citizen reports batch: {e}")
+
+    return _citizen_reports_cache
+
+
+def fetch_citizen_reports_for_ward(ward_id, hours_back=3):
+    """
+    Queries Appwrite's citizen_reports database / reports table for reports
+    matching this ward, within the last `hours_back` hours.
+    Uses batched in-memory caching to prevent 67 individual database calls.
+    """
+    now = time.time()
+    if ward_id in _citizen_reports_cache:
+        entry = _citizen_reports_cache[ward_id]
+        if now - entry["ts"] < 180:  # 3 min TTL
+            return entry["data"]
+
+    fetch_all_recent_citizen_reports(hours_back=hours_back)
+    entry = _citizen_reports_cache.get(ward_id)
+    if entry:
+        return entry["data"]
+    return []
 
 
 def submit_citizen_report(ward_id, hazard_type, latitude, longitude, description=""):
