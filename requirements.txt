@@ -1,0 +1,21 @@
+# Apada Sathi Backend - Python Dependencies
+# ==========================================
+
+# Core HTTP & Environment
+requests>=2.31.0
+python-dotenv>=1.0.0
+flask>=3.0.0
+flask-cors>=4.0.0
+gunicorn>=21.2.0
+
+# Database & BaaS Integration
+appwrite>=23.0.0
+
+# Push Notifications (Firebase Cloud Messaging)
+firebase-admin>=6.5.0
+
+# Multi-Hazard AI Explanation
+google-generativeai>=0.8.0
+
+# Emergency SMS Dispatch
+twilio>=9.0.0
