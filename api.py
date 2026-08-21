@@ -18,9 +18,11 @@ load_dotenv()
 app = Flask(__name__)
 
 # Safely configure CORS
-default_origins = "http://localhost:3000,http://127.0.0.1:3000,http://localhost:3001,http://127.0.0.1:3001,http://localhost:5173,http://127.0.0.1:5173"
+default_origins = "https://nivaran-ai-delta.vercel.app,http://localhost:3000,http://127.0.0.1:3000,http://localhost:3001,http://127.0.0.1:3001,http://localhost:5173,http://127.0.0.1:5173"
 allowed_origins_str = os.environ.get("ALLOWED_ORIGINS", default_origins)
 allowed_origins = [origin.strip() for origin in allowed_origins_str.split(",") if origin.strip()]
+if "https://nivaran-ai-delta.vercel.app" not in allowed_origins:
+    allowed_origins.append("https://nivaran-ai-delta.vercel.app")
 CORS(app, origins=allowed_origins, supports_credentials=True)
 
 def require_auth(f):
