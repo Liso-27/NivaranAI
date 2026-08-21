@@ -70,7 +70,7 @@ export function renderOfficialUpdatesLayer(
           ${update.ward_name}
         </h4>
         <p style="font-size: 11px; color: #e2e8f0; margin-bottom: 4px;">
-          <strong>Status:</strong> <span style="color: ${markerColor};">${update.mitigation_status.replace('_', ' ')}</span>
+          <strong>Status:</strong> <span style="color: ${markerColor};">${(update.mitigation_status || update.official_status || update.status || 'ACTION').replace('_', ' ')}</span>
         </p>
         <p style="font-size: 11px; color: #94a3b8; margin-bottom: 4px; line-height: 1.35;">
           ${update.official_note}

@@ -142,6 +142,7 @@ export interface CrowdReport {
   reported_by_name?: string;
   reported_by_role?: string;
   observation_type: ObservationType;
+  hazard_type?: HazardType | string;
   description: string;
   responses?: Record<string, QuestionResponse>;
   waterlogging_present?: QuestionResponse;
@@ -205,6 +206,7 @@ export interface OfficialFieldUpdate {
   ward_name: string;
   hazard_type?: HazardType;
   status?: MitigationStatus;
+  official_status?: MitigationStatus | string;
   mitigation_status: MitigationStatus;
   official_note?: string;
   remarks?: string;

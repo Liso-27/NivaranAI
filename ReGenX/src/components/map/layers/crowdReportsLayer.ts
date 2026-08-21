@@ -79,7 +79,7 @@ export function renderCrowdReportsLayer(
         </div>
 
         <h4 style="font-size: 12px; font-weight: 700; color: #ffffff; margin: 3px 0 2px;">
-          ${report.observation_type.replace('_', ' ').toUpperCase()}
+          ${(report.observation_type || report.hazard_type || 'OBSERVATION').replace('_', ' ').toUpperCase()}
         </h4>
         <p style="font-size: 11px; color: #cbd5e1; margin: 4px 0 6px; line-height: 1.35;">
           ${report.description}

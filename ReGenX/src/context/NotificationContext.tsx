@@ -198,7 +198,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
 
     const newAlert: InAppNotification = {
       id: `alert-${Date.now()}`,
-      title: `${zone.severity}: ${zone.hazard_type.replace('_', ' ').toUpperCase()} in ${zone.ward_name}`,
+      title: `${zone.severity}: ${(zone.hazard_type || 'HAZARD').replace('_', ' ').toUpperCase()} in ${zone.ward_name}`,
       message: zone.short_description || zone.description || 'Hazard alert active in your area.',
       hazard_type: zone.hazard_type,
       severity: zone.severity,

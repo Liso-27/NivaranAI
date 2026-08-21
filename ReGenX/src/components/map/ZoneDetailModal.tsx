@@ -131,7 +131,7 @@ export const ZoneDetailModal: React.FC<ZoneDetailModalProps> = ({ zone, isOpen, 
             <div className="p-3.5 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800 text-center">
               <span className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase block">Hazard Category</span>
               <span className="text-base font-black text-slate-900 dark:text-white capitalize block mt-1">
-                {zone.hazard_type.replace('_', ' ')}
+                {(zone.hazard_type || 'HAZARD').replace('_', ' ')}
               </span>
               <span className="text-[10px] text-slate-500 block">Active Status</span>
             </div>

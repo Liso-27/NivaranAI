@@ -243,7 +243,7 @@ export const GovCommandCenter: React.FC = () => {
                     <tr key={zone.id} className="hover:bg-slate-50 dark:hover:bg-slate-900/60 transition">
                       <td className="p-3 font-mono font-bold text-slate-600 dark:text-slate-300">#{zone.ward_id}</td>
                       <td className="p-3 font-bold text-slate-900 dark:text-white">{zone.ward_name}</td>
-                      <td className="p-3 capitalize text-slate-700 dark:text-slate-300">{zone.hazard_type.replace('_', ' ')}</td>
+                      <td className="p-3 capitalize text-slate-700 dark:text-slate-300">{(zone.hazard_type || 'HAZARD').replace('_', ' ')}</td>
                       <td className="p-3">
                         <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded border uppercase ${SEVERITY_BG_CLASSES[zone.severity]}`}>
                           {zone.severity}
