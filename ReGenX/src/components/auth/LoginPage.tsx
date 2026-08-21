@@ -54,8 +54,8 @@ export const LoginPage: React.FC = () => {
   const [resendTimer, setResendTimer] = useState(0);
 
   // Citizen Email/Password Sign In State
-  const [citizenEmail, setCitizenEmail] = useState('riya.patnaik@example.com');
-  const [citizenPassword, setCitizenPassword] = useState('Citizen@2026');
+  const [citizenEmail, setCitizenEmail] = useState('');
+  const [citizenPassword, setCitizenPassword] = useState('');
   const [showCitizenPassword, setShowCitizenPassword] = useState(false);
 
   // Citizen Sign Up State
