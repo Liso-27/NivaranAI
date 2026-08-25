@@ -49,13 +49,20 @@ interface DisasterDataContextType {
 const DisasterDataContext = createContext<DisasterDataContextType | undefined>(undefined);
 
 export const DisasterDataProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [hazardZones, setHazardZones] = useState<HazardZone[]>([]);
+  const [hazardZones, setHazardZones] = useState<HazardZone[]>(() => {
+    try {
+      const saved = localStorage.getItem('nivaran_cached_hazard_zones');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
   const [safePlaces, setSafePlaces] = useState<SafePlace[]>([]);
   const [crowdReports, setCrowdReports] = useState<CrowdReport[]>([]);
   const [newsArticles, setNewsArticles] = useState<NewsArticle[]>([]);
   const [officialUpdates, setOfficialUpdates] = useState<OfficialFieldUpdate[]>([]);
   const [selectedZone, setSelectedZone] = useState<HazardZone | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
   // Layer State
@@ -89,7 +96,6 @@ export const DisasterDataProvider: React.FC<{ children: React.ReactNode }> = ({ 
 
   const refreshData = useCallback(async () => {
     try {
-      setIsLoading(true);
       setError(null);
       const [zones, places, reports, news, updates] = await Promise.all([
         disasterApi.getHazardZones(),
@@ -99,6 +105,11 @@ export const DisasterDataProvider: React.FC<{ children: React.ReactNode }> = ({ 
         disasterApi.getOfficialUpdates()
       ]);
       setHazardZones(zones);
+      try {
+        localStorage.setItem('nivaran_cached_hazard_zones', JSON.stringify(zones));
+      } catch {
+        // Safe fallback for quota or disabled storage
+      }
       setSafePlaces(places);
       setCrowdReports(reports);
       setNewsArticles(news);
