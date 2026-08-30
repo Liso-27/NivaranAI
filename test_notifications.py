@@ -997,6 +997,26 @@ class TestLocationAwareNotificationSystem(unittest.TestCase):
         self.assertEqual(len(self.mock_provider.sent_sms), 1)
         print("  [PASS] All 4 severity rules (LOW, MODERATE, HIGH, EMERGENCY) perfectly verified for FCM & Twilio.")
 
+    def test_33_device_registration_endpoint(self):
+        import api
+        client = api.app.test_client()
+        res = client.post("/api/notifications/register-device", json={
+            "fcm_token": "test_fcm_token_12345",
+            "user_id": "test_user_99",
+            "latitude": 20.2961,
+            "longitude": 85.8245
+        })
+        self.assertEqual(res.status_code, 200)
+        data = res.get_json()
+        self.assertEqual(data.get("status"), "REGISTERED")
+        self.assertTrue(data.get("has_fcm_token"))
+        self.assertEqual(data.get("user_id"), "test_user_99")
+        # Verify in-memory registry
+        rec = notification_service._USER_REGISTRY.get("test_user_99")
+        self.assertIsNotNone(rec)
+        self.assertEqual(rec.get("fcm_token"), "test_fcm_token_12345")
+        print("  [PASS] Device registration endpoint /api/notifications/register-device verified.")
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

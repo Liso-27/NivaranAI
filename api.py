@@ -12,6 +12,7 @@ import crowd_updates
 import news_service
 import scheduled_runner
 import ai_disaster_intelligence
+import notification_service
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -472,6 +473,45 @@ def ai_role_summary():
         return jsonify(summary), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+# ==========================================
+# FCM PUSH NOTIFICATION TOKEN REGISTRATION
+# ==========================================
+
+@app.route("/api/notifications/register-device", methods=["POST"])
+@optional_auth
+def register_device(session):
+    data = request.json or {}
+    fcm_token = data.get("fcm_token")
+    if not fcm_token:
+        return jsonify({"error": "fcm_token is required"}), 400
+
+    user_id = (session.get("user_id") if (session and isinstance(session, dict)) else None) or data.get("user_id") or "anonymous_device"
+    device_id = data.get("device_id") or user_id or "web_device"
+
+    try:
+        lat = float(data["latitude"]) if data.get("latitude") is not None else None
+    except (ValueError, TypeError):
+        lat = None
+
+    try:
+        lng = float(data["longitude"]) if data.get("longitude") is not None else None
+    except (ValueError, TypeError):
+        lng = None
+
+    try:
+        res = notification_service.register_user_device(
+            user_id=user_id,
+            device_id=device_id,
+            fcm_token=fcm_token,
+            latitude=lat,
+            longitude=lng,
+            notification_enabled=bool(data.get("notification_enabled", True)),
+            sms_enabled=bool(data.get("sms_enabled", True))
+        )
+        return jsonify(res), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))

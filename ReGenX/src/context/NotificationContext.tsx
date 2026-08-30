@@ -5,6 +5,7 @@ import {
   subscribeToForegroundMessages, 
   getCachedFCMToken 
 } from '../services/fcmService';
+import { disasterApi } from '../services/api';
 
 interface NotificationContextType {
   notifications: InAppNotification[];
@@ -105,6 +106,21 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
     }
   }, [soundEnabled]);
 
+  // Helper to sync FCM Token to backend without repeated unnecessary calls
+  const syncFcmTokenToBackend = async (token: string) => {
+    if (!token || typeof window === 'undefined') return;
+    const lastSynced = sessionStorage.getItem('nivaran_fcm_synced');
+    if (lastSynced === token) return;
+
+    try {
+      await disasterApi.registerDeviceToken({ fcm_token: token });
+      sessionStorage.setItem('nivaran_fcm_synced', token);
+      console.log('[FCM Context] Token registered with backend successfully.');
+    } catch (err) {
+      console.warn('[FCM Context] FCM token backend registration warning:', err);
+    }
+  };
+
   // Request browser permission and generate real FCM registration token
   const requestNotificationPermission = async () => {
     setFcmLoading(true);
@@ -117,6 +133,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
         setFcmToken(result.token);
         setIsPushEnabled(true);
         setFcmError(null);
+        await syncFcmTokenToBackend(result.token);
       } else {
         if (result.permission === 'denied') {
           setIsPushEnabled(false);
@@ -144,6 +161,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
         requestFCMToken().then(result => {
           if (result.success && result.token) {
             setFcmToken(result.token);
+            syncFcmTokenToBackend(result.token);
           }
         }).catch(err => {
           console.warn('[FCM Startup] Background token refresh non-fatal error:', err);

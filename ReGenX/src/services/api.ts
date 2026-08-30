@@ -411,6 +411,14 @@ class DisasterApiClient {
     return this.fetchApi(`/api/ai/role-summary?ward_id=${wardId}&role=${role}`);
   }
 
+  // FCM Device Registration Token sync
+  async registerDeviceToken(data: { fcm_token: string; user_id?: string; latitude?: number; longitude?: number }): Promise<any> {
+    return this.fetchApi('/api/notifications/register-device', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    });
+  }
+
   // Haversine formula for exact distance in KM
   private calculateHaversineDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
     const R = 6371; // Earth radius km
