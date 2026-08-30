@@ -74,11 +74,10 @@ export const DisasterMap: React.FC = () => {
       attributionControl: false
     });
 
-    // CartoDB Voyager Raster Tiles (Clean, fast, high contrast)
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+    // OpenStreetMap Raster Tiles (Clean, free, high contrast)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
-      subdomains: 'abcd',
-      attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
+      attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
     // Zoom Controls in top-right
