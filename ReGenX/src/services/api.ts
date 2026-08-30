@@ -386,6 +386,31 @@ class DisasterApiClient {
     });
   }
 
+  // ==========================================
+  // AI DISASTER INTELLIGENCE LAYER
+  // ==========================================
+  async parseReportText(text: string, locationHint?: string): Promise<any> {
+    return this.fetchApi('/api/ai/parse-report', {
+      method: 'POST',
+      body: JSON.stringify({ text, location_hint: locationHint })
+    });
+  }
+
+  async getSituationBrief(wardId: string | number): Promise<any> {
+    return this.fetchApi(`/api/ai/situation-brief?ward_id=${wardId}`);
+  }
+
+  async askAiQuestion(question: string, wardId?: string | number): Promise<any> {
+    return this.fetchApi('/api/ai/ask', {
+      method: 'POST',
+      body: JSON.stringify({ question, ward_id: wardId })
+    });
+  }
+
+  async getAiRoleSummary(wardId: string | number, role: string = 'citizen'): Promise<any> {
+    return this.fetchApi(`/api/ai/role-summary?ward_id=${wardId}&role=${role}`);
+  }
+
   // Haversine formula for exact distance in KM
   private calculateHaversineDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
     const R = 6371; // Earth radius km

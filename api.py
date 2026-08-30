@@ -11,6 +11,7 @@ import emergency_locations
 import crowd_updates
 import news_service
 import scheduled_runner
+import ai_disaster_intelligence
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -414,6 +415,61 @@ def get_audit_logs(session):
     try:
         logs = auth_service.get_audit_logs(limit=50)
         return jsonify(logs), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+# ==========================================
+# AI DISASTER INTELLIGENCE LAYER
+# ==========================================
+
+@app.route("/api/ai/parse-report", methods=["POST"])
+def ai_parse_report():
+    data = request.json or {}
+    text = data.get("text") or data.get("description", "")
+    location_hint = data.get("location_hint") or data.get("ward_name")
+    try:
+        parsed = ai_disaster_intelligence.parse_report_text(text, location_hint)
+        return jsonify(parsed), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+@app.route("/api/ai/analyze-incident", methods=["POST"])
+def ai_analyze_incident():
+    data = request.json or {}
+    reports = data.get("reports", [])
+    try:
+        analysis = ai_disaster_intelligence.analyze_incident_reports(reports)
+        return jsonify(analysis), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+@app.route("/api/ai/situation-brief", methods=["GET"])
+def ai_situation_brief():
+    ward_id = request.args.get("ward_id", "ward_1")
+    try:
+        brief = ai_disaster_intelligence.generate_situation_brief(ward_id)
+        return jsonify(brief), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/api/ai/ask", methods=["POST"])
+def ai_ask_question():
+    data = request.json or {}
+    question = data.get("question", "")
+    ward_id = data.get("ward_id")
+    try:
+        res = ai_disaster_intelligence.answer_controlled_question(question, ward_id)
+        return jsonify(res), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+@app.route("/api/ai/role-summary", methods=["GET"])
+def ai_role_summary():
+    ward_id = request.args.get("ward_id", "ward_1")
+    role = request.args.get("role", "citizen")
+    try:
+        summary = ai_disaster_intelligence.generate_role_specific_communication(ward_id, role)
+        return jsonify(summary), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 

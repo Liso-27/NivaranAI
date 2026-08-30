@@ -30,6 +30,7 @@ from dotenv import load_dotenv
 
 import risk_engine
 import emergency_locations as el
+import trust_shield
 
 load_dotenv()
 
@@ -283,6 +284,15 @@ def normalize_crowd_row(row: Any) -> Dict[str, Any]:
     data["official_note"] = notes
     data["official_notes"] = notes
 
+    # TrustShield credibility normalization
+    if "trust_classification" not in data or not data["trust_classification"]:
+        data["trust_classification"] = "Pending"
+    if "trust_shield" not in data or not data["trust_shield"]:
+        data["trust_shield"] = {
+            "classification": data["trust_classification"],
+            "summary": "Report pending TrustShield validation"
+        }
+
     return data
 
 
@@ -355,6 +365,18 @@ def submit_crowd_update(
     tdb = el.get_tables_db_service()
     doc_id = ID.unique()
 
+    # TrustShield in-memory credibility evaluation
+    ts_eval = trust_shield.evaluate_report(
+        latitude=row_data["latitude"],
+        longitude=row_data["longitude"],
+        update_type=row_data["update_type"],
+        description=row_data["description"],
+        photo_url=row_data["photo_url"],
+        user_id=row_data["user_id"],
+        ward_id=row_data["ward_id"],
+        created_at_iso=now_iso,
+    )
+
     try:
         created_row = tdb.create_row(
             database_id=database_id,
@@ -362,13 +384,20 @@ def submit_crowd_update(
             row_id=doc_id,
             data=row_data,
         )
-        return normalize_crowd_row(created_row)
+        norm = normalize_crowd_row(created_row)
     except Exception as e:
         print(f"Note on Appwrite insert: {e}")
         # In-memory return fallback for offline / test environments
         row_data["id"] = doc_id
         row_data["$id"] = doc_id
-        return row_data
+        norm = normalize_crowd_row(row_data)
+
+    norm["trust_classification"] = ts_eval["classification"]
+    norm["trust_shield"] = ts_eval
+
+    # Record report in sliding cache for subsequent duplicate detection & incident grouping
+    trust_shield.record_report_in_cache(norm)
+    return norm
 
 
 def confirm_crowd_update(

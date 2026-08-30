@@ -167,6 +167,8 @@ export interface CrowdReport {
   reviewed_by_name?: string;
   verified_by?: string;
   verified_at?: string;
+  trust_classification?: 'Corroborated' | 'Plausible' | 'Suspicious' | 'Rejected' | 'Pending';
+  trust_shield?: Record<string, any>;
 }
 
 // News Service from news_service.py
