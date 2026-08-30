@@ -419,6 +419,14 @@ class DisasterApiClient {
     });
   }
 
+  // TEMPORARY FCM TEST CALL (Remove after verification)
+  async sendTestFcm(fcmToken: string): Promise<any> {
+    return this.fetchApi('/api/notifications/test-fcm', {
+      method: 'POST',
+      body: JSON.stringify({ fcm_token: fcmToken })
+    });
+  }
+
   // Haversine formula for exact distance in KM
   private calculateHaversineDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
     const R = 6371; // Earth radius km

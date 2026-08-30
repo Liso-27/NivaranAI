@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNotifications } from '../../context/NotificationContext';
 import { useAuth } from '../../context/AuthContext';
+import { disasterApi } from '../../services/api';
 import { 
   X, 
   Bell, 
@@ -33,6 +34,8 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
   const { user, updateSmsPreference } = useAuth();
 
   const [copiedToken, setCopiedToken] = useState(false);
+  const [testFcmLoading, setTestFcmLoading] = useState(false);
+  const [testFcmResult, setTestFcmResult] = useState<string | null>(null);
 
   if (!isOpen) return null;
 
@@ -41,6 +44,25 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
       navigator.clipboard.writeText(fcmToken);
       setCopiedToken(true);
       setTimeout(() => setCopiedToken(false), 2000);
+    }
+  };
+
+  const handleSendTestFcm = async () => {
+    if (!fcmToken) return;
+    setTestFcmLoading(true);
+    setTestFcmResult(null);
+    try {
+      const res = await disasterApi.sendTestFcm(fcmToken);
+      if (res?.success) {
+        const mode = res?.mode === 'LIVE' ? 'LIVE FCM Push' : 'Simulated Mock Mode';
+        setTestFcmResult(`✓ Test Notification Dispatched (${mode})`);
+      } else {
+        setTestFcmResult(`❌ Push Error: ${res?.error || 'Dispatch failed'}`);
+      }
+    } catch (err: any) {
+      setTestFcmResult(`❌ Error: ${err?.message || 'Failed to dispatch test notification'}`);
+    } finally {
+      setTestFcmLoading(false);
     }
   };
 
@@ -122,6 +144,26 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                     ● Real FCM Token Active
                   </span>
                 </div>
+                {/* TEMPORARY TEST BUTTON (Remove after verification) */}
+                <button
+                  onClick={handleSendTestFcm}
+                  disabled={testFcmLoading}
+                  className="w-full mt-2 py-1.5 px-3 bg-amber-500 hover:bg-amber-600 text-white rounded-lg text-[11px] font-bold transition flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
+                >
+                  {testFcmLoading ? (
+                    <>
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      <span>Sending Test FCM Push...</span>
+                    </>
+                  ) : (
+                    <span>Send Test FCM Push</span>
+                  )}
+                </button>
+                {testFcmResult && (
+                  <p className="text-[10px] font-semibold text-slate-700 dark:text-slate-300 mt-1 text-center">
+                    {testFcmResult}
+                  </p>
+                )}
               </div>
             ) : (
               <button
