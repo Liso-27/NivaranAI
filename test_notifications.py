@@ -1017,18 +1017,6 @@ class TestLocationAwareNotificationSystem(unittest.TestCase):
         self.assertEqual(rec.get("fcm_token"), "test_fcm_token_12345")
         print("  [PASS] Device registration endpoint /api/notifications/register-device verified.")
 
-    def test_34_test_fcm_endpoint(self):
-        import api
-        client = api.app.test_client()
-        res = client.post("/api/notifications/test-fcm", json={
-            "fcm_token": "test_fcm_token_xyz"
-        })
-        self.assertEqual(res.status_code, 200)
-        data = res.get_json()
-        self.assertTrue(data.get("success"))
-        self.assertIn("provider", data)
-        print("  [PASS] Temporary test FCM endpoint /api/notifications/test-fcm verified.")
-
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

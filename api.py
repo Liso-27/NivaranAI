@@ -13,7 +13,6 @@ import news_service
 import scheduled_runner
 import ai_disaster_intelligence
 import notification_service
-import notification_provider
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -509,26 +508,6 @@ def register_device(session):
             longitude=lng,
             notification_enabled=bool(data.get("notification_enabled", True)),
             sms_enabled=bool(data.get("sms_enabled", True))
-        )
-        return jsonify(res), 200
-    except Exception as e:
-        return jsonify({"error": str(e)}), 400
-
-# TEMPORARY FCM TESTING ENDPOINT (Remove after verification)
-@app.route("/api/notifications/test-fcm", methods=["POST"])
-def test_fcm_notification():
-    data = request.json or {}
-    token = data.get("fcm_token")
-    if not token:
-        return jsonify({"error": "fcm_token is required"}), 400
-
-    try:
-        fcm_prov = notification_provider.ProviderFactory.get_push_provider()
-        res = fcm_prov.send_push(
-            recipient_token=token,
-            title="NivaranAI FCM Test",
-            body="This is a test notification. Firebase Cloud Messaging is working.",
-            data={"target_screen": "hazard_details", "test_mode": "true"}
         )
         return jsonify(res), 200
     except Exception as e:
