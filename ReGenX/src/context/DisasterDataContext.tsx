@@ -190,6 +190,7 @@ export const DisasterDataProvider: React.FC<{ children: React.ReactNode }> = ({ 
   const verifyCrowdReport = async (id: string, state: VerificationState, note: string, officialName: string) => {
     const updated = await disasterApi.verifyCrowdReport(id, state, note, officialName);
     setCrowdReports(prev => prev.map(r => r.id === id ? { ...r, ...updated, verification_state: state } : r));
+    await refreshData();
   };
 
   const corroborateCrowdReport = async (id: string) => {

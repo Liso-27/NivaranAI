@@ -41,7 +41,7 @@ export const ReportTriageView: React.FC = () => {
   const [filterState, setFilterState] = useState<string>('ALL');
   const [activeReportId, setActiveReportId] = useState<string | null>(null);
   const [officialNotes, setOfficialNotes] = useState<string>('');
-  const [feedback, setFeedback] = useState<string | null>(null);
+  const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 
   const filteredReports = crowdReports.filter(r => {
     if (filterState === 'ALL') return true;
@@ -56,25 +56,34 @@ export const ReportTriageView: React.FC = () => {
         officialNotes || `Status updated to ${newState} by ${user?.name || 'Authorized Official'}`,
         user?.name || 'BMC Duty Officer'
       );
-      setFeedback(`Report updated to ${newState} successfully.`);
+      setFeedback({ type: 'success', message: `Report updated to ${newState} successfully.` });
       setTimeout(() => setFeedback(null), 4000);
+      setActiveReportId(null);
+      setOfficialNotes('');
     } catch (err: any) {
       console.error('Report triage action failed:', err);
+      setFeedback({ type: 'error', message: `Failed to update report: ${err.message || 'API request failed.'}` });
     }
-    setActiveReportId(null);
-    setOfficialNotes('');
   };
 
   return (
     <div className="p-4 md:p-6 max-w-6xl mx-auto w-full space-y-6 animate-fade-in transition-colors duration-200">
-      {/* Success Feedback Banner */}
+      {/* Feedback Banner */}
       {feedback && (
-        <div className="p-3.5 bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-700/60 text-emerald-800 dark:text-emerald-200 rounded-2xl text-xs font-bold flex items-center justify-between shadow-xs">
+        <div className={`p-3.5 border rounded-2xl text-xs font-bold flex items-center justify-between shadow-xs ${
+          feedback.type === 'error'
+            ? 'bg-rose-50 dark:bg-rose-950/60 border-rose-300 dark:border-rose-700/60 text-rose-800 dark:text-rose-200'
+            : 'bg-emerald-50 dark:bg-emerald-950/60 border-emerald-300 dark:border-emerald-700/60 text-emerald-800 dark:text-emerald-200'
+        }`}>
           <div className="flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-            <span>{feedback}</span>
+            {feedback.type === 'error' ? (
+              <AlertCircle className="w-4 h-4 text-rose-600 dark:text-rose-400" />
+            ) : (
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+            )}
+            <span>{feedback.message}</span>
           </div>
-          <button onClick={() => setFeedback(null)} className="text-emerald-600 dark:text-emerald-400 hover:underline">
+          <button onClick={() => setFeedback(null)} className="hover:underline cursor-pointer">
             Dismiss
           </button>
         </div>
