@@ -32,6 +32,12 @@ export const CitizenReportsHistory: React.FC = () => {
             <AlertCircle className="w-3 h-3" /> Disputed / Disproved
           </span>
         );
+      case 'CANCELLED':
+        return (
+          <span className="inline-flex items-center gap-1 text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-slate-100 text-slate-800 border border-slate-300 dark:bg-slate-500/20 dark:text-slate-300 dark:border-slate-500/30">
+            <AlertCircle className="w-3 h-3" /> Report Cancelled
+          </span>
+        );
       default:
         return (
           <span className="inline-flex items-center gap-1 text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-300 dark:bg-amber-500/20 dark:text-amber-300 dark:border-amber-500/30">

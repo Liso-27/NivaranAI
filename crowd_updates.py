@@ -57,7 +57,7 @@ VALID_UPDATE_TYPES = {
 VALID_ANSWERS = {"YES", "NO", "UNKNOWN"}
 
 # Valid verification statuses
-VALID_STATUSES = {"PENDING", "VERIFIED", "REJECTED", "UNVERIFIED", "DISPUTED"}
+VALID_STATUSES = {"PENDING", "VERIFIED", "REJECTED", "UNVERIFIED", "DISPUTED", "CANCELLED"}
 
 # Time decay: Active relevance lifetime (hours) per update type
 # Ephemeral observations (rain, lightning) expire quickly; physical damage persists longer
@@ -266,6 +266,9 @@ def normalize_crowd_row(row: Any) -> Dict[str, Any]:
     elif st in ["REJECTED", "DISPUTED"]:
         ver_state = "DISPUTED"
         db_status = "REJECTED"
+    elif st in ["CANCELLED"]:
+        ver_state = "CANCELLED"
+        db_status = "CANCELLED"
     else:
         ver_state = "UNVERIFIED"
         db_status = "PENDING"
@@ -480,6 +483,8 @@ def verify_crowd_update(
     status_clean = str(status).upper().strip()
     if status_clean in ["DISPUTED", "REJECTED"]:
         db_status = "REJECTED"
+    elif status_clean in ["CANCELLED"]:
+        db_status = "CANCELLED"
     elif status_clean in ["VERIFIED"]:
         db_status = "VERIFIED"
     else:
@@ -511,7 +516,7 @@ def verify_crowd_update(
             "id": update_id,
             "$id": update_id,
             "status": db_status,
-            "verification_state": "DISPUTED" if db_status == "REJECTED" else db_status,
+            "verification_state": "DISPUTED" if db_status == "REJECTED" else ("CANCELLED" if db_status == "CANCELLED" else db_status),
             "verified_by": verified_by or "Authorized BMC Official",
             "official_remarks": official_remarks or "",
             "official_note": official_remarks or "",

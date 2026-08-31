@@ -102,7 +102,8 @@ export const ReportTriageView: React.FC = () => {
             { id: 'ALL', label: 'All Reports' },
             { id: 'UNVERIFIED', label: 'Pending Review' },
             { id: 'VERIFIED', label: 'Verified' },
-            { id: 'DISPUTED', label: 'Disputed' }
+            { id: 'DISPUTED', label: 'Disputed' },
+            { id: 'CANCELLED', label: 'Cancelled' }
           ].map(tab => (
             <button
               key={tab.id}
@@ -151,6 +152,8 @@ export const ReportTriageView: React.FC = () => {
                       ? 'bg-emerald-100 text-emerald-800 border-emerald-300 dark:bg-emerald-500/20 dark:text-emerald-300 dark:border-emerald-500/30'
                       : report.verification_state === 'DISPUTED'
                       ? 'bg-rose-100 text-rose-800 border-rose-300 dark:bg-rose-500/20 dark:text-rose-300 dark:border-rose-500/30'
+                      : report.verification_state === 'CANCELLED'
+                      ? 'bg-slate-200 text-slate-800 border-slate-400 dark:bg-slate-700/50 dark:text-slate-300 dark:border-slate-600'
                       : 'bg-amber-100 text-amber-800 border-amber-300 dark:bg-amber-500/20 dark:text-amber-300 dark:border-amber-500/30'
                   }`}>
                     {report.verification_state || 'UNVERIFIED'}
@@ -200,6 +203,12 @@ export const ReportTriageView: React.FC = () => {
                         className="px-3 py-1.5 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-bold cursor-pointer"
                       >
                         Cancel
+                      </button>
+                      <button
+                        onClick={() => handleAction(report.id, 'CANCELLED')}
+                        className="px-3 py-1.5 bg-slate-600 hover:bg-slate-500 text-white rounded-lg font-bold flex items-center gap-1 shadow-xs cursor-pointer"
+                      >
+                        <AlertCircle className="w-3.5 h-3.5" /> Mark Cancelled
                       </button>
                       <button
                         onClick={() => handleAction(report.id, 'DISPUTED')}

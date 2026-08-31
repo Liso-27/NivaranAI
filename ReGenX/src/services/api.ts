@@ -217,6 +217,7 @@ class DisasterApiClient {
       let verState: VerificationState = 'UNVERIFIED';
       if (st === 'VERIFIED') verState = 'VERIFIED';
       else if (st === 'REJECTED' || st === 'DISPUTED') verState = 'DISPUTED';
+      else if (st === 'CANCELLED') verState = 'CANCELLED';
 
       const rawWard = item.ward_id;
       const wardNum = typeof rawWard === 'number' ? rawWard : (parseInt(String(rawWard || '').replace(/\D/g, ''), 10) || 1);
@@ -280,6 +281,7 @@ class DisasterApiClient {
     let verState: VerificationState = 'UNVERIFIED';
     if (st === 'VERIFIED') verState = 'VERIFIED';
     else if (st === 'REJECTED' || st === 'DISPUTED') verState = 'DISPUTED';
+    else if (st === 'CANCELLED') verState = 'CANCELLED';
 
     const notes = res.official_notes || res.official_note || res.official_remarks || officialNote;
     const ts = res.timestamp || res.created_at || res.updated_at || new Date().toISOString();
