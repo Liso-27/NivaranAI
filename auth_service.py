@@ -197,6 +197,7 @@ class AppwriteEmailIndex:
 _USER_DATABASE = AppwriteUserDB()
 _USER_EMAIL_INDEX = AppwriteEmailIndex()
 _ACTIVE_SESSIONS: Dict[str, Dict[str, Any]] = {}
+_REVOKED_SESSIONS: Set[str] = set()
 _OFFICIAL_FIELD_UPDATES: Dict[str, Dict[str, Any]] = {}
 _AUDIT_LOGS: List[Dict[str, Any]] = []
 
@@ -762,11 +763,22 @@ def admin_suspend_official(
 # SESSION MANAGEMENT & AUTHORIZATION MIDDLEWARE
 # ==============================================================================
 
+_SESSION_SECRET = os.environ.get("ADMIN_BOOTSTRAP_SECRET") or os.environ.get("APPWRITE_API_KEY") or "apada_sathi_session_secret_key_2026"
+
+def _generate_token_signature(payload_str: str) -> str:
+    return hmac.new(_SESSION_SECRET.encode('utf-8'), payload_str.encode('utf-8'), hashlib.sha256).hexdigest()[:32]
+
 def _create_session(user: Dict[str, Any]) -> Dict[str, Any]:
-    """Generates a secure server-side session token."""
+    """Generates a secure server-side session token with stateless HMAC fallback verification."""
     global _ACTIVE_SESSIONS
-    token = f"sess_{secrets.token_hex(24)}"
     now = datetime.now(timezone.utc)
+    now_ts = int(now.timestamp())
+    user_id = str(user["user_id"])
+    
+    payload_str = f"{user_id}:{now_ts}"
+    sig = _generate_token_signature(payload_str)
+    token = f"sess_{user_id}_{now_ts}_{sig}"
+    
     expires_at = now + timedelta(hours=SESSION_TTL_HOURS)
 
     session_record = {
@@ -840,7 +852,8 @@ def login_user(email: str, password: str) -> Dict[str, Any]:
 
 def logout_user(session_token: str) -> Dict[str, Any]:
     """Invalidates an active session token."""
-    global _ACTIVE_SESSIONS
+    global _ACTIVE_SESSIONS, _REVOKED_SESSIONS
+    _REVOKED_SESSIONS.add(session_token)
     sess = _ACTIVE_SESSIONS.pop(session_token, None)
     if sess:
         record_audit_event(
@@ -856,26 +869,54 @@ def logout_user(session_token: str) -> Dict[str, Any]:
 def verify_session(session_token: Optional[str]) -> Optional[Dict[str, Any]]:
     """
     Verifies session token validity and expiration.
-    Returns user record if valid, None otherwise.
+    Supports both in-memory cache and stateless HMAC fallback verification across multi-worker deployments.
     """
-    if not session_token:
+    if not session_token or session_token in _REVOKED_SESSIONS:
         return None
 
+    # 1. Fast in-memory lookup
     sess = _ACTIVE_SESSIONS.get(session_token)
-    if not sess:
-        return None
+    if sess:
+        try:
+            expires_at = datetime.fromisoformat(sess["expires_at"])
+            if datetime.now(timezone.utc) <= expires_at:
+                user = _USER_DATABASE.get(sess["user_id"])
+                if user and user.get("status") == STATUS_ACTIVE:
+                    return user
+            else:
+                _ACTIVE_SESSIONS.pop(session_token, None)
+        except Exception:
+            pass
 
-    # Check expiration
-    expires_at = datetime.fromisoformat(sess["expires_at"])
-    if datetime.now(timezone.utc) > expires_at:
-        _ACTIVE_SESSIONS.pop(session_token, None)
-        return None
+    # 2. Stateless HMAC token validation fallback (for multi-worker / process restarts)
+    if isinstance(session_token, str) and session_token.startswith("sess_"):
+        parts = session_token[5:].split("_")
+        if len(parts) >= 3:
+            sig = parts[-1]
+            now_ts_str = parts[-2]
+            user_id = "_".join(parts[:-2])
+            
+            try:
+                now_ts = int(now_ts_str)
+                expected_sig = _generate_token_signature(f"{user_id}:{now_ts}")
+                if hmac.compare_digest(sig, expected_sig):
+                    token_age_sec = (int(datetime.now(timezone.utc).timestamp()) - now_ts)
+                    if token_age_sec <= (SESSION_TTL_HOURS * 3600):
+                        user = _USER_DATABASE.get(user_id)
+                        if user and user.get("status") == STATUS_ACTIVE:
+                            _ACTIVE_SESSIONS[session_token] = {
+                                "token": session_token,
+                                "user_id": user["user_id"],
+                                "role": user["role"],
+                                "status": user["status"],
+                                "created_at": datetime.fromtimestamp(now_ts, timezone.utc).isoformat(),
+                                "expires_at": datetime.fromtimestamp(now_ts + SESSION_TTL_HOURS * 3600, timezone.utc).isoformat(),
+                            }
+                            return user
+            except Exception:
+                pass
 
-    user = _USER_DATABASE.get(sess["user_id"])
-    if not user or user.get("status") != STATUS_ACTIVE:
-        return None
-
-    return user
+    return None
 
 
 def require_permission(
@@ -1271,9 +1312,10 @@ def update_government_camp(
 
 def reset_auth_state() -> None:
     """Resets all in-memory auth databases, sessions, field updates, and audit logs."""
-    global _USER_DATABASE, _USER_EMAIL_INDEX, _ACTIVE_SESSIONS, _OFFICIAL_FIELD_UPDATES, _AUDIT_LOGS
+    global _USER_DATABASE, _USER_EMAIL_INDEX, _ACTIVE_SESSIONS, _REVOKED_SESSIONS, _OFFICIAL_FIELD_UPDATES, _AUDIT_LOGS
     _USER_DATABASE.clear()
     _USER_EMAIL_INDEX.clear()
     _ACTIVE_SESSIONS.clear()
+    _REVOKED_SESSIONS.clear()
     _OFFICIAL_FIELD_UPDATES.clear()
     _AUDIT_LOGS.clear()
