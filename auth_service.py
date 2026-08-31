@@ -777,7 +777,7 @@ def _create_session(user: Dict[str, Any]) -> Dict[str, Any]:
     
     payload_str = f"{user_id}:{now_ts}"
     sig = _generate_token_signature(payload_str)
-    token = f"sess_{user_id}_{now_ts}_{sig}"
+    token = f"sess.{user_id}.{now_ts}.{sig}"
     
     expires_at = now + timedelta(hours=SESSION_TTL_HOURS)
 
@@ -869,9 +869,10 @@ def logout_user(session_token: str) -> Dict[str, Any]:
 def verify_session(session_token: Optional[str]) -> Optional[Dict[str, Any]]:
     """
     Verifies session token validity and expiration.
-    Supports both in-memory cache and stateless HMAC fallback verification across multi-worker deployments.
+    Supports in-memory cache and stateless HMAC fallback verification.
+    Strictly rejects raw user IDs and unauthenticated tokens.
     """
-    if not session_token or session_token in _REVOKED_SESSIONS:
+    if not session_token or not isinstance(session_token, str) or session_token in _REVOKED_SESSIONS:
         return None
 
     # 1. Fast in-memory lookup
@@ -888,14 +889,40 @@ def verify_session(session_token: Optional[str]) -> Optional[Dict[str, Any]]:
         except Exception:
             pass
 
-    # 2. Stateless HMAC token validation fallback (for multi-worker / process restarts)
-    if isinstance(session_token, str) and session_token.startswith("sess_"):
+    # 2. Stateless HMAC token validation fallback (dot format: sess.<user_id>.<timestamp>.<sig>)
+    if session_token.startswith("sess."):
+        parts = session_token.split(".")
+        if len(parts) == 4 and parts[0] == "sess":
+            user_id = parts[1]
+            now_ts_str = parts[2]
+            sig = parts[3]
+            try:
+                now_ts = int(now_ts_str)
+                expected_sig = _generate_token_signature(f"{user_id}:{now_ts}")
+                if hmac.compare_digest(sig, expected_sig):
+                    token_age_sec = (int(datetime.now(timezone.utc).timestamp()) - now_ts)
+                    if token_age_sec <= (SESSION_TTL_HOURS * 3600):
+                        user = _USER_DATABASE.get(user_id)
+                        if user and user.get("status") == STATUS_ACTIVE:
+                            _ACTIVE_SESSIONS[session_token] = {
+                                "token": session_token,
+                                "user_id": user["user_id"],
+                                "role": user["role"],
+                                "status": user["status"],
+                                "created_at": datetime.fromtimestamp(now_ts, timezone.utc).isoformat(),
+                                "expires_at": datetime.fromtimestamp(now_ts + SESSION_TTL_HOURS * 3600, timezone.utc).isoformat(),
+                            }
+                            return user
+            except Exception:
+                pass
+
+    # Legacy underscore format fallback (sess_<user_id>_<timestamp>_<sig>)
+    if session_token.startswith("sess_"):
         parts = session_token[5:].split("_")
         if len(parts) >= 3:
             sig = parts[-1]
             now_ts_str = parts[-2]
             user_id = "_".join(parts[:-2])
-            
             try:
                 now_ts = int(now_ts_str)
                 expected_sig = _generate_token_signature(f"{user_id}:{now_ts}")
