@@ -189,12 +189,12 @@ export const DisasterDataProvider: React.FC<{ children: React.ReactNode }> = ({ 
 
   const verifyCrowdReport = async (id: string, state: VerificationState, note: string, officialName: string) => {
     const updated = await disasterApi.verifyCrowdReport(id, state, note, officialName);
-    setCrowdReports(prev => prev.map(r => r.id === id ? updated : r));
+    setCrowdReports(prev => prev.map(r => r.id === id ? { ...r, ...updated, verification_state: state } : r));
   };
 
   const corroborateCrowdReport = async (id: string) => {
     const updated = await disasterApi.corroborateCrowdReport(id);
-    setCrowdReports(prev => prev.map(r => r.id === id ? updated : r));
+    setCrowdReports(prev => prev.map(r => r.id === id ? { ...r, ...updated } : r));
   };
 
   const createGovernmentCamp = async (data: any) => {
