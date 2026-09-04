@@ -311,6 +311,7 @@ def normalize_news_article(raw_article: Dict[str, Any]) -> Optional[Dict[str, An
     """
     Converts a raw News API article response into a standardized Apada Sathi
     news entity conforming to the required data structure.
+    Enforces strict local relevance filter (must contain 'Bhubaneswar' or 'BBSR').
     """
     title = str(raw_article.get("title", "")).strip()
     if not title or title.lower() == "[removed]":
@@ -321,6 +322,24 @@ def normalize_news_article(raw_article: Dict[str, Any]) -> Optional[Dict[str, An
         return None
 
     description = str(raw_article.get("description") or raw_article.get("content") or "").strip()
+    content = str(raw_article.get("content") or "").strip()
+
+    # Strict Bhubaneswar geographic text relevance check (title, description, or content)
+    full_text = f"{title} {description} {content}".lower()
+    if "bhubaneswar" not in full_text and "bbsr" not in full_text:
+        return None
+
+    # Disaster / Weather / Hazard relevance check
+    disaster_kws = {
+        "disaster", "flood", "floods", "flooding", "waterlogging", "waterlogged",
+        "rainfall", "rain", "rains", "lightning", "thunderstorm", "cyclone",
+        "storm", "wind", "winds", "inundation", "inundated", "rescue", "evacuation",
+        "downpour", "weather", "monsoon", "squall", "alert", "warning", "emergency",
+        "landslide", "damage", "relief", "marooned"
+    }
+    if not any(kw in full_text for kw in disaster_kws):
+        return None
+
     # Clean News API truncation artifacts (e.g. [+1234 chars])
     description = re.sub(r'\[\+\d+\s+chars\]', '', description).strip()
 
@@ -337,7 +356,6 @@ def normalize_news_article(raw_article: Dict[str, Any]) -> Optional[Dict[str, An
     hazard_type, _ = classify_hazard_type(title, description)
 
     # Determine locality and scope
-    full_text = f"{title} {description}"
     matched_locality, matched_ward_id, location_scope = resolve_locality_and_scope(full_text)
 
     # Calculate informational relevance
@@ -383,10 +401,10 @@ def fetch_raw_news_from_api(query: Optional[str] = None) -> List[Dict[str, Any]]
         print("Note: NEWS_API_KEY not found in environment.")
         return []
 
-    # Default targeted query covering Bhubaneswar & hazards
+    # Focused Boolean search query for Bhubaneswar disaster intelligence
     search_query = query or (
-        '(Bhubaneswar OR Odisha OR BMC) AND '
-        '(rain OR rainfall OR flood OR flooding OR waterlogging OR lightning OR cyclone OR storm OR downpour)'
+        '("Bhubaneswar" OR "BBSR") AND '
+        '(disaster OR flood OR flooding OR waterlogging OR rainfall OR rain OR lightning OR thunderstorm OR cyclone OR storm OR wind OR inundation OR rescue OR evacuation)'
     )
 
     endpoint = f"{NEWS_API_BASE_URL}/everything"
@@ -555,8 +573,8 @@ def get_news_for_ward(ward_id: str, limit: int = 20) -> List[Dict[str, Any]]:
 
 
 def get_citywide_news(limit: int = 20) -> List[Dict[str, Any]]:
-    """Fetches articles categorized as CITYWIDE Bhubaneswar news."""
-    return get_latest_news(limit=limit, location_scope="CITYWIDE")
+    """Fetches all relevant Bhubaneswar disaster news articles."""
+    return get_latest_news(limit=limit)
 
 
 # ==============================================================================

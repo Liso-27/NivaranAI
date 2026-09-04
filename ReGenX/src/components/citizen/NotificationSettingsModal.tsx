@@ -46,25 +46,25 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 animate-fade-in">
-      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 max-w-lg w-full p-6 space-y-6 shadow-2xl relative transition-colors duration-200">
+      <div className="bg-[#FFFDF9] dark:bg-slate-900 rounded-lg border border-[#D9D6CF] dark:border-slate-800 max-w-lg w-full p-6 space-y-6 shadow-2xl relative transition-colors duration-200">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4">
+        <div className="flex items-center justify-between border-b border-[#D9D6CF] dark:border-slate-800 pb-4">
           <div className="flex items-center gap-2">
-            <div className="p-2 bg-[#0B3D91] rounded-xl text-white">
+            <div className="p-2 bg-[#8A9A86] rounded-xl text-white">
               <Bell className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-black text-slate-900 dark:text-white font-heading">
+              <h3 className="text-base font-black text-[#2F3E46] dark:text-white font-heading">
                 Disaster Alert & Notification Channels
               </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
+              <p className="text-xs text-[#66736F] dark:text-slate-400">
                 FCM Push Tokens and Twilio SMS Preferences
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-700 dark:hover:text-white transition"
+            className="p-1.5 rounded-xl hover:bg-[#F3EFEA] dark:hover:bg-slate-800 text-slate-400 hover:text-slate-700 dark:hover:text-white transition"
           >
             <X className="w-5 h-5" />
           </button>
@@ -72,32 +72,32 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
 
         <div className="space-y-4 text-xs">
           {/* FCM Push Token Registration (Section 16) */}
-          <div className="p-4 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800 space-y-3">
+          <div className="p-4 bg-[#F9F7F3] dark:bg-slate-950 rounded-xl border border-[#D9D6CF] dark:border-slate-800 space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Smartphone className="w-4 h-4 text-[#0B3D91] dark:text-cyan-400" />
-                <strong className="text-slate-900 dark:text-white">Firebase Cloud Messaging (FCM)</strong>
+                <Smartphone className="w-4 h-4 text-[#8A9A86]" />
+                <strong className="text-[#2F3E46] dark:text-white">Firebase Cloud Messaging (FCM)</strong>
               </div>
               <span className={`text-[10px] font-bold px-2 py-0.5 rounded border uppercase ${
                 permissionStatus === 'granted'
-                  ? 'bg-emerald-100 text-emerald-800 border-emerald-300 dark:bg-emerald-500/20 dark:text-emerald-300 dark:border-emerald-500/30'
+                  ? 'bg-[#4D8B63]/10 text-[#4D8B63] border-[#4D8B63]/30'
                   : permissionStatus === 'denied'
-                  ? 'bg-rose-100 text-rose-800 border-rose-300 dark:bg-rose-500/20 dark:text-rose-300 dark:border-rose-500/30'
-                  : 'bg-amber-100 text-amber-800 border-amber-300 dark:bg-amber-500/20 dark:text-amber-300 dark:border-amber-500/30'
+                  ? 'bg-[#C53030]/10 text-[#C53030] border-[#C53030]/30'
+                  : 'bg-[#C68A27]/10 text-[#C68A27] border-[#C68A27]/30'
               }`}>
                 {permissionStatus}
               </span>
             </div>
 
             {fcmError && (
-              <div className="p-2.5 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/60 rounded-lg text-rose-700 dark:text-rose-300 text-[11px] flex items-start gap-2">
-                <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-rose-600 dark:text-rose-400" />
+              <div className="p-2.5 bg-[#C53030]/10 border border-[#C53030]/30 rounded-lg text-[#C53030] text-[11px] flex items-start gap-2">
+                <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-[#C53030]" />
                 <div className="flex-1 space-y-1">
                   <p>{fcmError}</p>
                   {permissionStatus !== 'denied' && (
                     <button
                       onClick={requestNotificationPermission}
-                      className="text-rose-800 dark:text-rose-200 font-bold underline hover:no-underline flex items-center gap-1 cursor-pointer"
+                      className="text-[#C53030] font-bold underline hover:no-underline flex items-center gap-1 cursor-pointer"
                     >
                       <RefreshCw className="w-3 h-3" /> Retry Token Generation
                     </button>
@@ -108,17 +108,17 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
 
             {fcmToken ? (
               <div className="space-y-1.5">
-                <div className="p-2 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 font-mono text-[10px] text-slate-600 dark:text-slate-400 break-all max-h-24 overflow-y-auto selection:bg-[#F58220] selection:text-white">
+                <div className="p-2 bg-[#FFFDF9] dark:bg-slate-900 rounded-lg border border-[#D9D6CF] dark:border-slate-800 font-mono text-[10px] text-[#66736F] dark:text-slate-400 break-all max-h-24 overflow-y-auto selection:bg-[#B86B52] selection:text-white">
                   {fcmToken}
                 </div>
                 <div className="flex items-center justify-between">
                   <button
                     onClick={handleCopyToken}
-                    className="text-[11px] text-[#0B3D91] dark:text-sky-400 font-bold hover:underline cursor-pointer"
+                    className="text-[11px] text-[#8A9A86] font-bold hover:underline cursor-pointer"
                   >
                     {copiedToken ? '✓ Copied Token to Clipboard' : 'Copy FCM Device Token'}
                   </button>
-                  <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold">
+                  <span className="text-[10px] text-[#4D8B63] font-semibold">
                     ● Real FCM Token Active
                   </span>
                 </div>
@@ -127,10 +127,10 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
               <button
                 onClick={requestNotificationPermission}
                 disabled={fcmLoading || permissionStatus === 'denied'}
-                className={`w-full py-2 px-4 rounded-xl font-bold transition shadow-xs flex items-center justify-center gap-2 ${
+                className={`w-full py-2 px-4 rounded-xl font-bold transition shadow-2xs flex items-center justify-center gap-2 ${
                   permissionStatus === 'denied'
                     ? 'bg-slate-200 text-slate-500 dark:bg-slate-800 dark:text-slate-400 cursor-not-allowed'
-                    : 'bg-[#0B3D91] hover:bg-[#0A2F70] text-white cursor-pointer'
+                    : 'bg-[#8A9A86] hover:bg-[#778873] text-white cursor-pointer'
                 }`}
               >
                 {fcmLoading ? (
@@ -185,7 +185,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
               onClick={toggleSound}
               className={`px-3 py-1 rounded-lg border text-xs font-bold transition ${
                 soundEnabled
-                  ? 'bg-blue-50 text-[#0B3D91] border-blue-200 dark:bg-sky-500/20 dark:text-sky-300 dark:border-sky-500/30'
+                  ? 'bg-amber-50 text-[#D97706] border-amber-300 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-700/60'
                   : 'bg-white text-slate-400 border-slate-200 dark:bg-slate-800 dark:border-slate-700'
               }`}
             >

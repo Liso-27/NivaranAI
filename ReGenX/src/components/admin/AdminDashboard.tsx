@@ -94,19 +94,19 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentTab = 'AD
     switch (status) {
       case 'OPERATIONAL':
         return (
-          <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300 dark:bg-emerald-500/20 dark:text-emerald-300 dark:border-emerald-500/30">
+          <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 border border-emerald-300 dark:bg-emerald-500/20 dark:text-emerald-300 dark:border-emerald-500/30">
             🟢 Operational
           </span>
         );
       case 'WARNING':
         return (
-          <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-300 dark:bg-amber-500/20 dark:text-amber-300 dark:border-amber-500/30">
+          <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-md bg-amber-100 text-amber-800 border border-amber-300 dark:bg-amber-500/20 dark:text-amber-300 dark:border-amber-500/30">
             🟡 Warning / Config
           </span>
         );
       case 'UNAVAILABLE':
         return (
-          <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-100 text-rose-800 border border-rose-300 dark:bg-rose-500/20 dark:text-rose-300 dark:border-rose-500/30">
+          <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-md bg-rose-100 text-rose-800 border border-rose-300 dark:bg-rose-500/20 dark:text-rose-300 dark:border-rose-500/30">
             🔴 Unavailable
           </span>
         );
@@ -114,98 +114,98 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentTab = 'AD
   };
 
   return (
-    <div className="p-4 md:p-6 max-w-7xl mx-auto w-full space-y-6 animate-fade-in transition-colors duration-200">
+    <div className="p-4 md:p-6 max-w-7xl mx-auto w-full space-y-6 transition-colors duration-200">
       {/* Admin Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="p-2 bg-[#0B3D91] rounded-xl text-white">
+            <span className="p-2 bg-[#D97706] rounded-lg text-white">
               <ShieldAlert className="w-5 h-5" />
             </span>
-            <h2 className="text-xl md:text-2xl font-black text-slate-900 dark:text-white font-heading">
+            <h2 className="text-xl md:text-2xl font-bold text-[#0F172A] dark:text-white">
               System Admin & Developer Operations Hub
             </h2>
           </div>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+          <p className="text-xs text-[#475569] dark:text-slate-400 mt-1 font-medium">
             Backend services health, 20-minute analytical scheduler telemetry, official authorizations, and audit trails.
           </p>
         </div>
 
         {/* Global Status Pill */}
-        <div className="flex items-center gap-2 px-3.5 py-2 bg-white dark:bg-slate-900/80 rounded-xl border border-slate-200 dark:border-slate-800 text-xs shadow-xs">
-          <Server className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-          <span className="text-slate-600 dark:text-slate-300">
-            Cluster: <strong className="text-slate-900 dark:text-white">BMC-RISK-PROD-01</strong>
+        <div className="flex items-center gap-2 px-3.5 py-2 bg-[#FFFFFF] dark:bg-slate-900 rounded-lg border border-[#D1D5DB] dark:border-slate-800 text-xs">
+          <Server className="w-4 h-4 text-[#059669]" />
+          <span className="text-[#475569] dark:text-slate-300">
+            Cluster: <strong className="text-[#0F172A] dark:text-white">BMC-RISK-PROD-01</strong>
           </span>
         </div>
       </div>
 
-      {/* TAB 1: SYSTEM OVERVIEW & STATISTICS (Section 27) */}
+      {/* TAB 1: SYSTEM OVERVIEW & STATISTICS */}
       {activeTab === 'TELEMETRY' && (
         <div className="space-y-6">
           {/* Top Statistics Cards */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <div className="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow-xs space-y-1">
-              <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 block">BMC Ward Coverage</span>
-              <span className="text-3xl font-black text-slate-900 dark:text-white">67 Wards</span>
-              <span className="text-[10px] text-emerald-700 dark:text-emerald-400 block font-semibold">100% Geo-Centroids Calibrated</span>
+            <div className="bg-[#FFFFFF] dark:bg-slate-900 rounded-lg p-4 border border-[#D1D5DB] dark:border-slate-800 space-y-1">
+              <span className="text-xs font-semibold text-[#475569] dark:text-slate-400 block">BMC Ward Coverage</span>
+              <span className="text-2xl font-bold text-[#0F172A] dark:text-white">67 Wards</span>
+              <span className="text-[10px] text-[#059669] block font-semibold">100% Geo-Centroids Calibrated</span>
             </div>
 
-            <div className="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow-xs space-y-1">
-              <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 block">Covered Hazards</span>
-              <span className="text-3xl font-black text-[#F58220]">5 Hazards</span>
-              <span className="text-[10px] text-slate-500 dark:text-slate-400 block">Rain, Flood, Waterlog, Lightning, Cyclone</span>
+            <div className="bg-[#FFFFFF] dark:bg-slate-900 rounded-lg p-4 border border-[#D1D5DB] dark:border-slate-800 space-y-1">
+              <span className="text-xs font-semibold text-[#475569] dark:text-slate-400 block">Covered Hazards</span>
+              <span className="text-2xl font-bold text-[#D97706]">5 Hazards</span>
+              <span className="text-[10px] text-[#475569] dark:text-slate-400 block font-medium">Rain, Flood, Waterlog, Lightning, Cyclone</span>
             </div>
 
-            <div className="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow-xs space-y-1">
-              <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 block">Active Critical Zones</span>
-              <span className="text-3xl font-black text-rose-600 dark:text-rose-400">
+            <div className="bg-[#FFFFFF] dark:bg-slate-900 rounded-lg p-4 border border-[#D1D5DB] dark:border-slate-800 space-y-1">
+              <span className="text-xs font-semibold text-[#475569] dark:text-slate-400 block">Active Critical Zones</span>
+              <span className="text-2xl font-bold text-[#DC2626]">
                 {hazardZones.filter(z => z.severity === 'HIGH' || z.severity === 'EMERGENCY').length}
               </span>
-              <span className="text-[10px] text-rose-700 dark:text-rose-400/90 block font-semibold">HIGH + EMERGENCY perimeters</span>
+              <span className="text-[10px] text-[#DC2626] block font-semibold">HIGH + EMERGENCY perimeters</span>
             </div>
 
-            <div className="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow-xs space-y-1">
-              <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 block">Citizen Ground Reports</span>
-              <span className="text-3xl font-black text-[#0B3D91] dark:text-cyan-400">{crowdReports.length}</span>
-              <span className="text-[10px] text-slate-500 dark:text-slate-400 block">Separate from risk scores</span>
+            <div className="bg-[#FFFFFF] dark:bg-slate-900 rounded-lg p-4 border border-[#D1D5DB] dark:border-slate-800 space-y-1">
+              <span className="text-xs font-semibold text-[#475569] dark:text-slate-400 block">Citizen Ground Reports</span>
+              <span className="text-2xl font-bold text-[#0F172A] dark:text-white">{crowdReports.length}</span>
+              <span className="text-[10px] text-[#475569] dark:text-slate-400 block font-medium">Separate from risk scores</span>
             </div>
           </div>
 
           {/* Quick System Health Summary */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow-xs space-y-3">
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white font-heading uppercase tracking-wider flex items-center gap-2">
-                <Database className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+            <div className="bg-[#FFFFFF] dark:bg-slate-900 rounded-lg p-5 border border-[#D1D5DB] dark:border-slate-800 space-y-3">
+              <h3 className="text-sm font-bold text-[#0F172A] dark:text-white uppercase tracking-wider flex items-center gap-2">
+                <Database className="w-4 h-4 text-[#059669]" />
                 Backend Architecture Integrity
               </h3>
-              <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+              <p className="text-xs text-[#475569] dark:text-slate-300 leading-normal">
                 NivaranAI connects to the 10 Python backend modules. The analytical risk engine serves as the single source of truth for all risk calculations, radii, and severity classifications.
               </p>
-              <div className="p-3 bg-slate-50 dark:bg-slate-950/70 rounded-xl border border-slate-200 dark:border-slate-800 text-xs font-mono text-slate-600 dark:text-slate-400 space-y-1">
+              <div className="p-3 bg-[#F8F9FA] dark:bg-slate-950 rounded-md border border-[#D1D5DB] dark:border-slate-800 text-xs text-[#475569] dark:text-slate-400 space-y-1 font-medium">
                 <div>• risk_engine.py: Source of Truth (Formula immutable on frontend)</div>
                 <div>• map_zones.py: Radius & Coordinate serializer</div>
                 <div>• scheduled_runner.py: Active (20-min cycle)</div>
               </div>
             </div>
 
-            <div className="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow-xs space-y-3">
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white font-heading uppercase tracking-wider flex items-center gap-2">
-                <Bell className="w-4 h-4 text-[#F58220]" />
+            <div className="bg-[#FFFFFF] dark:bg-slate-900 rounded-lg p-5 border border-[#D1D5DB] dark:border-slate-800 space-y-3">
+              <h3 className="text-sm font-bold text-[#0F172A] dark:text-white uppercase tracking-wider flex items-center gap-2">
+                <Bell className="w-4 h-4 text-[#D97706]" />
                 Deterministic Notification Channels
               </h3>
               <div className="space-y-2 text-xs">
-                <div className="flex items-center justify-between p-2.5 bg-slate-50 dark:bg-slate-950/60 rounded-xl border border-slate-200 dark:border-slate-800">
-                  <span className="text-slate-700 dark:text-slate-300">Firebase Cloud Messaging (FCM Push)</span>
-                  <span className="text-emerald-700 dark:text-emerald-400 font-bold">CONNECTED</span>
+                <div className="flex items-center justify-between p-2.5 bg-[#F8F9FA] dark:bg-slate-950 rounded-md border border-[#D1D5DB] dark:border-slate-800">
+                  <span className="text-[#0F172A] dark:text-slate-300 font-medium">Firebase Cloud Messaging (FCM Push)</span>
+                  <span className="text-[#059669] font-semibold">CONNECTED</span>
                 </div>
-                <div className="flex items-center justify-between p-2.5 bg-slate-50 dark:bg-slate-950/60 rounded-xl border border-slate-200 dark:border-slate-800">
-                  <span className="text-slate-700 dark:text-slate-300">Twilio SMS Gateway</span>
-                  <span className="text-emerald-700 dark:text-emerald-400 font-bold">READY (HIGH/EMERGENCY)</span>
+                <div className="flex items-center justify-between p-2.5 bg-[#F8F9FA] dark:bg-slate-950 rounded-md border border-[#D1D5DB] dark:border-slate-800">
+                  <span className="text-[#0F172A] dark:text-slate-300 font-medium">Twilio SMS Gateway</span>
+                  <span className="text-[#059669] font-semibold">READY (HIGH/EMERGENCY)</span>
                 </div>
-                <div className="flex items-center justify-between p-2.5 bg-slate-50 dark:bg-slate-950/60 rounded-xl border border-slate-200 dark:border-slate-800">
-                  <span className="text-slate-700 dark:text-slate-300">In-App Notification Bus</span>
-                  <span className="text-emerald-700 dark:text-emerald-400 font-bold">ACTIVE</span>
+                <div className="flex items-center justify-between p-2.5 bg-[#F8F9FA] dark:bg-slate-950 rounded-md border border-[#D1D5DB] dark:border-slate-800">
+                  <span className="text-[#0F172A] dark:text-slate-300 font-medium">In-App Notification Bus</span>
+                  <span className="text-[#059669] font-semibold">ACTIVE</span>
                 </div>
               </div>
             </div>
@@ -213,88 +213,88 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentTab = 'AD
         </div>
       )}
 
-      {/* TAB 2: SCHEDULER MONITORING (Section 26) */}
+      {/* TAB 2: SCHEDULER MONITORING */}
       {activeTab === 'SCHEDULER' && telemetry && (
         <div className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-emerald-200 dark:border-emerald-500/30 shadow-xs space-y-1">
-              <span className="text-xs font-semibold text-emerald-800 dark:text-emerald-300">Cron Scheduler Cadence</span>
-              <h3 className="text-2xl font-black text-slate-900 dark:text-white font-mono">{telemetry.cron_expression}</h3>
-              <p className="text-xs text-slate-600 dark:text-slate-300">Every 20 Minutes (scheduled_runner.py)</p>
+            <div className="bg-[#FFFFFF] dark:bg-slate-900 rounded-lg p-5 border border-[#059669]/30 space-y-1">
+              <span className="text-xs font-semibold text-[#059669]">Cron Scheduler Cadence</span>
+              <h3 className="text-xl font-bold text-[#0F172A] dark:text-white">{telemetry.cron_expression}</h3>
+              <p className="text-xs text-[#475569] dark:text-slate-300 font-medium">Every 20 Minutes (scheduled_runner.py)</p>
             </div>
 
-            <div className="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-blue-200 dark:border-cyan-500/30 shadow-xs space-y-1">
-              <span className="text-xs font-semibold text-blue-800 dark:text-cyan-300">Next Scheduled Execution</span>
-              <h3 className="text-2xl font-black text-[#0B3D91] dark:text-cyan-300 font-mono">
+            <div className="bg-[#FFFFFF] dark:bg-slate-900 rounded-lg p-5 border border-[#D97706]/30 space-y-1">
+              <span className="text-xs font-semibold text-[#D97706]">Next Scheduled Execution</span>
+              <h3 className="text-xl font-bold text-[#D97706]">
                 {formatSecondsToMMSS(secondsUntilNextRun)}
               </h3>
-              <p className="text-xs text-slate-600 dark:text-slate-300">Auto-evaluates all 67 BMC wards</p>
+              <p className="text-xs text-[#475569] dark:text-slate-300 font-medium">Auto-evaluates all 67 BMC wards</p>
             </div>
 
-            <div className="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow-xs space-y-1">
-              <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Last Execution Duration</span>
-              <h3 className="text-2xl font-black text-slate-900 dark:text-white font-mono">{telemetry.execution_duration_sec}s</h3>
-              <p className="text-xs text-emerald-700 dark:text-emerald-400 font-semibold">Completed with 0 analytical failures</p>
+            <div className="bg-[#FFFFFF] dark:bg-slate-900 rounded-lg p-5 border border-[#D1D5DB] dark:border-slate-800 space-y-1">
+              <span className="text-xs font-semibold text-[#475569] dark:text-slate-400">Last Execution Duration</span>
+              <h3 className="text-xl font-bold text-[#0F172A] dark:text-white">{telemetry.execution_duration_sec}s</h3>
+              <p className="text-xs text-[#059669] font-semibold">Completed with 0 analytical failures</p>
             </div>
           </div>
 
-          <div className="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
-            <h3 className="text-sm font-bold text-slate-900 dark:text-white font-heading uppercase tracking-wider">
+          <div className="bg-[#FFFFFF] dark:bg-slate-900 rounded-lg p-5 border border-[#D1D5DB] dark:border-slate-800 space-y-4">
+            <h3 className="text-sm font-bold text-[#0F172A] dark:text-white uppercase tracking-wider">
               Last Execution Cycle Telemetry
             </h3>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-              <div className="p-3 bg-slate-50 dark:bg-slate-950/70 rounded-xl border border-slate-200 dark:border-slate-800">
-                <span className="text-slate-500 block">Wards Evaluated</span>
-                <strong className="text-slate-900 dark:text-white text-base">{telemetry.wards_evaluated} / 67</strong>
+              <div className="p-3 bg-[#F8F9FA] dark:bg-slate-950 rounded-md border border-[#D1D5DB] dark:border-slate-800">
+                <span className="text-[#475569] dark:text-slate-400 block font-medium">Wards Evaluated</span>
+                <strong className="text-[#0F172A] dark:text-white text-base">{telemetry.wards_evaluated} / 67</strong>
               </div>
 
-              <div className="p-3 bg-slate-50 dark:bg-slate-950/70 rounded-xl border border-slate-200 dark:border-slate-800">
-                <span className="text-slate-500 block">Zones Status Shift</span>
-                <strong className="text-[#F58220] text-base">{telemetry.zones_changed} Wards</strong>
+              <div className="p-3 bg-[#F8F9FA] dark:bg-slate-950 rounded-md border border-[#D1D5DB] dark:border-slate-800">
+                <span className="text-[#475569] dark:text-slate-400 block font-medium">Zones Status Shift</span>
+                <strong className="text-[#D97706] text-base">{telemetry.zones_changed} Wards</strong>
               </div>
 
-              <div className="p-3 bg-slate-50 dark:bg-slate-950/70 rounded-xl border border-slate-200 dark:border-slate-800">
-                <span className="text-slate-500 block">Alerts Dispatched</span>
-                <strong className="text-rose-600 dark:text-rose-400 text-base">{telemetry.notifications_triggered} Triggers</strong>
+              <div className="p-3 bg-[#F8F9FA] dark:bg-slate-950 rounded-md border border-[#D1D5DB] dark:border-slate-800">
+                <span className="text-[#475569] dark:text-slate-400 block font-medium">Alerts Dispatched</span>
+                <strong className="text-[#DC2626] text-base">{telemetry.notifications_triggered} Triggers</strong>
               </div>
 
-              <div className="p-3 bg-slate-50 dark:bg-slate-950/70 rounded-xl border border-slate-200 dark:border-slate-800">
-                <span className="text-slate-500 block">Daemon State</span>
-                <strong className="text-emerald-700 dark:text-emerald-400 text-base">HEALTHY</strong>
+              <div className="p-3 bg-[#F8F9FA] dark:bg-slate-950 rounded-md border border-[#D1D5DB] dark:border-slate-800">
+                <span className="text-[#475569] dark:text-slate-400 block font-medium">Daemon State</span>
+                <strong className="text-[#059669] text-base">HEALTHY</strong>
               </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* TAB 3: API & SERVICE HEALTH MATRIX (Section 25) */}
+      {/* TAB 3: API & SERVICE HEALTH MATRIX */}
       {activeTab === 'HEALTH_MATRIX' && (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-bold text-slate-900 dark:text-white font-heading uppercase tracking-wider">
+            <h3 className="text-sm font-bold text-[#0F172A] dark:text-white uppercase tracking-wider">
               External & Internal Service Connectivity Matrix
             </h3>
-            <span className="text-xs text-slate-500 font-mono">Live Probing</span>
+            <span className="text-xs text-[#475569] dark:text-slate-400 font-medium">Live Probing</span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {servicesHealth.map(service => (
               <div
                 key={service.name}
-                className="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow-xs space-y-3"
+                className="bg-[#FFFFFF] dark:bg-slate-900 rounded-lg p-5 border border-[#D1D5DB] dark:border-slate-800 space-y-3"
               >
                 <div className="flex items-center justify-between">
-                  <h4 className="text-sm font-bold text-slate-900 dark:text-white font-heading">{service.name}</h4>
+                  <h4 className="text-sm font-bold text-[#0F172A] dark:text-white">{service.name}</h4>
                   {getStatusBadge(service.status)}
                 </div>
 
-                <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed min-h-[36px]">
+                <p className="text-xs text-[#475569] dark:text-slate-300 leading-normal min-h-[36px]">
                   {service.details}
                 </p>
 
-                <div className="pt-2 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[11px] text-slate-500 font-mono">
-                  <span>Latency: <strong className="text-slate-800 dark:text-slate-300">{service.latency_ms}ms</strong></span>
+                <div className="pt-2 border-t border-[#D1D5DB] dark:border-slate-800 flex items-center justify-between text-[11px] text-[#475569] dark:text-slate-400 font-medium">
+                  <span>Latency: <strong className="text-[#0F172A] dark:text-slate-300">{service.latency_ms}ms</strong></span>
                   <span>Checked: Just now</span>
                 </div>
               </div>
@@ -303,20 +303,20 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentTab = 'AD
         </div>
       )}
 
-      {/* TAB 4: USERS & GOVERNMENT OFFICIAL MANAGEMENT (Section 28) */}
+      {/* TAB 4: USERS & GOVERNMENT OFFICIAL MANAGEMENT */}
       {activeTab === 'USERS' && (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-bold text-slate-900 dark:text-white font-heading uppercase tracking-wider">
+            <h3 className="text-sm font-bold text-[#0F172A] dark:text-white uppercase tracking-wider">
               User Directory & Official Account Approvals
             </h3>
-            <span className="text-xs text-slate-500">{usersList.length} Accounts Registered</span>
+            <span className="text-xs text-[#475569] dark:text-slate-400 font-medium">{usersList.length} Accounts Registered</span>
           </div>
 
-          <div className="overflow-x-auto bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs">
+          <div className="overflow-x-auto bg-[#FFFFFF] dark:bg-slate-900 rounded-lg border border-[#D1D5DB] dark:border-slate-800">
             <table className="w-full text-left text-xs">
               <thead>
-                <tr className="border-b border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 font-semibold bg-slate-50/60 dark:bg-slate-950/40">
+                <tr className="border-b border-[#D1D5DB] dark:border-slate-800 text-[#475569] dark:text-slate-400 font-semibold bg-[#F8F9FA] dark:bg-slate-950">
                   <th className="p-3.5">Name / Email</th>
                   <th className="p-3.5">Assigned Role</th>
                   <th className="p-3.5">Department & Title</th>
@@ -325,12 +325,12 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentTab = 'AD
                   <th className="p-3.5 text-right">Approval Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60">
+              <tbody className="divide-y divide-[#D1D5DB]/60 dark:divide-slate-800/80">
                 {usersList.map(u => (
-                  <tr key={u.id} className="hover:bg-slate-50 dark:hover:bg-slate-900/60 transition">
+                  <tr key={u.id} className="hover:bg-[#F8F9FA] dark:hover:bg-slate-800/40 transition">
                     <td className="p-3.5">
-                      <strong className="text-slate-900 dark:text-white block">{u.name}</strong>
-                      <span className="text-slate-500 dark:text-slate-400 text-[11px] font-mono">{u.email}</span>
+                      <strong className="text-[#0F172A] dark:text-white block font-semibold">{u.name}</strong>
+                      <span className="text-[#475569] dark:text-slate-400 text-[11px] font-medium">{u.email}</span>
                     </td>
                     <td className="p-3.5">
                       <span className={`text-[10px] font-bold px-2 py-0.5 rounded border uppercase ${
@@ -343,16 +343,16 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentTab = 'AD
                         {u.role.replace('_', ' ')}
                       </span>
                     </td>
-                    <td className="p-3.5 text-slate-700 dark:text-slate-300">
+                    <td className="p-3.5 text-[#0F172A] dark:text-slate-300 font-medium">
                       {u.department ? `${u.department} (${u.designation || 'Officer'})` : 'Citizen Account'}
                     </td>
                     <td className="p-3.5">
                       {u.official_status ? (
-                        <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded border uppercase ${
+                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded border uppercase ${
                           u.official_status === 'APPROVED'
                             ? 'bg-emerald-100 text-emerald-800 border-emerald-300 dark:bg-emerald-500/20 dark:text-emerald-300 dark:border-emerald-500/30'
                             : u.official_status === 'PENDING_APPROVAL'
-                            ? 'bg-amber-100 text-amber-800 border-amber-300 dark:bg-amber-500/20 dark:text-amber-300 dark:border-amber-500/30 animate-pulse'
+                            ? 'bg-amber-100 text-amber-800 border-amber-300 dark:bg-amber-500/20 dark:text-amber-300 dark:border-amber-500/30'
                             : 'bg-rose-100 text-rose-800 border-rose-300 dark:bg-rose-500/20 dark:text-rose-300 dark:border-rose-500/30'
                         }`}>
                           {u.official_status.replace('_', ' ')}
@@ -362,7 +362,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentTab = 'AD
                       )}
                     </td>
                     <td className="p-3.5">
-                      <span className={`text-[11px] font-medium ${u.notification_sms_enabled ? 'text-emerald-700 dark:text-emerald-400' : 'text-slate-400'}`}>
+                      <span className={`text-[11px] font-semibold ${u.notification_sms_enabled ? 'text-[#059669]' : 'text-slate-400'}`}>
                         {u.notification_sms_enabled ? 'Active' : 'Disabled'}
                       </span>
                     </td>
@@ -372,7 +372,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentTab = 'AD
                           {u.official_status !== 'APPROVED' && (
                             <button
                               onClick={() => handleUpdateApproval(u.id, 'APPROVED')}
-                              className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-[11px] font-bold transition flex items-center gap-1 shadow-xs"
+                              className="px-2.5 py-1 bg-[#059669] hover:bg-[#047857] text-white rounded-md text-[11px] font-semibold transition flex items-center gap-1 cursor-pointer"
                             >
                               <ShieldCheck className="w-3 h-3" /> Approve
                             </button>
@@ -380,7 +380,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentTab = 'AD
                           {u.official_status !== 'SUSPENDED' && (
                             <button
                               onClick={() => handleUpdateApproval(u.id, 'SUSPENDED')}
-                              className="px-2.5 py-1 bg-rose-600/90 hover:bg-rose-600 text-white rounded-lg text-[11px] font-bold transition flex items-center gap-1 shadow-xs"
+                              className="px-2.5 py-1 bg-[#DC2626] hover:bg-[#B91C1C] text-white rounded-md text-[11px] font-semibold transition flex items-center gap-1 cursor-pointer"
                             >
                               <Ban className="w-3 h-3" /> Suspend
                             </button>
@@ -396,15 +396,15 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentTab = 'AD
         </div>
       )}
 
-      {/* TAB 5: SECURITY AUDIT LOGS (Section 29) */}
+      {/* TAB 5: SECURITY AUDIT LOGS */}
       {activeTab === 'AUDIT_LOGS' && (
         <div className="space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white font-heading uppercase tracking-wider">
+              <h3 className="text-sm font-bold text-[#0F172A] dark:text-white uppercase tracking-wider">
                 Immutable Operational Event Logs
               </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
+              <p className="text-xs text-[#475569] dark:text-slate-400 font-medium">
                 Audited timeline of official mitigation postings, camp creations, and verification actions.
               </p>
             </div>
@@ -416,33 +416,33 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentTab = 'AD
                 placeholder="Filter audit logs..."
                 value={searchAudit}
                 onChange={(e) => setSearchAudit(e.target.value)}
-                className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-3 py-1.5 text-xs text-slate-800 dark:text-white placeholder-slate-400 focus:outline-none focus:border-[#0B3D91] shadow-xs"
+                className="w-full bg-[#FFFFFF] dark:bg-slate-900 border border-[#D1D5DB] dark:border-slate-800 rounded-md pl-9 pr-3 py-1.5 text-xs text-[#0F172A] dark:text-white placeholder-slate-400 focus:outline-none focus:border-[#D97706]"
               />
             </div>
           </div>
 
-          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs overflow-hidden divide-y divide-slate-100 dark:divide-slate-800/60">
+          <div className="bg-[#FFFFFF] dark:bg-slate-900 rounded-lg border border-[#D1D5DB] dark:border-slate-800 overflow-hidden divide-y divide-[#D1D5DB]/60 dark:divide-slate-800/80">
             {auditLogs
               .filter(l => !searchAudit.trim() || l.details.toLowerCase().includes(searchAudit.toLowerCase()) || l.action_type.toLowerCase().includes(searchAudit.toLowerCase()))
               .map(log => (
-                <div key={log.id} className="p-4 hover:bg-slate-50 dark:hover:bg-slate-900/40 transition flex items-start gap-3">
-                  <div className="p-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-xl border border-slate-200 dark:border-slate-700 shrink-0 font-mono text-[10px]">
+                <div key={log.id} className="p-4 hover:bg-[#F8F9FA] dark:hover:bg-slate-800/40 transition flex items-start gap-3">
+                  <div className="p-1.5 bg-[#F8F9FA] dark:bg-slate-800 text-[#0F172A] dark:text-slate-300 rounded border border-[#D1D5DB] dark:border-slate-700 shrink-0 text-[10px] font-semibold">
                     {log.target_type}
                   </div>
                   <div className="flex-1 space-y-1">
                     <div className="flex items-center justify-between gap-2">
-                      <strong className="text-xs font-bold text-slate-900 dark:text-white font-mono">
+                      <strong className="text-xs font-semibold text-[#0F172A] dark:text-white">
                         {log.action_type}
                       </strong>
-                      <span className="text-[11px] text-slate-400 dark:text-slate-500 font-mono">
+                      <span className="text-[11px] text-[#475569] dark:text-slate-400 font-medium">
                         {new Date(log.timestamp).toLocaleString()}
                       </span>
                     </div>
-                    <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                    <p className="text-xs text-[#475569] dark:text-slate-300 leading-normal">
                       {log.details}
                     </p>
-                    <div className="text-[10px] text-slate-500 flex items-center gap-2">
-                      <span>Actor: <strong className="text-slate-700 dark:text-slate-300">{log.actor_name}</strong> ({log.actor_role})</span>
+                    <div className="text-[10px] text-[#475569] dark:text-slate-400 flex items-center gap-2 font-medium">
+                      <span>Actor: <strong className="text-[#0F172A] dark:text-slate-300">{log.actor_name}</strong> ({log.actor_role})</span>
                       <span>• Target ID: #{log.target_id}</span>
                     </div>
                   </div>

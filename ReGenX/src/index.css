@@ -4,51 +4,56 @@
 
 @layer base {
   :root {
-    /* Light Mode Tokens (Default) */
-    --bg-app: #F5F7FA;
-    --bg-surface: #FFFFFF;
-    --bg-surface-alt: #F0F3F7;
-    --border: #E2E8F0;
-    --text-primary: #1A202C;
-    --text-secondary: #4A5568;
-    --text-muted: #94A3B8;
+    /* Global Visual Identity: Operational Telemetry & Live Signal System */
+    --bg-app: #F4F5F7;          /* Crisp Light Neutral Base */
+    --bg-surface: #FFFFFF;      /* Pure Crisp White Surface */
+    --bg-surface-alt: #F8F9FA;  /* Neutral Container Surface */
+    --border: #D1D5DB;          /* Crisp Slate Border */
+    --text-primary: #0F172A;    /* Deep Slate / Dark Charcoal */
+    --text-secondary: #475569;  /* Muted Slate */
+    --text-muted: #64748B;      /* Muted Subtitle */
 
-    /* Brand Tokens */
-    --brand-primary: #0B3D91;
-    --brand-primary-hover: #0A2F70;
-    --brand-accent: #F58220;
-    --brand-accent-hover: #DC721A;
-    --brand-success-tint: #1E8449;
-    --brand-info: #4A90D9;
+    /* Command & Live Operational Controls */
+    --brand-primary: #0F172A;        /* Deep Operations Charcoal */
+    --brand-primary-hover: #1E293B;  /* Dark Slate */
+    --brand-signal: #D97706;         /* Signal Amber / Gold */
+    --brand-signal-hover: #B45309;   /* Dark Signal Amber */
+    --brand-accent: #D97706;         /* High-Visibility Attention */
+    --brand-accent-hover: #B45309;
 
-    /* Backend Severity Tokens (Source of Truth) */
-    --color-low: #22C55E;
-    --color-moderate: #EAB308;
-    --color-high: #F97316;
-    --color-emergency: #EF4444;
+    /* Severity Escalation Tokens (WCAG Compliant) */
+    --color-low: #059669;        /* Forest Emerald (Safe / Normal) */
+    --color-moderate: #D97706;   /* Signal Amber (Developing / Attention) */
+    --color-high: #EA580C;       /* Alert Orange (High Threat) */
+    --color-emergency: #DC2626;  /* Operational Crimson (Immediate Evacuation) */
 
-    /* Typography */
-    --font-heading: 'Outfit', sans-serif;
-    --font-sans: 'Inter', sans-serif;
-    --font-mono: 'JetBrains Mono', monospace;
+    /* Typography: Universal System UI Stack */
+    --font-heading: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   }
 
   html.dark {
-    /* Dark Mode Tokens (Optional) */
-    --bg-app: #030712;
-    --bg-surface: #0f172a;
-    --bg-surface-alt: #1e293b;
-    --border: rgba(255, 255, 255, 0.1);
+    /* Dark Operations Telemetry Mode */
+    --bg-app: #090D12;
+    --bg-surface: #0F172A;
+    --bg-surface-alt: #1E293B;
+    --border: #334155;
     --text-primary: #F8FAFC;
-    --text-secondary: #CBD5E1;
+    --text-secondary: #94A3B8;
     --text-muted: #64748B;
 
-    --brand-primary: #3B82F6;
-    --brand-primary-hover: #2563EB;
-    --brand-accent: #F58220;
-    --brand-accent-hover: #EA580C;
-    --brand-success-tint: #10B981;
-    --brand-info: #60A5FA;
+    --brand-primary: #0F172A;
+    --brand-primary-hover: #1E293B;
+    --brand-signal: #D97706;
+    --brand-signal-hover: #F59E0B;
+    --brand-accent: #D97706;
+    --brand-accent-hover: #F59E0B;
+
+    --color-low: #10B981;
+    --color-moderate: #F59E0B;
+    --color-high: #F97316;
+    --color-emergency: #EF4444;
   }
 
   html, body {
@@ -58,11 +63,14 @@
     overflow: hidden;
   }
 
-  body {
+  body, input, button, select, textarea, table, th, td {
     font-family: var(--font-sans);
+  }
+
+  body {
     background-color: var(--bg-app);
     color: var(--text-primary);
-    transition: background-color 0.2s ease, color 0.2s ease;
+    transition: background-color 0.15s ease, color 0.15s ease;
   }
 
   #root {
@@ -74,10 +82,12 @@
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
+    font-weight: 600;
+    letter-spacing: -0.01em;
   }
 }
 
-/* Custom scrollbars */
+/* Custom Operational Scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -87,71 +97,33 @@
 }
 ::-webkit-scrollbar-thumb {
   background: #CBD5E1;
-  border-radius: 9999px;
+  border-radius: 4px;
 }
 html.dark ::-webkit-scrollbar-thumb {
-  background: #1f293d;
+  background: #334155;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94A3B8;
-}
-html.dark ::-webkit-scrollbar-thumb:hover {
-  background: #374151;
+  background: #D97706;
 }
 
-/* Glassmorphic & Surface Panels */
-.glass-panel {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+/* Operational Surface Panels & Standard Components */
+.op-card, .glass-panel, .glass-card, .glass-panel-elevated {
+  background-color: #FFFFFF;
   border: 1px solid #E2E8F0;
-  box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  box-shadow: 0 1px 2px 0 rgba(15, 23, 42, 0.03);
 }
-html.dark .glass-panel {
-  background: rgba(15, 23, 42, 0.85);
-  border-color: rgba(255, 255, 255, 0.08);
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
-}
-
-.glass-panel-elevated {
-  background: #FFFFFF;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid #CBD5E1;
-  box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-html.dark .glass-panel-elevated {
-  background: rgba(15, 23, 42, 0.95);
-  border-color: rgba(255, 255, 255, 0.12);
-  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
-}
-
-.glass-card {
-  background: #FFFFFF;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid #E2E8F0;
-  box-shadow: 0 2px 6px -1px rgba(0, 0, 0, 0.04);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.glass-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 16px -2px rgba(0, 0, 0, 0.08);
-}
-html.dark .glass-card {
-  background: rgba(15, 23, 42, 0.7);
-  border-color: rgba(255, 255, 255, 0.08);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
-html.dark .glass-card:hover {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+html.dark .op-card, html.dark .glass-panel, html.dark .glass-card, html.dark .glass-panel-elevated {
+  background-color: #0F172A;
+  border: 1px solid #1E293B;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
 }
 
 /* Animations */
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(4px);
+    transform: translateY(2px);
   }
   to {
     opacity: 1;
@@ -160,7 +132,7 @@ html.dark .glass-card:hover {
 }
 
 .animate-fade-in {
-  animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: fadeIn 0.15s ease-out forwards;
 }
 
 @keyframes ticker {
@@ -184,7 +156,7 @@ html.dark .glass-card:hover {
 
 /* Leaflet Map Light Mode & Dark Mode */
 .leaflet-container {
-  background-color: #e5e9f0 !important;
+  background-color: #e2e8f0 !important;
   font-family: var(--font-sans) !important;
   outline: none;
   width: 100% !important;
@@ -201,84 +173,84 @@ html.dark .leaflet-tile {
   filter: brightness(0.7) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3) brightness(0.7);
 }
 
-/* Leaflet Zoom Control Modern Cohesive Pill */
+/* Leaflet Zoom Control Operational Layout */
 .leaflet-control-zoom {
-  border: 1px solid #E2E8F0 !important;
-  border-radius: 12px !important;
-  box-shadow: 0 8px 20px -4px rgba(0, 0, 0, 0.12) !important;
+  border: 1px solid #D1D5DB !important;
+  border-radius: 8px !important;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.08) !important;
   overflow: hidden !important;
   background: #FFFFFF !important;
 }
 html.dark .leaflet-control-zoom {
-  border-color: rgba(255, 255, 255, 0.12) !important;
+  border-color: #334155 !important;
   background: #0f172a !important;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.6) !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4) !important;
 }
 
 .leaflet-control-zoom a {
   background-color: #FFFFFF !important;
-  color: #1A202C !important;
-  border-bottom: 1px solid #E2E8F0 !important;
+  color: #0F172A !important;
+  border-bottom: 1px solid #D1D5DB !important;
   width: 32px !important;
   height: 32px !important;
   line-height: 32px !important;
   font-size: 16px !important;
   font-weight: 700 !important;
-  transition: all 0.15s ease !important;
+  transition: background-color 0.15s ease !important;
 }
 html.dark .leaflet-control-zoom a {
   background-color: #0f172a !important;
   color: #F8FAFC !important;
-  border-bottom-color: rgba(255, 255, 255, 0.1) !important;
+  border-bottom-color: #334155 !important;
 }
 .leaflet-control-zoom a:last-child {
   border-bottom: none !important;
 }
 .leaflet-control-zoom a:hover {
   background-color: #F1F5F9 !important;
-  color: #0B3D91 !important;
+  color: #D97706 !important;
 }
 html.dark .leaflet-control-zoom a:hover {
   background-color: #1e293b !important;
-  color: #38bdf8 !important;
+  color: #F59E0B !important;
 }
 
-/* Hazard Outer Glow on Maps */
+/* Hazard Outer Ring Indicators on Maps */
 .hazard-glow-emergency {
-  filter: drop-shadow(0 0 10px rgba(239, 68, 68, 0.7));
+  outline: 2px solid #DC2626;
 }
 .hazard-glow-high {
-  filter: drop-shadow(0 0 7px rgba(249, 115, 22, 0.6));
+  outline: 2px solid #EA580C;
 }
 
 /* Leaflet Popups */
 .leaflet-popup-content-wrapper {
   background: #FFFFFF !important;
-  color: #1A202C !important;
-  border: 1px solid #CBD5E1 !important;
-  border-radius: 14px !important;
-  box-shadow: 0 16px 32px -6px rgba(0, 0, 0, 0.15) !important;
+  color: #0F172A !important;
+  border: 1px solid #D1D5DB !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.12) !important;
   padding: 0 !important;
 }
 html.dark .leaflet-popup-content-wrapper {
-  background: rgba(15, 23, 42, 0.95) !important;
+  background: #0f172a !important;
   color: #f1f5f9 !important;
-  border-color: rgba(255, 255, 255, 0.15) !important;
-  box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.7) !important;
+  border-color: #334155 !important;
+  box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.5) !important;
 }
 
 .leaflet-popup-content {
   margin: 12px 16px !important;
-  line-height: 1.5;
+  line-height: 1.4;
 }
 
 .leaflet-popup-tip {
   background: #FFFFFF !important;
-  border: 1px solid #CBD5E1 !important;
+  border: 1px solid #D1D5DB !important;
 }
 html.dark .leaflet-popup-tip {
-  background: rgba(15, 23, 42, 0.95) !important;
-  border-color: rgba(255, 255, 255, 0.15) !important;
+  background: #0f172a !important;
+  border-color: #334155 !important;
 }
 
 .leaflet-container a.leaflet-popup-close-button {
@@ -293,24 +265,4 @@ html.dark .leaflet-container a.leaflet-popup-close-button {
 }
 html.dark .leaflet-container a.leaflet-popup-close-button:hover {
   color: #ffffff !important;
-}
-
-/* Pulsing Leaflet Circle Marker */
-.pulse-circle {
-  animation: pulse-ring 2.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
-}
-
-@keyframes pulse-ring {
-  0% {
-    transform: scale(0.95);
-    opacity: 0.8;
-  }
-  50% {
-    transform: scale(1.05);
-    opacity: 0.4;
-  }
-  100% {
-    transform: scale(0.95);
-    opacity: 0.8;
-  }
 }

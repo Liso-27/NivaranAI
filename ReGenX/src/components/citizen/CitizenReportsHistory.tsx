@@ -52,14 +52,14 @@ export const CitizenReportsHistory: React.FC = () => {
       {/* Header */}
       <div>
         <div className="flex items-center gap-2">
-          <span className="p-2 bg-[#F58220] rounded-xl text-white">
+          <span className="p-2 bg-[#B86B52] rounded-xl text-white">
             <Radio className="w-5 h-5" />
           </span>
-          <h2 className="text-xl md:text-2xl font-black text-slate-900 dark:text-white font-heading">
+          <h2 className="text-xl md:text-2xl font-black text-[#2F3E46] dark:text-white font-heading">
             Citizen Ground Observations Feed
           </h2>
         </div>
-        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+        <p className="text-xs text-[#66736F] dark:text-slate-400 mt-1">
           Crowdsourced ground verifications with corroboration counters and official BMC review notes.
         </p>
       </div>
@@ -69,54 +69,54 @@ export const CitizenReportsHistory: React.FC = () => {
         {crowdReports.map(report => (
           <div
             key={report.id}
-            className="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4 hover:border-slate-300 dark:hover:border-slate-700 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"
+            className="bg-[#FFFDF9] dark:bg-slate-900 rounded-lg p-5 border border-[#D9D6CF] dark:border-slate-800 shadow-2xs space-y-4 hover:border-[#8A9A86] hover:shadow-md transition-all duration-200"
           >
             {/* Top Meta */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 dark:border-slate-800/80 pb-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#D9D6CF] dark:border-slate-800/80 pb-3">
               <div className="flex items-center gap-2">
-                <strong className="text-sm font-bold text-slate-900 dark:text-white font-heading">
+                <strong className="text-sm font-bold text-[#2F3E46] dark:text-white font-heading">
                   {report.ward_name} (Ward #{report.ward_id})
                 </strong>
                 {getVerificationBadge(report.verification_state)}
               </div>
 
-              <div className="flex items-center gap-3 text-slate-400 dark:text-slate-500 font-mono text-[11px]">
+              <div className="flex items-center gap-3 text-[#66736F] dark:text-slate-500 text-[11px]">
                 {report.landmark && <span>📍 {report.landmark}</span>}
                 <span>{new Date(report.timestamp).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' })}</span>
               </div>
             </div>
 
             {/* Observation Text */}
-            <p className="text-xs text-slate-700 dark:text-slate-300 italic bg-slate-50 dark:bg-slate-950 p-3 rounded-xl border border-slate-200 dark:border-slate-800/60 leading-relaxed">
+            <p className="text-xs text-[#2F3E46] dark:text-slate-300 italic bg-[#F9F7F3] dark:bg-slate-950 p-3 rounded-xl border border-[#D9D6CF] dark:border-slate-800/60 leading-relaxed">
               "{report.description}"
             </p>
 
             {/* Responses Grid (Section 9) */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
-              <div className="p-2 bg-slate-50 dark:bg-slate-950 rounded-lg border border-slate-200 dark:border-slate-800/80">
-                <span className="text-[10px] text-slate-500 block">Waterlogging Present</span>
-                <span className={`font-black ${report.waterlogging_present === 'YES' ? 'text-rose-600 dark:text-rose-400' : 'text-slate-700 dark:text-slate-300'}`}>
+              <div className="p-2 bg-[#F9F7F3] dark:bg-slate-950 rounded-lg border border-[#D9D6CF] dark:border-slate-800/80">
+                <span className="text-[10px] text-[#66736F] block">Waterlogging Present</span>
+                <span className={`font-black ${report.waterlogging_present === 'YES' ? 'text-[#C53030]' : 'text-[#2F3E46] dark:text-slate-300'}`}>
                   {report.waterlogging_present} {report.waterlogging_depth_cm ? `(${report.waterlogging_depth_cm}cm)` : ''}
                 </span>
               </div>
 
-              <div className="p-2 bg-slate-50 dark:bg-slate-950 rounded-lg border border-slate-200 dark:border-slate-800/80">
-                <span className="text-[10px] text-slate-500 block">Road Passable</span>
-                <span className={`font-black ${report.road_passable === 'NO' ? 'text-rose-600 dark:text-rose-400' : 'text-emerald-700 dark:text-emerald-400'}`}>
+              <div className="p-2 bg-[#F9F7F3] dark:bg-slate-950 rounded-lg border border-[#D9D6CF] dark:border-slate-800/80">
+                <span className="text-[10px] text-[#66736F] block">Road Passable</span>
+                <span className={`font-black ${report.road_passable === 'NO' ? 'text-[#C53030]' : 'text-[#4D8B63]'}`}>
                   {report.road_passable}
                 </span>
               </div>
 
-              <div className="p-2 bg-slate-50 dark:bg-slate-950 rounded-lg border border-slate-200 dark:border-slate-800/80">
-                <span className="text-[10px] text-slate-500 block">Power Outage</span>
-                <span className={`font-black ${report.power_outage === 'YES' ? 'text-amber-700 dark:text-amber-400' : 'text-slate-700 dark:text-slate-300'}`}>
+              <div className="p-2 bg-[#F9F7F3] dark:bg-slate-950 rounded-lg border border-[#D9D6CF] dark:border-slate-800/80">
+                <span className="text-[10px] text-[#66736F] block">Power Outage</span>
+                <span className={`font-black ${report.power_outage === 'YES' ? 'text-[#C68A27]' : 'text-[#2F3E46] dark:text-slate-300'}`}>
                   {report.power_outage}
                 </span>
               </div>
 
-              <div className="p-2 bg-slate-50 dark:bg-slate-950 rounded-lg border border-slate-200 dark:border-slate-800/80">
-                <span className="text-[10px] text-slate-500 block">Structural Damage</span>
-                <span className={`font-black ${report.structural_damage === 'YES' ? 'text-rose-600 dark:text-rose-400' : 'text-slate-700 dark:text-slate-300'}`}>
+              <div className="p-2 bg-[#F9F7F3] dark:bg-slate-950 rounded-lg border border-[#D9D6CF] dark:border-slate-800/80">
+                <span className="text-[10px] text-[#66736F] block">Structural Damage</span>
+                <span className={`font-black ${report.structural_damage === 'YES' ? 'text-[#C53030]' : 'text-[#2F3E46] dark:text-slate-300'}`}>
                   {report.structural_damage}
                 </span>
               </div>

@@ -13,17 +13,17 @@ export type SeverityLevel =
   | 'EMERGENCY';
 
 export const SEVERITY_COLORS: Record<SeverityLevel, string> = {
-  LOW: '#22C55E',
-  MODERATE: '#EAB308',
-  HIGH: '#F97316',
-  EMERGENCY: '#EF4444'
+  LOW: '#059669',
+  MODERATE: '#D97706',
+  HIGH: '#EA580C',
+  EMERGENCY: '#DC2626'
 };
 
 export const SEVERITY_BG_CLASSES: Record<SeverityLevel, string> = {
-  LOW: 'bg-emerald-100/80 text-emerald-800 border-emerald-300 dark:bg-emerald-500/20 dark:text-emerald-300 dark:border-emerald-500/40',
-  MODERATE: 'bg-amber-100/80 text-amber-900 border-amber-300 dark:bg-amber-500/20 dark:text-amber-300 dark:border-amber-500/40',
-  HIGH: 'bg-orange-100/80 text-orange-950 border-orange-300 dark:bg-orange-500/20 dark:text-orange-300 dark:border-orange-500/40',
-  EMERGENCY: 'bg-rose-100/90 text-rose-950 border-rose-300 dark:bg-rose-500/20 dark:text-rose-300 dark:border-rose-500/40'
+  LOW: 'bg-emerald-50 text-emerald-900 border-emerald-300 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-700/60',
+  MODERATE: 'bg-amber-50 text-amber-900 border-amber-300 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-700/60',
+  HIGH: 'bg-orange-50 text-orange-950 border-orange-300 dark:bg-orange-950/40 dark:text-orange-300 dark:border-orange-700/60',
+  EMERGENCY: 'bg-rose-50 text-rose-950 border-rose-300 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-700/60'
 };
 
 // Bhubaneswar Municipal Corporation (BMC) Ward
@@ -80,6 +80,7 @@ export type SafePlaceType =
   | 'police_station'
   | 'fire_station'
   | 'official_shelter'
+  | 'cyclone_shelter'
   | 'relief_centre'
   | 'government_camp'
   | 'temporary_camp';
@@ -180,15 +181,17 @@ export interface NewsArticle {
   title: string;
   overview?: string;
   summary?: string;
+  description?: string;
   hazard_type?: HazardType;
   locality: string;
   ward_id?: number;
   scope: NewsScope;
   source: string;
+  source_name?: string;
   url: string;
   image_url?: string;
   published_at: string;
-  is_ticker: boolean;
+  is_ticker?: boolean;
 }
 
 // Official Field Updates from government officials

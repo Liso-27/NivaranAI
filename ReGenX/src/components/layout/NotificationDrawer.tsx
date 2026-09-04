@@ -62,8 +62,8 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({ isOpen, 
               onClick={toggleSound}
               className={`p-1.5 rounded-lg border transition ${
                 soundEnabled 
-                  ? 'bg-blue-50 text-[#0B3D91] border-blue-200 dark:bg-sky-500/20 dark:text-sky-300 dark:border-sky-500/30' 
-                  : 'bg-slate-100 text-slate-400 border-slate-200 dark:bg-slate-800 dark:border-slate-700'
+                  ? 'bg-[#8A9A86]/10 text-[#8A9A86] border-[#8A9A86]/30 dark:bg-emerald-500/20 dark:text-emerald-300 dark:border-emerald-500/30' 
+                  : 'bg-[#F9F7F3] text-slate-400 border-[#D9D6CF] dark:bg-slate-800 dark:border-slate-700'
               }`}
               title={soundEnabled ? 'Alert audio sound enabled' : 'Alert audio sound muted'}
             >
@@ -139,24 +139,24 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({ isOpen, 
 
                   <div className="flex-1 space-y-1 pr-3">
                     <div className="flex items-center gap-2">
-                      <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded border uppercase ${SEVERITY_BG_CLASSES[notif.severity]}`}>
+                      <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded border uppercase ${SEVERITY_BG_CLASSES[notif.severity]}`}>
                         {notif.severity}
                       </span>
-                      <span className="text-[10px] text-slate-400 dark:text-slate-500 font-mono flex items-center gap-1">
+                      <span className="text-[10px] text-slate-500 font-medium flex items-center gap-1">
                         <Clock className="w-3 h-3" />
                         {new Date(notif.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </span>
                     </div>
 
-                    <h4 className="text-xs font-bold text-slate-900 dark:text-white font-heading">
+                    <h4 className="text-xs font-semibold text-slate-900 dark:text-white">
                       {notif.title}
                     </h4>
-                    <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                    <p className="text-xs text-slate-600 dark:text-slate-300 leading-normal">
                       {notif.message}
                     </p>
 
                     {notif.ward_name && (
-                      <div className="text-[10px] text-slate-500 dark:text-slate-400 pt-1">
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400 pt-1 font-medium">
                         📍 {notif.ward_name} (Ward #{notif.ward_id})
                       </div>
                     )}

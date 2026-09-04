@@ -227,16 +227,16 @@ export const DisasterMap: React.FC = () => {
             placeholder="Search 67 Wards (e.g. Kalinga Nagar, Baramunda)..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-700/80 rounded-2xl pl-10 pr-4 py-2.5 text-xs text-slate-800 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0B3D91]/30 focus:border-[#0B3D91] dark:focus:border-rose-500 shadow-lg transition-all"
+            className="w-full bg-[#FFFFFF]/95 dark:bg-slate-900/95 border border-[#D1D5DB] dark:border-slate-700/80 rounded-lg pl-10 pr-4 py-2.5 text-xs text-[#0F172A] dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#D97706]/30 focus:border-[#D97706] shadow-2xs transition-all"
           />
         </form>
 
         <button
           onClick={() => setShowLayerPanel(!showLayerPanel)}
-          className={`p-2.5 rounded-2xl border backdrop-blur-md transition-all duration-150 shadow-lg hover:scale-105 active:scale-95 cursor-pointer ${
+          className={`p-2.5 rounded-lg border transition-all duration-150 shadow-2xs hover:scale-105 active:scale-95 cursor-pointer ${
             showLayerPanel 
-              ? 'bg-[#0B3D91] text-white border-[#0B3D91] dark:bg-rose-600 dark:border-rose-500' 
-              : 'bg-white/95 dark:bg-slate-900/95 text-slate-700 dark:text-slate-300 border-slate-200/90 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800'
+              ? 'bg-[#0F172A] text-[#D97706] border-[#0F172A]' 
+              : 'bg-[#FFFFFF]/95 dark:bg-slate-900/95 text-[#0F172A] dark:text-slate-300 border-[#D1D5DB] dark:border-slate-700 hover:bg-[#F8F9FA]'
           }`}
           title="Toggle Layers & Filters"
         >
@@ -246,25 +246,23 @@ export const DisasterMap: React.FC = () => {
         <button
           onClick={centerOnUser}
           disabled={userLocation.isLoading}
-          className={`p-2.5 bg-white/95 dark:bg-slate-900/95 hover:bg-slate-50 dark:hover:bg-slate-800 border rounded-2xl backdrop-blur-md transition-all duration-150 shadow-lg hover:scale-105 active:scale-95 cursor-pointer ${
+          className={`p-2.5 bg-[#FFFFFF]/95 dark:bg-slate-900/95 hover:bg-[#F8F9FA] border rounded-lg transition-all duration-150 shadow-2xs hover:scale-105 active:scale-95 cursor-pointer ${
             userLocation.permissionGranted
-              ? 'text-blue-600 dark:text-cyan-400 border-blue-200 dark:border-cyan-500/40'
+              ? 'text-[#059669] border-[#059669]/40'
               : userLocation.permissionStatus === 'denied'
-              ? 'text-rose-500 border-rose-200 dark:border-rose-800/60'
-              : 'text-slate-700 dark:text-slate-300 border-slate-200/90 dark:border-slate-700'
+              ? 'text-[#DC2626] border-[#DC2626]/40'
+              : 'text-[#0F172A] dark:text-slate-300 border-[#D1D5DB] dark:border-slate-700'
           }`}
           title={
             userLocation.isLoading 
               ? 'Acquiring GPS location...' 
               : userLocation.permissionGranted 
               ? 'Center on My GPS Location' 
-              : userLocation.permissionStatus === 'denied'
-              ? 'Location Permission Denied'
-              : 'Locate My Position'
+              : 'Detect Location'
           }
         >
           {userLocation.isLoading ? (
-            <Loader2 className="w-4 h-4 animate-spin text-[#0B3D91] dark:text-cyan-400" />
+            <Loader2 className="w-4 h-4 animate-spin text-[#D97706]" />
           ) : (
             <Crosshair className="w-4 h-4" />
           )}
@@ -273,7 +271,7 @@ export const DisasterMap: React.FC = () => {
 
       {/* Geolocation Notice Banner */}
       {userLocation.error && (
-        <div className="absolute top-16 left-3 right-3 md:right-auto md:max-w-md z-30 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border border-rose-200 dark:border-rose-800/80 rounded-2xl p-3 shadow-xl animate-fade-in flex items-start gap-2.5 text-xs text-rose-800 dark:text-rose-200">
+        <div className="absolute top-16 left-3 right-3 md:right-auto md:max-w-md z-30 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border border-rose-200 dark:border-rose-800/80 rounded-lg p-3 shadow-xl animate-fade-in flex items-start gap-2.5 text-xs text-rose-800 dark:text-rose-200">
           <AlertCircle className="w-4 h-4 text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" />
           <div className="flex-1 space-y-1">
             <p className="font-bold">Device Geolocation Notice</p>
@@ -292,7 +290,7 @@ export const DisasterMap: React.FC = () => {
 
       {/* Layer Toggles & Filter Panel Popover */}
       {showLayerPanel && (
-        <div className="absolute top-14 left-3 z-30 w-72 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded-2xl p-4 border border-slate-200/90 dark:border-slate-700 shadow-2xl animate-fade-in text-xs space-y-3">
+        <div className="absolute top-14 left-3 z-30 w-72 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded-lg p-4 border border-slate-200/90 dark:border-slate-700 shadow-xl animate-fade-in text-xs space-y-3">
           <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2">
             <span className="font-bold text-slate-900 dark:text-white font-heading">Map Layers</span>
             <span className="text-[10px] text-slate-500 dark:text-slate-400">BMC Live Data</span>
@@ -404,7 +402,7 @@ export const DisasterMap: React.FC = () => {
       {/* Floating Interactive Map Legend (Collapsible) */}
       <div className="absolute bottom-5 left-3 z-30 flex flex-col items-start gap-1.5 pointer-events-auto">
         {showLegend && (
-          <div className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded-2xl p-3.5 border border-slate-200/90 dark:border-slate-700/80 shadow-2xl animate-fade-in text-[11px] space-y-2.5 max-w-xs w-64 mb-1 transition-all">
+          <div className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded-lg p-3.5 border border-slate-200/90 dark:border-slate-700/80 shadow-xl animate-fade-in text-[11px] space-y-2.5 max-w-xs w-64 mb-1 transition-all">
             <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-1.5">
               <span className="font-black text-slate-900 dark:text-white font-heading uppercase tracking-wider text-[10px] flex items-center gap-1.5">
                 <Info className="w-3.5 h-3.5 text-[#0B3D91] dark:text-[#F58220]" />

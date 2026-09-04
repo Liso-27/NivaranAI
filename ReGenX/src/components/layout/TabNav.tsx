@@ -54,8 +54,8 @@ export const TabNav: React.FC<TabNavProps> = ({ currentTab, onTabChange }) => {
     citizenTabs;
 
   return (
-    <nav className="bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 px-4 flex items-center overflow-x-auto select-none transition-colors duration-200 shrink-0 shadow-2xs">
-      <div className="max-w-7xl mx-auto flex items-center gap-1.5 w-full text-xs font-bold py-1">
+    <nav className="bg-[#0F172A] text-slate-300 border-b border-[#1E293B] px-4 flex items-center overflow-x-auto select-none shrink-0">
+      <div className="max-w-7xl mx-auto flex items-center gap-1 w-full text-xs py-1">
         {activeTabsList.map(tab => {
           const Icon = tab.icon;
           const isActive = currentTab === tab.id;
@@ -64,17 +64,17 @@ export const TabNav: React.FC<TabNavProps> = ({ currentTab, onTabChange }) => {
             <button
               key={tab.id}
               onClick={() => onTabChange(tab.id)}
-              className={`py-2 px-3.5 border-b-2 transition-all duration-200 flex items-center gap-2 whitespace-nowrap rounded-t-xl group cursor-pointer ${
+              className={`py-2 px-3 border-b-2 transition-all duration-150 flex items-center gap-2 whitespace-nowrap rounded-t font-semibold cursor-pointer focus:outline-none ${
                 isActive
                   ? role === 'GOVERNMENT_OFFICIAL'
-                    ? 'border-[#F58220] text-[#0B3D91] dark:text-amber-300 dark:border-amber-500 font-black bg-slate-100/80 dark:bg-slate-900/70 shadow-2xs'
+                    ? 'border-[#EA580C] text-white bg-[#1E293B]'
                     : role === 'SYSTEM_ADMIN'
-                    ? 'border-rose-600 text-rose-800 dark:text-rose-300 dark:border-rose-500 font-black bg-slate-100/80 dark:bg-slate-900/70 shadow-2xs'
-                    : 'border-[#0B3D91] text-[#0B3D91] dark:border-[#F58220] dark:text-white font-black bg-slate-100/80 dark:bg-slate-900/70 shadow-2xs'
-                  : 'border-transparent text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-900/40'
+                    ? 'border-[#DC2626] text-white bg-[#1E293B]'
+                    : 'border-[#D97706] text-white bg-[#1E293B]'
+                  : 'border-transparent text-slate-400 hover:text-slate-200 hover:bg-[#1E293B]/50'
               }`}
             >
-              <Icon className={`w-4 h-4 transition-transform duration-200 ${isActive ? 'scale-110 text-[#0B3D91] dark:text-[#F58220]' : 'text-slate-400 group-hover:scale-105 group-hover:text-slate-700 dark:group-hover:text-slate-200'}`} />
+              <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-[#D97706]' : 'text-slate-400'}`} />
               <span>{tab.label}</span>
             </button>
           );
@@ -82,5 +82,4 @@ export const TabNav: React.FC<TabNavProps> = ({ currentTab, onTabChange }) => {
       </div>
     </nav>
   );
-
 };

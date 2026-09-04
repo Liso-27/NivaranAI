@@ -37,18 +37,18 @@ export const ZonePreviewCard: React.FC<ZonePreviewCardProps> = ({
 
   return (
     <div className="absolute bottom-4 left-4 right-4 md:left-auto md:right-4 md:w-96 z-30 animate-fade-in">
-      <div className="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-3.5 relative transition-colors duration-200">
+      <div className="bg-white dark:bg-slate-900 rounded-lg p-5 border border-slate-200 dark:border-slate-800 shadow-xl space-y-3.5 relative transition-colors duration-200">
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-3.5 right-3.5 p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-700 dark:hover:text-white transition cursor-pointer"
+          className="absolute top-3.5 right-3.5 p-1.5 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-700 dark:hover:text-white transition cursor-pointer"
         >
           <X className="w-4 h-4" />
         </button>
 
         {/* Top Header & Severity */}
         <div className="flex items-start gap-3 pr-6">
-          <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shrink-0">
+          <div className="p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shrink-0">
             {getHazardIcon(zone.hazard_type)}
           </div>
           <div>
@@ -56,7 +56,7 @@ export const ZonePreviewCard: React.FC<ZonePreviewCardProps> = ({
               <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded border uppercase tracking-wider ${SEVERITY_BG_CLASSES[zone.severity]}`}>
                 {zone.severity}
               </span>
-              <span className="text-[11px] text-slate-500 dark:text-slate-400 font-mono">
+              <span className="text-[11px] text-slate-500 dark:text-slate-400">
                 Ward #{zone.ward_id}
               </span>
             </div>
@@ -112,7 +112,7 @@ export const ZonePreviewCard: React.FC<ZonePreviewCardProps> = ({
         {/* Action Button */}
         <button
           onClick={onViewMoreDetails}
-          className="w-full py-2.5 bg-[#0B3D91] hover:bg-[#0A2F70] text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-md cursor-pointer active:scale-98"
+          className="w-full py-2.5 bg-[#8A9A86] hover:bg-[#778873] text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer active:scale-98"
         >
           <span>VIEW FULL ASSESSMENT & SHELTERS</span>
           <ArrowRight className="w-3.5 h-3.5" />

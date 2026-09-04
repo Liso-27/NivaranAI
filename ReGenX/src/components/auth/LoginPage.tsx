@@ -304,25 +304,27 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#F5F7FA] dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col justify-between font-sans selection:bg-[#F58220] selection:text-white transition-colors duration-200 overflow-y-auto">
+    <div className="min-h-screen w-full bg-[#F4F5F7] dark:bg-slate-950 text-[#0F172A] dark:text-slate-100 flex flex-col justify-between transition-colors duration-200 overflow-y-auto">
       {/* Top Floating Branding Bar */}
-      <header className="w-full border-b border-slate-200/80 dark:border-slate-800/80 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md sticky top-0 z-30 px-4 py-3 shadow-xs">
+      <header className="w-full border-b border-[#D1D5DB] dark:border-slate-800 bg-[#FFFFFF] dark:bg-slate-950 sticky top-0 z-30 px-4 py-3">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-gradient-to-tr from-[#0B3D91] to-[#1e58b8] dark:from-rose-600 dark:to-[#F58220] rounded-xl text-white shadow-md shadow-[#0B3D91]/20 dark:shadow-rose-600/30 ring-1 ring-white/20">
-              <Shield className="w-5 h-5" />
-            </div>
+            <img 
+              src="/nivaran-logo.png" 
+              alt="NivaranAI Logo" 
+              className="w-9 h-9 object-contain rounded-full bg-white p-0.5 shadow-xs shrink-0" 
+            />
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-xl font-black font-heading tracking-tight text-slate-900 dark:text-white">
-                  Nivaran<span className="text-[#F58220]">AI</span>
+                <span className="text-lg font-bold tracking-tight text-[#0F172A] dark:text-white">
+                  Nivaran<span className="text-[#D97706]">AI</span>
                 </span>
-                <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300">
-                  <Radio className="w-2.5 h-2.5 text-emerald-500 animate-pulse" />
+                <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded bg-[#F8F9FA] dark:bg-slate-900 border border-[#D1D5DB] dark:border-slate-800 text-[#0F172A] dark:text-slate-300">
+                  <Radio className="w-2.5 h-2.5 text-emerald-500" />
                   BMC Risk Grid Active
                 </span>
               </div>
-              <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium hidden md:block">
+              <p className="text-[11px] text-[#475569] dark:text-slate-400 font-medium hidden md:block">
                 Bhubaneswar Municipal Corporation • Disaster Management Authority
               </p>
             </div>
@@ -331,12 +333,12 @@ export const LoginPage: React.FC = () => {
           <div className="flex items-center gap-2">
             <button
               onClick={toggleTheme}
-              className="p-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-900 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 rounded-xl transition duration-150 shadow-2xs hover:scale-105 active:scale-95 cursor-pointer"
+              className="p-2 bg-[#F8F9FA] hover:bg-[#E2E8F0] dark:bg-slate-900 dark:hover:bg-slate-800 text-[#0F172A] dark:text-slate-300 border border-[#D1D5DB] dark:border-slate-800 rounded-lg transition duration-150 cursor-pointer"
               title={theme === 'light' ? 'Switch to Dark Theme' : 'Switch to Light Theme'}
               aria-label="Toggle Theme"
             >
               {theme === 'light' ? (
-                <Moon className="w-4 h-4 text-slate-700" />
+                <Moon className="w-4 h-4 text-[#0F172A]" />
               ) : (
                 <Sun className="w-4 h-4 text-amber-400" />
               )}
@@ -348,51 +350,48 @@ export const LoginPage: React.FC = () => {
       {/* Main Authentication Container */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 py-8 lg:py-12 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
         {/* Left Column: Hero & Emergency System Overview */}
-        <div className="lg:col-span-5 space-y-6">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800/80 text-xs font-bold text-[#0B3D91] dark:text-blue-400 shadow-2xs">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-600"></span>
-            </span>
-            Official Emergency Management Platform
+        <div className="lg:col-span-5 space-y-5">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded bg-[#059669]/10 border border-[#059669]/30 text-xs font-semibold text-[#059669] dark:text-emerald-400">
+            <span className="h-2 w-2 rounded-full bg-[#059669]" />
+            Official Emergency Management Portal
           </div>
 
-          <div className="space-y-3">
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black font-heading text-slate-900 dark:text-white tracking-tight leading-tight">
-              Nivaran <span className="text-[#0B3D91] dark:text-[#F58220]">AI</span>
+          <div className="space-y-2">
+            <h1 className="text-2xl sm:text-3xl font-bold text-[#0F172A] dark:text-white tracking-tight leading-tight">
+              Nivaran <span className="text-[#D97706]">AI</span>
             </h1>
-            <p className="text-base sm:text-lg font-medium text-slate-600 dark:text-slate-300 leading-relaxed">
-              "Intelligent Hazard Detection. Actionable Alerts. Safer Communities."
+            <p className="text-sm font-semibold text-[#475569] dark:text-slate-300 leading-normal">
+              Bhubaneswar Municipal Corporation Disaster Risk Telemetry & Public Safety Platform
             </p>
           </div>
 
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-            Real-time geospatial intelligence, multi-ward hydrological risk scoring, crowd-sourced incident corroboration, and rapid relief coordination across Bhubaneswar.
+          <p className="text-xs text-[#475569] dark:text-slate-400 leading-normal">
+            Real-time geospatial intelligence, 67-ward risk engine scoring, verified citizen report triage, and emergency relief camp routing across Bhubaneswar.
           </p>
 
           {/* Quick Metrics Cards */}
-          <div className="grid grid-cols-3 gap-3 pt-2">
-            <div className="p-3 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs">
-              <div className="text-lg font-black text-[#0B3D91] dark:text-blue-400 font-heading">67</div>
-              <div className="text-[11px] font-medium text-slate-500 dark:text-slate-400">BMC Wards</div>
+          <div className="grid grid-cols-3 gap-3 pt-1">
+            <div className="p-3 bg-[#FFFFFF] dark:bg-slate-900 rounded-lg border border-[#D1D5DB] dark:border-slate-800">
+              <div className="text-lg font-bold text-[#0F172A] dark:text-white">67</div>
+              <div className="text-[11px] font-medium text-[#475569] dark:text-slate-400">BMC Wards</div>
             </div>
-            <div className="p-3 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs">
-              <div className="text-lg font-black text-[#F58220] font-heading">20 min</div>
-              <div className="text-[11px] font-medium text-slate-500 dark:text-slate-400">Sync Cycle</div>
+            <div className="p-3 bg-[#FFFFFF] dark:bg-slate-900 rounded-lg border border-[#D1D5DB] dark:border-slate-800">
+              <div className="text-lg font-bold text-[#D97706]">20 min</div>
+              <div className="text-[11px] font-medium text-[#475569] dark:text-slate-400">Sync Cycle</div>
             </div>
-            <div className="p-3 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs">
-              <div className="text-lg font-black text-emerald-600 dark:text-emerald-400 font-heading">100%</div>
-              <div className="text-[11px] font-medium text-slate-500 dark:text-slate-400">Verified Camps</div>
+            <div className="p-3 bg-[#FFFFFF] dark:bg-slate-900 rounded-lg border border-[#D1D5DB] dark:border-slate-800">
+              <div className="text-lg font-bold text-[#059669]">100%</div>
+              <div className="text-[11px] font-medium text-[#475569] dark:text-slate-400">Verified Camps</div>
             </div>
           </div>
 
           {/* Security & Regulatory Footnote */}
-          <div className="p-3.5 bg-slate-100 dark:bg-slate-900/60 rounded-xl border border-slate-200 dark:border-slate-800/80 flex items-center gap-3 text-xs text-slate-600 dark:text-slate-400">
-            <div className="p-1.5 bg-[#0B3D91]/10 dark:bg-blue-500/10 text-[#0B3D91] dark:text-blue-400 rounded-lg shrink-0">
+          <div className="p-3 bg-[#FFFFFF] dark:bg-slate-900 rounded-lg border border-[#D1D5DB] dark:border-slate-800 flex items-center gap-3 text-xs text-[#475569] dark:text-slate-400">
+            <div className="p-1.5 bg-[#D97706]/10 text-[#D97706] rounded shrink-0">
               <Lock className="w-4 h-4" />
             </div>
-            <span>
-              End-to-end encrypted incident reporting & role-authorized emergency dispatch gateway.
+            <span className="font-medium">
+              Encrypted incident reporting & role-authorized emergency dispatch portal.
             </span>
           </div>
         </div>
@@ -403,17 +402,17 @@ export const LoginPage: React.FC = () => {
           {/* STEP 1: ROLE GATE ("Are you a System Admin?") */}
           {/* ========================================================================= */}
           {authStep === 'ROLE_GATE' && (
-            <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800/80 shadow-2xl p-6 sm:p-8 space-y-6 transition-all duration-200">
+            <div className="bg-[#FFFDF9] dark:bg-slate-900 rounded-lg border border-[#D9D6CF] dark:border-slate-800/80 shadow-xl p-6 sm:p-8 space-y-6 transition-all duration-200">
               {/* Header / Welcome Prompt */}
               <div className="space-y-2">
-                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-[11px] font-bold text-slate-600 dark:text-slate-400">
-                  <Shield className="w-3.5 h-3.5 text-[#0B3D91] dark:text-[#F58220]" />
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#F9F7F3] dark:bg-slate-800 text-[11px] font-bold text-[#66736F] dark:text-slate-400">
+                  <Shield className="w-3.5 h-3.5 text-[#8A9A86] dark:text-[#B86B52]" />
                   <span>Identity & Access Gateway</span>
                 </div>
-                <h2 className="text-2xl sm:text-3xl font-black font-heading text-slate-900 dark:text-white">
+                <h2 className="text-2xl sm:text-3xl font-black font-heading text-[#2F3E46] dark:text-white">
                   Are you a System Admin?
                 </h2>
-                <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium">
+                <p className="text-xs sm:text-sm text-[#66736F] dark:text-slate-400 font-medium">
                   Please select your role category to proceed with authentication.
                 </p>
               </div>
@@ -430,27 +429,27 @@ export const LoginPage: React.FC = () => {
                     setSuccessMessage(null);
                     setAuthStep('ADMIN_LOGIN');
                   }}
-                  className="w-full text-left p-4.5 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 hover:bg-rose-50/70 dark:bg-slate-950/60 dark:hover:bg-rose-950/30 hover:border-rose-500 dark:hover:border-rose-500/80 hover:ring-2 hover:ring-rose-500/20 transition-all duration-200 cursor-pointer flex items-center justify-between group shadow-xs hover:shadow-md"
+                  className="w-full text-left p-4.5 sm:p-5 rounded-lg border border-[#D9D6CF] dark:border-slate-800 bg-[#F9F7F3] hover:bg-[#C53030]/10 dark:bg-slate-950/60 dark:hover:bg-rose-950/30 hover:border-[#C53030] dark:hover:border-rose-500/80 hover:ring-2 hover:ring-[#C53030]/20 transition-all duration-200 cursor-pointer flex items-center justify-between group shadow-2xs hover:shadow-md"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-rose-100 dark:bg-rose-900/40 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-200 shadow-xs">
+                    <div className="w-12 h-12 rounded-xl bg-[#C53030]/10 text-[#C53030] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-200 shadow-2xs">
                       <Lock className="w-6 h-6" />
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
-                        <h3 className="text-base font-black font-heading text-slate-900 dark:text-white group-hover:text-rose-600 dark:group-hover:text-rose-400 transition-colors">
+                        <h3 className="text-base font-black font-heading text-[#2F3E46] dark:text-white group-hover:text-[#C53030] transition-colors">
                           Yes, I'm a System Admin
                         </h3>
-                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-rose-100 dark:bg-rose-900/60 text-rose-700 dark:text-rose-300">
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-[#C53030]/10 text-[#C53030]">
                           Restricted
                         </span>
                       </div>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                      <p className="text-xs text-[#66736F] dark:text-slate-400 mt-1">
                         BMC IT Operations Hub, cron telemetry, API health matrix & server controls.
                       </p>
                     </div>
                   </div>
-                  <div className="p-2 rounded-xl bg-slate-200/60 dark:bg-slate-800 text-slate-400 group-hover:bg-rose-600 group-hover:text-white transition-all duration-200 shrink-0 ml-2">
+                  <div className="p-2 rounded-xl bg-[#D9D6CF]/60 dark:bg-slate-800 text-[#66736F] group-hover:bg-[#C53030] group-hover:text-white transition-all duration-200 shrink-0 ml-2">
                     <ChevronRight className="w-4 h-4" />
                   </div>
                 </button>
@@ -465,34 +464,34 @@ export const LoginPage: React.FC = () => {
                     setSuccessMessage(null);
                     setAuthStep('NON_ADMIN_SELECTION');
                   }}
-                  className="w-full text-left p-4.5 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 hover:bg-blue-50/70 dark:bg-slate-950/60 dark:hover:bg-blue-950/30 hover:border-[#0B3D91] dark:hover:border-blue-500/80 hover:ring-2 hover:ring-blue-500/20 transition-all duration-200 cursor-pointer flex items-center justify-between group shadow-xs hover:shadow-md"
+                  className="w-full text-left p-4.5 sm:p-5 rounded-lg border border-[#D9D6CF] dark:border-slate-800 bg-[#F9F7F3] hover:bg-[#8A9A86]/10 dark:bg-slate-950/60 dark:hover:bg-emerald-950/30 hover:border-[#8A9A86] dark:hover:border-emerald-500/80 hover:ring-2 hover:ring-[#8A9A86]/20 transition-all duration-200 cursor-pointer flex items-center justify-between group shadow-2xs hover:shadow-md"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-900/40 text-[#0B3D91] dark:text-blue-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-200 shadow-xs">
+                    <div className="w-12 h-12 rounded-xl bg-[#8A9A86]/10 text-[#8A9A86] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-200 shadow-2xs">
                       <Users className="w-6 h-6" />
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
-                        <h3 className="text-base font-black font-heading text-slate-900 dark:text-white group-hover:text-[#0B3D91] dark:group-hover:text-blue-400 transition-colors">
+                        <h3 className="text-base font-black font-heading text-[#2F3E46] dark:text-white group-hover:text-[#8A9A86] transition-colors">
                           No, I'm not a System Admin
                         </h3>
-                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-blue-100 dark:bg-blue-900/60 text-[#0B3D91] dark:text-blue-300">
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-[#8A9A86]/10 text-[#8A9A86]">
                           Citizens & Officials
                         </span>
                       </div>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                      <p className="text-xs text-[#66736F] dark:text-slate-400 mt-1">
                         Public citizens, emergency volunteers, ward officers & BMC command staff.
                       </p>
                     </div>
                   </div>
-                  <div className="p-2 rounded-xl bg-slate-200/60 dark:bg-slate-800 text-slate-400 group-hover:bg-[#0B3D91] group-hover:text-white transition-all duration-200 shrink-0 ml-2">
+                  <div className="p-2 rounded-xl bg-[#D9D6CF]/60 dark:bg-slate-800 text-[#66736F] group-hover:bg-[#8A9A86] group-hover:text-white transition-all duration-200 shrink-0 ml-2">
                     <ChevronRight className="w-4 h-4" />
                   </div>
                 </button>
               </div>
 
               {/* Security Note */}
-              <div className="p-3.5 bg-slate-50 dark:bg-slate-950/60 rounded-2xl border border-slate-200/80 dark:border-slate-800 flex items-center gap-2.5 text-xs text-slate-500 dark:text-slate-400">
+              <div className="p-3.5 bg-slate-50 dark:bg-slate-950/60 rounded-lg border border-slate-200/80 dark:border-slate-800 flex items-center gap-2.5 text-xs text-slate-500 dark:text-slate-400">
                 <Info className="w-4 h-4 text-slate-400 shrink-0" />
                 <span>Role selection directs you to the appropriate verification protocol.</span>
               </div>
@@ -503,7 +502,7 @@ export const LoginPage: React.FC = () => {
           {/* STEP 2A: SYSTEM ADMIN LOGIN FLOW */}
           {/* ========================================================================= */}
           {authStep === 'ADMIN_LOGIN' && (
-            <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800/80 shadow-2xl p-6 sm:p-8 space-y-6 transition-all duration-200">
+            <div className="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800/80 shadow-xl p-6 sm:p-8 space-y-6 transition-all duration-200">
               {/* Back button + Header */}
               <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
                 <button
@@ -590,7 +589,7 @@ export const LoginPage: React.FC = () => {
                           value={adminEmail}
                           onChange={(e) => setAdminEmail(e.target.value)}
                           placeholder="admin.disaster@bmc.gov.in"
-                          className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-900 dark:text-white font-mono focus:outline-none focus:border-rose-600"
+                          className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-rose-600"
                         />
                       </div>
                     </div>
@@ -616,7 +615,7 @@ export const LoginPage: React.FC = () => {
                           value={adminPassword}
                           onChange={(e) => setAdminPassword(e.target.value)}
                           placeholder="••••••••••••"
-                          className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-9 py-2 text-xs text-slate-900 dark:text-white font-mono focus:outline-none focus:border-rose-600"
+                          className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-9 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-rose-600"
                         />
                         <button
                           type="button"
@@ -625,6 +624,28 @@ export const LoginPage: React.FC = () => {
                         >
                           {showAdminPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                         </button>
+                      </div>
+                    </div>
+
+                    {/* System Admin Preset */}
+                    <div className="pt-2">
+                      <div className="p-3 bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-800/60 rounded-xl space-y-1.5 text-xs text-rose-900 dark:text-rose-200">
+                        <div className="flex items-center justify-between font-bold">
+                          <span>System Admin Quick Access:</span>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setAdminEmail('api_admin@apadasathi.gov.in');
+                              setAdminPassword('AdminPassword123!');
+                            }}
+                            className="text-[11px] underline hover:text-rose-700 dark:hover:text-rose-300 cursor-pointer font-bold"
+                          >
+                            Fill your credentials
+                          </button>
+                        </div>
+                        <p className="text-[11px] text-rose-700 dark:text-rose-300">
+                          Use saved credentials for quick System Administrator authentication
+                        </p>
                       </div>
                     </div>
 
@@ -651,8 +672,8 @@ export const LoginPage: React.FC = () => {
 
                 {/* SIGN UP TAB: Restricted Administrator Notice */}
                 {authTab === 'SIGN_UP' && (
-                  <div className="space-y-3 text-center p-5 bg-rose-50/60 dark:bg-rose-950/20 border border-rose-200 dark:border-rose-800/60 rounded-2xl">
-                    <div className="w-12 h-12 mx-auto bg-rose-100 dark:bg-rose-900/40 text-rose-700 dark:text-rose-400 rounded-2xl flex items-center justify-center">
+                  <div className="space-y-3 text-center p-5 bg-rose-50/60 dark:bg-rose-950/20 border border-rose-200 dark:border-rose-800/60 rounded-xl">
+                    <div className="w-12 h-12 mx-auto bg-rose-100 dark:bg-rose-900/40 text-rose-700 dark:text-rose-400 rounded-xl flex items-center justify-center">
                       <Lock className="w-6 h-6" />
                     </div>
                     <h4 className="text-sm font-black font-heading text-rose-800 dark:text-rose-300">
@@ -661,7 +682,7 @@ export const LoginPage: React.FC = () => {
                     <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
                       System Administrator credentials cannot be registered through public forms. Access is provisioned and audited directly by the IT Division of the State Disaster Management Authority.
                     </p>
-                    <div className="pt-2 text-[11px] font-mono text-slate-500 dark:text-slate-400">
+                    <div className="pt-2 text-[11px] text-slate-500 dark:text-slate-400">
                       Support Contact: sysadmin.disaster@bmc.gov.in
                     </div>
                   </div>
@@ -674,7 +695,7 @@ export const LoginPage: React.FC = () => {
           {/* STEP 2: NON-SYSTEM-ADMIN ROLE SELECTION (Citizen vs Government Official) */}
           {/* ========================================================================= */}
           {authStep === 'NON_ADMIN_SELECTION' && (
-            <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800/80 shadow-2xl p-6 sm:p-8 space-y-6 transition-all duration-200">
+            <div className="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800/80 shadow-xl p-6 sm:p-8 space-y-6 transition-all duration-200">
               {/* Back button + Header */}
               <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
                 <button
@@ -715,7 +736,7 @@ export const LoginPage: React.FC = () => {
                     setSuccessMessage(null);
                     setAuthStep('CITIZEN_AUTH');
                   }}
-                  className="text-left p-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 hover:bg-emerald-50/70 dark:bg-slate-950/60 dark:hover:bg-emerald-950/30 hover:border-emerald-500 dark:hover:border-emerald-500/80 hover:ring-2 hover:ring-emerald-500/20 transition-all duration-200 cursor-pointer flex flex-col justify-between group shadow-xs hover:shadow-md"
+                  className="text-left p-5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 hover:bg-emerald-50/70 dark:bg-slate-950/60 dark:hover:bg-emerald-950/30 hover:border-emerald-500 dark:hover:border-emerald-500/80 hover:ring-2 hover:ring-emerald-500/20 transition-all duration-200 cursor-pointer flex flex-col justify-between group shadow-xs hover:shadow-md"
                 >
                   <div>
                     <div className="w-11 h-11 rounded-xl bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-3.5 group-hover:scale-105 transition-transform shadow-xs">
@@ -748,7 +769,7 @@ export const LoginPage: React.FC = () => {
                     setSuccessMessage(null);
                     setAuthStep('GOV_LOGIN');
                   }}
-                  className="text-left p-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 hover:bg-amber-50/70 dark:bg-slate-950/60 dark:hover:bg-amber-950/30 hover:border-[#F58220] dark:hover:border-[#F58220]/80 hover:ring-2 hover:ring-[#F58220]/20 transition-all duration-200 cursor-pointer flex flex-col justify-between group shadow-xs hover:shadow-md"
+                  className="text-left p-5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 hover:bg-amber-50/70 dark:bg-slate-950/60 dark:hover:bg-amber-950/30 hover:border-[#F58220] dark:hover:border-[#F58220]/80 hover:ring-2 hover:ring-[#F58220]/20 transition-all duration-200 cursor-pointer flex flex-col justify-between group shadow-xs hover:shadow-md"
                 >
                   <div>
                     <div className="w-11 h-11 rounded-xl bg-amber-100 dark:bg-amber-900/40 text-[#F58220] flex items-center justify-center mb-3.5 group-hover:scale-105 transition-transform shadow-xs">
@@ -774,7 +795,7 @@ export const LoginPage: React.FC = () => {
               </div>
 
               {/* Security Footnote */}
-              <div className="p-3.5 bg-slate-50 dark:bg-slate-950/60 rounded-2xl border border-slate-200/80 dark:border-slate-800 flex items-center gap-2.5 text-xs text-slate-500 dark:text-slate-400">
+              <div className="p-3.5 bg-slate-50 dark:bg-slate-950/60 rounded-lg border border-slate-200/80 dark:border-slate-800 flex items-center gap-2.5 text-xs text-slate-500 dark:text-slate-400">
                 <Info className="w-4 h-4 text-slate-400 shrink-0" />
                 <span>Role selection directs you to the appropriate verification protocol.</span>
               </div>
@@ -785,7 +806,7 @@ export const LoginPage: React.FC = () => {
           {/* STEP 3A: CITIZEN AUTHENTICATION FLOW */}
           {/* ========================================================================= */}
           {authStep === 'CITIZEN_AUTH' && (
-            <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800/80 shadow-2xl p-6 sm:p-8 space-y-6 transition-all duration-200">
+            <div className="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800/80 shadow-xl p-6 sm:p-8 space-y-6 transition-all duration-200">
               {/* Back button + Header */}
               <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
                 <button
@@ -875,8 +896,8 @@ export const LoginPage: React.FC = () => {
                             required
                             value={citizenEmail}
                             onChange={(e) => setCitizenEmail(e.target.value)}
-                            placeholder="riya.patnaik@example.com"
-                            className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-3 py-2.5 text-xs text-slate-900 dark:text-white font-mono focus:outline-none focus:border-emerald-600 dark:focus:border-emerald-500 transition"
+                            placeholder="citizen@example.com"
+                            className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-3 py-2.5 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-emerald-600 dark:focus:border-emerald-500 transition"
                           />
                         </div>
                       </div>
@@ -886,6 +907,12 @@ export const LoginPage: React.FC = () => {
                           <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
                             Password
                           </label>
+                          <a
+                            href="/forgot-password"
+                            className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 hover:underline cursor-pointer"
+                          >
+                            Forgot Password?
+                          </a>
                         </div>
                         <div className="relative">
                           <KeyRound className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-3" />
@@ -895,7 +922,7 @@ export const LoginPage: React.FC = () => {
                             value={citizenPassword}
                             onChange={(e) => setCitizenPassword(e.target.value)}
                             placeholder="••••••••••••"
-                            className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-9 py-2.5 text-xs text-slate-900 dark:text-white font-mono focus:outline-none focus:border-emerald-600 dark:focus:border-emerald-500 transition"
+                            className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-9 py-2.5 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-emerald-600 dark:focus:border-emerald-500 transition"
                           />
                           <button
                             type="button"
@@ -919,11 +946,11 @@ export const LoginPage: React.FC = () => {
                             }}
                             className="text-[11px] underline hover:text-emerald-700 dark:hover:text-emerald-300 cursor-pointer font-bold"
                           >
-                            Fill Riya Patnaik
+                            Fill your credentials
                           </button>
                         </div>
                         <div className="p-3 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/60 rounded-xl text-[11px] text-emerald-800 dark:text-emerald-300">
-                          Account: riya.patnaik@example.com
+                          Use saved credentials for quick Citizen authentication
                         </div>
                       </div>
 
@@ -1023,7 +1050,7 @@ export const LoginPage: React.FC = () => {
                         <div className="relative flex items-center">
                           <span className="absolute left-3 text-xs font-bold text-slate-500 dark:text-slate-400 select-none">+91</span>
                           <span className="absolute left-10 text-slate-300 dark:text-slate-700 select-none">|</span>
-                          <input type="tel" value={phoneNumber} onChange={handlePhoneChange} placeholder="98765 43210" className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl pl-13 pr-3 py-2 text-xs text-slate-900 dark:text-white font-mono focus:outline-none focus:border-emerald-600 transition" />
+                          <input type="tel" value={phoneNumber} onChange={handlePhoneChange} placeholder="98765 43210" className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl pl-13 pr-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-emerald-600 transition" />
                         </div>
                       </div>
 
@@ -1061,7 +1088,7 @@ export const LoginPage: React.FC = () => {
                               value={phoneNumber}
                               onChange={handlePhoneChange}
                               placeholder="98765 43210"
-                              className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl pl-13 pr-3 py-2.5 text-sm text-slate-900 dark:text-white font-mono focus:outline-none focus:border-emerald-600 dark:focus:border-emerald-500 transition"
+                              className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl pl-13 pr-3 py-2.5 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-emerald-600 dark:focus:border-emerald-500 transition"
                             />
                           </div>
                         </div>
@@ -1129,7 +1156,7 @@ export const LoginPage: React.FC = () => {
                           <p className="text-xs font-bold text-slate-700 dark:text-slate-300">
                             Enter the OTP sent to your phone
                           </p>
-                          <p className="text-[11px] text-slate-500 dark:text-slate-400 font-mono">
+                          <p className="text-[11px] text-slate-500 dark:text-slate-400">
                             +91 {phoneNumber}
                           </p>
                         </div>
@@ -1146,7 +1173,7 @@ export const LoginPage: React.FC = () => {
                               value={digit}
                               onChange={(e) => handleOtpDigitChange(idx, e.target.value)}
                               onKeyDown={(e) => handleOtpKeyDown(idx, e)}
-                              className="w-10 h-12 text-center text-lg font-mono font-bold bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-emerald-600 transition shadow-2xs"
+                              className="w-10 h-12 text-center text-lg font-bold bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-emerald-600 transition shadow-2xs"
                             />
                           ))}
                         </div>
@@ -1154,7 +1181,7 @@ export const LoginPage: React.FC = () => {
                         {/* Helper Banner */}
                         <div className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center justify-between">
                           <div className="text-xs text-slate-600 dark:text-slate-400">
-                            <span>Standard OTP: <strong className="font-mono">123456</strong></span>
+                            <span>Standard OTP: <strong>123456</strong></span>
                           </div>
                           <button
                             type="button"
@@ -1213,7 +1240,7 @@ export const LoginPage: React.FC = () => {
           {/* STEP 3B: GOVERNMENT OFFICIAL LOGIN FLOW */}
           {/* ========================================================================= */}
           {authStep === 'GOV_LOGIN' && (
-            <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800/80 shadow-2xl p-6 sm:p-8 space-y-6 transition-all duration-200">
+            <div className="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800/80 shadow-xl p-6 sm:p-8 space-y-6 transition-all duration-200">
               {/* Back button + Header */}
               <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
                 <button
@@ -1272,7 +1299,7 @@ export const LoginPage: React.FC = () => {
                       value={officialEmail}
                       onChange={(e) => setOfficialEmail(e.target.value)}
                       placeholder="officer@bmc.gov.in"
-                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-3 py-2.5 text-xs text-slate-900 dark:text-white font-mono focus:outline-none focus:border-[#F58220] transition"
+                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-3 py-2.5 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-[#F58220] transition"
                     />
                   </div>
                 </div>
@@ -1282,6 +1309,12 @@ export const LoginPage: React.FC = () => {
                     <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
                       Official Password / Key
                     </label>
+                    <a
+                      href="/forgot-password"
+                      className="text-[11px] font-bold text-[#F58220] hover:underline cursor-pointer"
+                    >
+                      Forgot Password?
+                    </a>
                   </div>
                   <div className="relative">
                     <KeyRound className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-3" />
@@ -1291,7 +1324,7 @@ export const LoginPage: React.FC = () => {
                       value={officialPassword}
                       onChange={(e) => setOfficialPassword(e.target.value)}
                       placeholder="••••••••••••"
-                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-9 py-2.5 text-xs text-slate-900 dark:text-white font-mono focus:outline-none focus:border-[#F58220] transition"
+                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-9 py-2.5 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-[#F58220] transition"
                     />
                     <button
                       type="button"
@@ -1313,13 +1346,13 @@ export const LoginPage: React.FC = () => {
                         setOfficialEmail('api_official@bmc.gov.in');
                         setOfficialPassword('OfficialPassword123!');
                       }}
-                      className="text-[11px] underline hover:text-[#F58220] cursor-pointer"
+                      className="text-[11px] underline hover:text-[#F58220] cursor-pointer font-bold"
                     >
-                      Fill BMC Official
+                      Fill your credentials
                     </button>
                   </div>
                   <p className="text-[11px] text-amber-700 dark:text-amber-300">
-                    BMC Disaster Response Cell / Executive Engineer (api_official@bmc.gov.in)
+                    Use saved credentials for quick Government Official authentication
                   </p>
                 </div>
 
@@ -1360,11 +1393,13 @@ export const LoginPage: React.FC = () => {
       <footer className="w-full border-t border-slate-200/80 dark:border-slate-800/80 py-3 text-center text-xs text-slate-500 dark:text-slate-400">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
           <span>
-            © 2026 NirvanaAI • Odisha State Disaster Management & Bhubaneswar Municipal Corporation
+            © 2026 NivaranAI • Odisha State Disaster Management & Bhubaneswar Municipal Corporation
           </span>
-          <span className="font-mono text-[11px]">
-            Engine Version 3.4 • Risk Mesh Telemetry
-          </span>
+          <div className="flex items-center gap-4 text-[11px]">
+            <a href="/privacy-policy" className="hover:text-slate-800 dark:hover:text-slate-200 underline">Privacy Policy</a>
+            <a href="/terms" className="hover:text-slate-800 dark:hover:text-slate-200 underline">Terms & Conditions</a>
+            <a href="/cookie-preferences" className="hover:text-slate-800 dark:hover:text-slate-200 underline">Cookie Preferences</a>
+          </div>
         </div>
       </footer>
 
@@ -1373,17 +1408,17 @@ export const LoginPage: React.FC = () => {
       {/* ========================================================================= */}
       {isAuthRequestOpen && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 animate-fade-in">
-          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 max-w-lg w-full p-6 space-y-5 shadow-2xl relative">
+          <div className="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 max-w-lg w-full p-6 space-y-5 shadow-2xl relative">
             <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
               <div className="flex items-center gap-2">
-                <div className="p-2 bg-[#0B3D91] dark:bg-[#F58220] rounded-xl text-white">
+                <div className="p-2 bg-[#8A9A86] rounded-xl text-white">
                   <Building2 className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-base font-black text-slate-900 dark:text-white font-heading">
+                  <h3 className="text-base font-black text-[#2F3E46] dark:text-white font-heading">
                     Government Official Authorization
                   </h3>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                  <p className="text-xs text-[#66736F] dark:text-slate-400">
                     BMC & OSDMA Verified Personnel Access
                   </p>
                 </div>
@@ -1399,20 +1434,20 @@ export const LoginPage: React.FC = () => {
 
             {authRequestSubmitted ? (
               <div className="py-8 text-center space-y-3 animate-fade-in">
-                <div className="w-12 h-12 bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center mx-auto">
+                <div className="w-12 h-12 bg-[#4D8B63]/20 text-[#4D8B63] rounded-full flex items-center justify-center mx-auto">
                   <CheckCircle2 className="w-6 h-6" />
                 </div>
-                <h4 className="text-base font-bold text-slate-900 dark:text-white font-heading">
+                <h4 className="text-base font-bold text-[#2F3E46] dark:text-white font-heading">
                   Request Submitted Successfully
                 </h4>
-                <p className="text-xs text-slate-600 dark:text-slate-400 max-w-sm mx-auto">
+                <p className="text-xs text-[#66736F] dark:text-slate-400 max-w-sm mx-auto">
                   Your credentials have been forwarded to the IT Operations Division for verification. You will receive an SMS confirmation once approved.
                 </p>
               </div>
             ) : (
               <form onSubmit={handleSubmitAuthRequest} className="space-y-3 text-xs">
                 <div>
-                  <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1">
+                  <label className="block text-[#2F3E46] dark:text-slate-300 font-semibold mb-1">
                     Officer Full Name *
                   </label>
                   <input
@@ -1420,14 +1455,14 @@ export const LoginPage: React.FC = () => {
                     required
                     value={officialForm.name}
                     onChange={(e) => setOfficialForm({ ...officialForm, name: e.target.value })}
-                    placeholder="e.g. Dr. Sanjeev Mohapatra"
-                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-slate-900 dark:text-white focus:outline-none focus:border-[#0B3D91]"
+                    placeholder="Official Full Name"
+                    className="w-full bg-[#FFFDF9] dark:bg-slate-950 border border-[#D9D6CF] dark:border-slate-800 rounded-xl px-3 py-2 text-[#2F3E46] dark:text-white focus:outline-none focus:border-[#8A9A86]"
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1">
+                    <label className="block text-[#2F3E46] dark:text-slate-300 font-semibold mb-1">
                       Official Gov Email *
                     </label>
                     <input
@@ -1436,11 +1471,11 @@ export const LoginPage: React.FC = () => {
                       value={officialForm.email}
                       onChange={(e) => setOfficialForm({ ...officialForm, email: e.target.value })}
                       placeholder="name@bmc.gov.in"
-                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-slate-900 dark:text-white focus:outline-none focus:border-[#0B3D91]"
+                      className="w-full bg-[#FFFDF9] dark:bg-slate-950 border border-[#D9D6CF] dark:border-slate-800 rounded-xl px-3 py-2 text-[#2F3E46] dark:text-white focus:outline-none focus:border-[#8A9A86]"
                     />
                   </div>
                   <div>
-                    <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1">
+                    <label className="block text-[#2F3E46] dark:text-slate-300 font-semibold mb-1">
                       Contact Phone *
                     </label>
                     <input
@@ -1449,14 +1484,14 @@ export const LoginPage: React.FC = () => {
                       value={officialForm.phone}
                       onChange={(e) => setOfficialForm({ ...officialForm, phone: e.target.value })}
                       placeholder="+91 94370 12345"
-                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-slate-900 dark:text-white font-mono focus:outline-none focus:border-[#0B3D91]"
+                      className="w-full bg-[#FFFDF9] dark:bg-slate-950 border border-[#D9D6CF] dark:border-slate-800 rounded-xl px-3 py-2 text-[#2F3E46] dark:text-white focus:outline-none focus:border-[#8A9A86]"
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1">
+                    <label className="block text-[#2F3E46] dark:text-slate-300 font-semibold mb-1">
                       Department *
                     </label>
                     <input
@@ -1465,11 +1500,11 @@ export const LoginPage: React.FC = () => {
                       value={officialForm.department}
                       onChange={(e) => setOfficialForm({ ...officialForm, department: e.target.value })}
                       placeholder="BMC Disaster Cell"
-                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-slate-900 dark:text-white focus:outline-none focus:border-[#0B3D91]"
+                      className="w-full bg-[#FFFDF9] dark:bg-slate-950 border border-[#D9D6CF] dark:border-slate-800 rounded-xl px-3 py-2 text-[#2F3E46] dark:text-white focus:outline-none focus:border-[#8A9A86]"
                     />
                   </div>
                   <div>
-                    <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1">
+                    <label className="block text-[#2F3E46] dark:text-slate-300 font-semibold mb-1">
                       Designation *
                     </label>
                     <input
@@ -1478,13 +1513,13 @@ export const LoginPage: React.FC = () => {
                       value={officialForm.designation}
                       onChange={(e) => setOfficialForm({ ...officialForm, designation: e.target.value })}
                       placeholder="Executive Engineer"
-                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-slate-900 dark:text-white focus:outline-none focus:border-[#0B3D91]"
+                      className="w-full bg-[#FFFDF9] dark:bg-slate-950 border border-[#D9D6CF] dark:border-slate-800 rounded-xl px-3 py-2 text-[#2F3E46] dark:text-white focus:outline-none focus:border-[#8A9A86]"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1">
+                  <label className="block text-[#2F3E46] dark:text-slate-300 font-semibold mb-1">
                     Employee / Badge ID (Optional)
                   </label>
                   <input
@@ -1492,11 +1527,11 @@ export const LoginPage: React.FC = () => {
                     value={officialForm.idNumber}
                     onChange={(e) => setOfficialForm({ ...officialForm, idNumber: e.target.value })}
                     placeholder="BMC-DIS-2026-981"
-                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-slate-900 dark:text-white font-mono focus:outline-none focus:border-[#0B3D91]"
+                    className="w-full bg-[#FFFDF9] dark:bg-slate-950 border border-[#D9D6CF] dark:border-slate-800 rounded-xl px-3 py-2 text-[#2F3E46] dark:text-white focus:outline-none focus:border-[#8A9A86]"
                   />
                 </div>
 
-                <div className="p-3 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/60 rounded-xl text-[11px] text-amber-800 dark:text-amber-300 leading-relaxed">
+                <div className="p-3 bg-[#C68A27]/10 border border-[#C68A27]/30 rounded-xl text-[11px] text-[#C68A27] leading-relaxed">
                   ⚠️ Submitted requests are reviewed by the Chief Disaster IT Administrator within 24 hours.
                 </div>
 
@@ -1504,14 +1539,14 @@ export const LoginPage: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setIsAuthRequestOpen(false)}
-                    className="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-xl font-bold transition cursor-pointer"
+                    className="flex-1 py-2.5 bg-[#F3EFEA] hover:bg-[#D9D6CF] dark:bg-slate-800 text-[#2F3E46] dark:text-slate-300 rounded-xl font-bold transition cursor-pointer"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={isLoading}
-                    className="flex-1 py-2.5 bg-[#0B3D91] hover:bg-[#0A2F70] text-white rounded-xl font-bold transition shadow-md cursor-pointer"
+                    className="flex-1 py-2.5 bg-[#8A9A86] hover:bg-[#778873] text-white rounded-xl font-bold transition shadow-2xs cursor-pointer"
                   >
                     {isLoading ? <Loader2 className="w-4 h-4 animate-spin mx-auto" /> : 'Submit Request'}
                   </button>
@@ -1527,25 +1562,25 @@ export const LoginPage: React.FC = () => {
       {/* ========================================================================= */}
       {showForgotModal && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 animate-fade-in">
-          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 max-w-sm w-full p-6 space-y-4 shadow-2xl relative">
-            <div className="w-10 h-10 bg-rose-100 dark:bg-rose-950 text-rose-600 rounded-xl flex items-center justify-center mx-auto">
+          <div className="bg-[#FFFDF9] dark:bg-slate-900 rounded-lg border border-[#D9D6CF] dark:border-slate-800 max-w-sm w-full p-6 space-y-4 shadow-2xl relative">
+            <div className="w-10 h-10 bg-[#C53030]/10 text-[#C53030] rounded-xl flex items-center justify-center mx-auto">
               <KeyRound className="w-5 h-5" />
             </div>
             <div className="text-center space-y-1">
-              <h4 className="text-base font-bold text-slate-900 dark:text-white font-heading">
+              <h4 className="text-base font-bold text-[#2F3E46] dark:text-white font-heading">
                 Reset Administrator Key
               </h4>
-              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+              <p className="text-xs text-[#66736F] dark:text-slate-400 leading-relaxed">
                 For security compliance, administrator password resets must be issued by the Chief IT Operations Director at BMC Command Center.
               </p>
             </div>
-            <div className="p-3 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800 text-[11px] font-mono text-slate-600 dark:text-slate-400 text-center">
+            <div className="p-3 bg-[#F9F7F3] dark:bg-slate-950 rounded-xl border border-[#D9D6CF] dark:border-slate-800 text-[11px] text-[#66736F] dark:text-slate-400 text-center">
               IT Support Line: +91 674 243 0001
             </div>
             <button
               type="button"
               onClick={() => setShowForgotModal(false)}
-              className="w-full py-2 bg-[#0B3D91] text-white rounded-xl font-bold text-xs cursor-pointer hover:bg-[#0A2F70] transition"
+              className="w-full py-2 bg-[#8A9A86] text-white rounded-xl font-bold text-xs cursor-pointer hover:bg-[#778873] transition"
             >
               Close
             </button>

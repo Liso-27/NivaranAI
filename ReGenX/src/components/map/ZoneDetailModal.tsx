@@ -1,4 +1,5 @@
 import React from 'react';
+import { formatBulletinDate } from '../citizen/NewsFeedView';
 import { HazardZone, SEVERITY_BG_CLASSES } from '../../types';
 import { useDisasterData } from '../../context/DisasterDataContext';
 import { 
@@ -38,11 +39,11 @@ export const ZoneDetailModal: React.FC<ZoneDetailModalProps> = ({ zone, isOpen, 
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 animate-fade-in">
-      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 max-w-3xl w-full max-h-[88vh] flex flex-col shadow-2xl overflow-hidden transition-colors duration-200">
+      <div className="bg-[#FFFDF9] dark:bg-slate-900 rounded-lg border border-[#D9D6CF] dark:border-slate-800 max-w-3xl w-full max-h-[88vh] flex flex-col shadow-2xl overflow-hidden transition-colors duration-200">
         {/* Modal Header */}
-        <div className="p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50/70 dark:bg-slate-950/50">
+        <div className="p-5 border-b border-[#D9D6CF] dark:border-slate-800 flex items-center justify-between bg-[#F9F7F3] dark:bg-slate-950/50">
           <div className="flex items-center gap-3">
-            <div className={`p-3 rounded-xl text-white ${isEmergency ? 'bg-rose-600 animate-pulse' : isHigh ? 'bg-orange-600' : 'bg-[#0B3D91]'}`}>
+            <div className={`p-3 rounded-lg text-white ${isEmergency ? 'bg-[#C53030] animate-pulse' : isHigh ? 'bg-[#C85A32]' : 'bg-[#8A9A86]'}`}>
               {isEmergency ? <Flame className="w-6 h-6" /> : <ShieldAlert className="w-6 h-6" />}
             </div>
             <div>
@@ -50,11 +51,11 @@ export const ZoneDetailModal: React.FC<ZoneDetailModalProps> = ({ zone, isOpen, 
                 <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded border uppercase tracking-wider ${SEVERITY_BG_CLASSES[zone.severity]}`}>
                   {zone.severity} SEVERITY
                 </span>
-                <span className="text-xs text-slate-500 dark:text-slate-400 font-mono">
+                <span className="text-xs text-[#66736F] dark:text-slate-400">
                   Ward #{wardNum} • Centroid: [{(zone.centroid_lat ?? zone.latitude ?? 20.2961).toFixed(4)}, {(zone.centroid_lng ?? zone.longitude ?? 85.8245).toFixed(4)}]
                 </span>
               </div>
-              <h2 className="text-lg md:text-xl font-black text-slate-900 dark:text-white font-heading mt-0.5">
+              <h2 className="text-lg md:text-xl font-black text-[#2F3E46] dark:text-white font-heading mt-0.5">
                 {zone.ward_name} Detailed Incident Assessment
               </h2>
             </div>
@@ -72,7 +73,7 @@ export const ZoneDetailModal: React.FC<ZoneDetailModalProps> = ({ zone, isOpen, 
         <div className="flex-1 overflow-y-auto p-5 space-y-6">
           {/* 1. PROMINENT RECOMMENDED ACTION CALLOUT (Requirement 4) */}
           {zone.recommended_action && (
-            <div className={`p-4 rounded-2xl border-2 shadow-sm animate-fade-in ${
+            <div className={`p-4 rounded-lg border-2 shadow-sm animate-fade-in ${
               isEmergency 
                 ? 'bg-rose-50/90 dark:bg-rose-950/40 border-rose-500 text-rose-950 dark:text-rose-100' 
                 : isHigh 
@@ -203,8 +204,8 @@ export const ZoneDetailModal: React.FC<ZoneDetailModalProps> = ({ zone, isOpen, 
                       <span className="text-[10px] font-bold px-2 py-0.5 bg-amber-100 text-amber-900 dark:bg-amber-500/20 dark:text-amber-300 rounded border border-amber-200 dark:border-amber-500/30">
                         {news.locality}
                       </span>
-                      <span className="text-[10px] text-slate-400 dark:text-slate-500 font-mono">
-                        {new Date(news.published_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      <span className="text-[10px] text-slate-400 dark:text-slate-500">
+                        {formatBulletinDate(news.published_at)}
                       </span>
                     </div>
                     <h4 className="text-xs font-bold text-slate-900 dark:text-white">{news.title}</h4>
@@ -262,7 +263,7 @@ export const ZoneDetailModal: React.FC<ZoneDetailModalProps> = ({ zone, isOpen, 
 
         {/* Modal Footer */}
         <div className="p-4 bg-slate-50 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
-          <span className="text-[11px] text-slate-500 font-mono flex items-center gap-1">
+          <span className="text-[11px] text-slate-500 flex items-center gap-1">
             <Clock className="w-3 h-3" />
             Last Updated: {zone.last_updated ? new Date(zone.last_updated).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Live'}
           </span>

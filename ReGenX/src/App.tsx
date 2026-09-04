@@ -17,6 +17,11 @@ import { CampManagerView } from './components/government/CampManagerView';
 import { DisasterMap } from './components/map/DisasterMap';
 import { AdminDashboard } from './components/admin/AdminDashboard';
 import { LoginPage } from './components/auth/LoginPage';
+import { PrivacyPolicyPage } from './components/legal/PrivacyPolicyPage';
+import { TermsPage } from './components/legal/TermsPage';
+import { CookiePreferencesModal } from './components/legal/CookiePreferencesModal';
+import { ForgotPasswordPage } from './components/auth/ForgotPasswordPage';
+import { PasswordResetPage } from './components/auth/PasswordResetPage';
 import { AlertCircle, RefreshCw, Loader2 } from 'lucide-react';
 
 const CITIZEN_TABS = ['CITIZEN_MAP', 'SAFE_PLACES', 'CITIZEN_REPORTS', 'DISASTER_NEWS'];
@@ -88,10 +93,10 @@ const MainAppContent: React.FC = () => {
       {/* Main View Area */}
       <main className={`flex-1 flex flex-col min-h-0 relative ${isMapTab ? 'overflow-hidden' : 'overflow-y-auto'}`}>
         {isLoading && (
-          <div className="absolute inset-0 z-40 bg-white/70 dark:bg-slate-950/80 backdrop-blur-xs flex items-center justify-center animate-fade-in">
-            <div className="p-6 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl flex flex-col items-center gap-3">
-              <Loader2 className="w-8 h-8 text-[#0B3D91] dark:text-[#F58220] animate-spin" />
-              <p className="text-xs font-semibold text-slate-700 dark:text-slate-300 font-heading">
+          <div className="absolute inset-0 z-40 bg-[#F9F7F3]/70 dark:bg-slate-950/80 backdrop-blur-xs flex items-center justify-center animate-fade-in">
+            <div className="p-6 bg-[#FFFDF9] dark:bg-slate-900 rounded-lg border border-[#D9D6CF] dark:border-slate-800 shadow-xl flex flex-col items-center gap-3">
+              <Loader2 className="w-8 h-8 text-[#8A9A86] animate-spin" />
+              <p className="text-xs font-semibold text-[#2F3E46] dark:text-slate-300 font-heading">
                 Syncing BMC 67-Ward Risk Engine Telemetry...
               </p>
             </div>
@@ -99,7 +104,7 @@ const MainAppContent: React.FC = () => {
         )}
 
         {error && (
-          <div className="m-4 p-4 bg-rose-50 dark:bg-rose-500/15 border border-rose-200 dark:border-rose-500/40 rounded-2xl text-rose-800 dark:text-rose-200 text-xs flex items-center justify-between gap-3 shadow-xs shrink-0">
+          <div className="m-4 p-4 bg-rose-50 dark:bg-rose-500/15 border border-rose-200 dark:border-rose-500/40 rounded-lg text-rose-800 dark:text-rose-200 text-xs flex items-center justify-between gap-3 shadow-xs shrink-0">
             <div className="flex items-center gap-2">
               <AlertCircle className="w-5 h-5 text-rose-600 dark:text-rose-400 shrink-0" />
               <span>{error}</span>
@@ -153,13 +158,36 @@ const MainAppContent: React.FC = () => {
 
 const RootNavigation: React.FC = () => {
   const { isAuthenticated, user } = useAuth();
+  const [pathname, setPathname] = useState(() => window.location.pathname);
+
+  useEffect(() => {
+    const handlePopState = () => setPathname(window.location.pathname);
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  if (pathname === '/privacy-policy') {
+    return <PrivacyPolicyPage />;
+  }
+  if (pathname === '/terms') {
+    return <TermsPage />;
+  }
+  if (pathname === '/cookie-preferences') {
+    return <CookiePreferencesModal isStandalonePage={true} />;
+  }
+  if (pathname === '/forgot-password') {
+    return <ForgotPasswordPage />;
+  }
+  if (pathname === '/reset-password' || pathname === '/password-reset') {
+    return <PasswordResetPage />;
+  }
 
   // If user is not authenticated, show the LoginPage
   if (!isAuthenticated || !user) {
     return <LoginPage />;
   }
 
-  // Once authenticated, show the existing NirvanaAI dashboard
+  // Once authenticated, show the existing NivaranAI dashboard
   return (
     <DisasterDataProvider>
       <MainAppContent />
