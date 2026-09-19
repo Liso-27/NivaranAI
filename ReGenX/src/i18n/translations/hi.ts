@@ -137,6 +137,7 @@ export const hi: Record<TranslationKey, string> = {
   'verification.DISPUTED': 'विवादित',
   'verification.PENDING': 'समीक्षाधीन',
   'verification.REJECTED': 'अस्वीकृत',
+  'verification.CANCELLED': 'रद्द किया गया',
 
   // BMC Zones
   'zone.North': 'उत्तर जोन',
@@ -468,10 +469,12 @@ export const hi: Record<TranslationKey, string> = {
   'triage.title': 'नागरिक रिपोर्ट समीक्षा एवं ट्राइएज डेस्क',
   'triage.subtitle': '67 वार्डों में नागरिकों द्वारा प्रस्तुत फील्ड अवलोकनों को मान्य, संपुष्ट या विवादित करें।',
   'triage.feedbackUpdated': 'रिपोर्ट को सफलतापूर्वक {state} में अपडेट किया गया।',
+  'triage.feedbackFailed': 'रिपोर्ट अपडेट करने में विफल: {error}',
   'triage.filterAll': 'सभी रिपोर्ट',
   'triage.filterUnverified': 'समीक्षा प्रतीक्षारत',
   'triage.filterVerified': 'सत्यापित',
   'triage.filterDisputed': 'विवादित',
+  'triage.filterCancelled': 'रद्द',
   'triage.noReportsFound': '"{filter}" फ़िल्टर के तहत कोई रिपोर्ट नहीं मिली।',
   'triage.reporter': 'रिपोर्टर:',
   'triage.corroborationsCount': '{count} संपुष्टि',
@@ -480,6 +483,7 @@ export const hi: Record<TranslationKey, string> = {
   'triage.powerOutage': 'बिजली कटौती:',
   'triage.structuralDamage': 'ढांचागत क्षति:',
   'triage.remarksPlaceholder': 'आधिकारिक समीक्षा टिप्पणी दर्ज करें (उदा. BMC टीम भेजी गई, पंप स्थापित)...',
+  'triage.markCancelled': 'रद्द चिह्नित करें',
   'triage.disproveDispute': 'अमान्य / विवादित करें',
   'triage.verifyObservation': 'अवलोकन सत्यापित करें',
   'triage.officialRemarks': 'आधिकारिक टिप्पणी:',

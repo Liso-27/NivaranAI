@@ -135,6 +135,7 @@ export const en = {
   'verification.DISPUTED': 'Disputed',
   'verification.PENDING': 'Pending Review',
   'verification.REJECTED': 'Rejected',
+  'verification.CANCELLED': 'Cancelled',
 
   // BMC Zones
   'zone.North': 'North Zone',
@@ -466,10 +467,12 @@ export const en = {
   'triage.title': 'Citizen Report Review & Triage Desk',
   'triage.subtitle': 'Validate, corroborate, or dispute field observations submitted by citizens across 67 wards.',
   'triage.feedbackUpdated': 'Report updated to {state} successfully.',
+  'triage.feedbackFailed': 'Failed to update report: {error}',
   'triage.filterAll': 'All Reports',
   'triage.filterUnverified': 'Pending Review',
   'triage.filterVerified': 'Verified',
   'triage.filterDisputed': 'Disputed',
+  'triage.filterCancelled': 'Cancelled',
   'triage.noReportsFound': 'No reports found under the "{filter}" filter.',
   'triage.reporter': 'Reporter:',
   'triage.corroborationsCount': '{count} corroboration(s)',
@@ -478,6 +481,7 @@ export const en = {
   'triage.powerOutage': 'Power Outage:',
   'triage.structuralDamage': 'Structural Damage:',
   'triage.remarksPlaceholder': 'Enter official review remarks (e.g. BMC team dispatched, pump installed)...',
+  'triage.markCancelled': 'Mark Cancelled',
   'triage.disproveDispute': 'Disprove / Dispute',
   'triage.verifyObservation': 'Verify Observation',
   'triage.officialRemarks': 'Official Remarks:',

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useDisasterData } from '../../context/DisasterDataContext';
 import { useAuth } from '../../context/AuthContext';
+import { useLanguage } from '../../context/LanguageContext';
 import { DisasterMap } from '../map/DisasterMap';
 import { OfficialUpdateModal } from './OfficialUpdateModal';
 import {
@@ -32,6 +33,7 @@ export const GovCommandCenter: React.FC = () => {
     setSelectedZone
   } = useDisasterData();
   const { user } = useAuth();
+  const { t, tWard, tHazard, tSeverity } = useLanguage();
 
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [selectedWardForUpdate, setSelectedWardForUpdate] = useState<number>(57);
@@ -64,18 +66,18 @@ export const GovCommandCenter: React.FC = () => {
               <ShieldAlert className="w-4 h-4 text-[#D97706]" />
             </span>
             <h2 className="text-base font-bold text-[#0F172A] dark:text-white">
-              BMC Disaster Emergency Command Center
+              {t('govCommand.title')}
             </h2>
           </div>
           <p className="text-xs text-[#475569] dark:text-slate-400 mt-0.5 font-medium">
-            Real-time multi-hazard threat monitoring, active warnings & operational status overview
+            {t('govCommand.subtitle')}
           </p>
         </div>
 
         <div className="flex items-center gap-2 text-xs">
           <div className="flex items-center gap-1.5 px-3 py-1.5 bg-[#059669]/10 text-[#059669] border border-[#059669]/30 rounded-md font-semibold">
             <span className="w-2 h-2 rounded-full bg-[#059669]" />
-            <span>Command Center Online</span>
+            <span>{t('govCommand.online')}</span>
           </div>
         </div>
 
@@ -89,7 +91,7 @@ export const GovCommandCenter: React.FC = () => {
                   : 'text-[#475569] dark:text-slate-400 hover:text-[#0F172A] dark:hover:text-white'
                 }`}
             >
-              Dashboard Overview
+              {t('govCommand.dashboardOverview')}
             </button>
             <button
               onClick={() => setViewMode('TACTICAL_MAP')}
@@ -98,7 +100,7 @@ export const GovCommandCenter: React.FC = () => {
                   : 'text-[#475569] dark:text-slate-400 hover:text-[#0F172A] dark:hover:text-white'
                 }`}
             >
-              Tactical Map
+              {t('govCommand.tacticalMap')}
             </button>
           </div>
 
@@ -110,7 +112,7 @@ export const GovCommandCenter: React.FC = () => {
             className="flex items-center gap-1.5 px-3 py-1.5 bg-[#D97706] hover:bg-[#B45309] text-white rounded-md text-xs font-semibold transition cursor-pointer"
           >
             <Plus className="w-3.5 h-3.5" />
-            <span>Post Field Update</span>
+            <span>{t('govCommand.postFieldUpdate')}</span>
           </button>
         </div>
       </div>
@@ -125,38 +127,38 @@ export const GovCommandCenter: React.FC = () => {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <div className="bg-[#FFFFFF] dark:bg-slate-900 rounded-lg p-4 border border-[#DC2626]/30">
               <div className="flex items-center justify-between mb-1">
-                <span className="text-[11px] font-semibold text-[#DC2626] dark:text-rose-400 uppercase">Emergency Wards</span>
+                <span className="text-[11px] font-semibold text-[#DC2626] dark:text-rose-400 uppercase">{t('govCommand.emergencyWards')}</span>
                 <Flame className="w-4 h-4 text-[#DC2626]" />
               </div>
               <span className="text-2xl font-bold text-[#DC2626]">{emergencyCount}</span>
-              <p className="text-[10px] text-[#475569] dark:text-slate-400 mt-1 font-medium">Direct rescue & evacuation underway</p>
+              <p className="text-[10px] text-[#475569] dark:text-slate-400 mt-1 font-medium">{t('govCommand.emergencyDesc')}</p>
             </div>
 
             <div className="bg-[#FFFFFF] dark:bg-slate-900 rounded-lg p-4 border border-[#EA580C]/30">
               <div className="flex items-center justify-between mb-1">
-                <span className="text-[11px] font-semibold text-[#EA580C] dark:text-orange-400 uppercase">High Risk Zones</span>
+                <span className="text-[11px] font-semibold text-[#EA580C] dark:text-orange-400 uppercase">{t('govCommand.highRiskZones')}</span>
                 <AlertTriangle className="w-4 h-4 text-[#EA580C]" />
               </div>
               <span className="text-2xl font-bold text-[#EA580C]">{highCount}</span>
-              <p className="text-[10px] text-[#475569] dark:text-slate-400 mt-1 font-medium">Dewatering & barrier deployment</p>
+              <p className="text-[10px] text-[#475569] dark:text-slate-400 mt-1 font-medium">{t('govCommand.highRiskDesc')}</p>
             </div>
 
             <div className="bg-[#FFFFFF] dark:bg-slate-900 rounded-lg p-4 border border-[#D97706]/30">
               <div className="flex items-center justify-between mb-1">
-                <span className="text-[11px] font-semibold text-[#D97706] dark:text-amber-400 uppercase">Moderate Wards</span>
+                <span className="text-[11px] font-semibold text-[#D97706] dark:text-amber-400 uppercase">{t('govCommand.moderateWards')}</span>
                 <Waves className="w-4 h-4 text-[#D97706]" />
               </div>
               <span className="text-2xl font-bold text-[#D97706]">{moderateCount}</span>
-              <p className="text-[10px] text-[#475569] dark:text-slate-400 mt-1 font-medium">Precautionary alert active</p>
+              <p className="text-[10px] text-[#475569] dark:text-slate-400 mt-1 font-medium">{t('govCommand.moderateDesc')}</p>
             </div>
 
             <div className="bg-[#FFFFFF] dark:bg-slate-900 rounded-lg p-4 border border-[#059669]/30">
               <div className="flex items-center justify-between mb-1">
-                <span className="text-[11px] font-semibold text-[#059669] dark:text-emerald-400 uppercase">Normal / Low Risk</span>
+                <span className="text-[11px] font-semibold text-[#059669] dark:text-emerald-400 uppercase">{t('govCommand.lowRiskWards')}</span>
                 <CheckCircle2 className="w-4 h-4 text-[#059669]" />
               </div>
               <span className="text-2xl font-bold text-[#059669]">{67 - emergencyCount - highCount - moderateCount}</span>
-              <p className="text-[10px] text-[#475569] dark:text-slate-400 mt-1 font-medium">All 67 BMC Wards monitored</p>
+              <p className="text-[10px] text-[#475569] dark:text-slate-400 mt-1 font-medium">{t('govCommand.lowRiskDesc')}</p>
             </div>
           </div>
 
@@ -166,17 +168,19 @@ export const GovCommandCenter: React.FC = () => {
             <div className="bg-[#FFFFFF] dark:bg-slate-900 rounded-lg p-4 border border-[#D1D5DB] dark:border-slate-800 flex flex-col justify-between space-y-3">
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-semibold text-[#475569] dark:text-slate-400 uppercase">Citizen Ground Submissions</span>
+                  <span className="text-xs font-semibold text-[#475569] dark:text-slate-400 uppercase">{t('govCommand.citizenSubmissions')}</span>
                   <Radio className="w-4 h-4 text-[#D97706]" />
                 </div>
-                <h3 className="text-xl font-bold text-[#0F172A] dark:text-white">{crowdReports.length} Reports</h3>
+                <h3 className="text-xl font-bold text-[#0F172A] dark:text-white">
+                  {t(crowdReports.length === 1 ? 'common.reportCount.one' : 'common.reportCount.other', { count: crowdReports.length })}
+                </h3>
                 <p className="text-xs text-[#D97706] font-semibold mt-1">
-                  ⚠️ {pendingReportsCount} pending verification
+                  {t('govCommand.pendingVerification', { count: pendingReportsCount })}
                 </p>
               </div>
               <div className="pt-3 border-t border-[#D1D5DB] dark:border-slate-800 text-xs text-[#475569] dark:text-slate-400 flex justify-between font-medium">
-                <span>Verified: {crowdReports.filter(r => r.verification_state === 'VERIFIED').length}</span>
-                <span>Disputed: {crowdReports.filter(r => r.verification_state === 'DISPUTED').length}</span>
+                <span>{t('govCommand.verifiedCount', { count: crowdReports.filter(r => r.verification_state === 'VERIFIED').length })}</span>
+                <span>{t('govCommand.disputedCount', { count: crowdReports.filter(r => r.verification_state === 'DISPUTED').length })}</span>
               </div>
             </div>
 
@@ -184,17 +188,19 @@ export const GovCommandCenter: React.FC = () => {
             <div className="bg-[#FFFFFF] dark:bg-slate-900 rounded-lg p-4 border border-[#D1D5DB] dark:border-slate-800 flex flex-col justify-between space-y-3">
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-semibold text-[#475569] dark:text-slate-400 uppercase">Emergency Camps & Shelters</span>
+                  <span className="text-xs font-semibold text-[#475569] dark:text-slate-400 uppercase">{t('govCommand.campsShelters')}</span>
                   <Building2 className="w-4 h-4 text-[#059669]" />
                 </div>
-                <h3 className="text-xl font-bold text-[#0F172A] dark:text-white">{occupiedCampBeds} / {totalCampBeds} Beds</h3>
+                <h3 className="text-xl font-bold text-[#0F172A] dark:text-white">
+                  {t('govCommand.bedsOccupiedRatio', { occupied: occupiedCampBeds, total: totalCampBeds })}
+                </h3>
                 <p className="text-xs text-[#059669] font-semibold mt-1">
-                  {totalCampBeds - occupiedCampBeds} beds currently available
+                  {t('govCommand.bedsAvailable', { count: availableCampBeds })}
                 </p>
               </div>
               <div className="pt-3 border-t border-[#D1D5DB] dark:border-slate-800 text-xs text-[#475569] dark:text-slate-400 flex justify-between font-medium">
-                <span>Active Camps: {camps.length}</span>
-                <span>Occupancy: {Math.round((occupiedCampBeds / (totalCampBeds || 1)) * 100)}%</span>
+                <span>{t('govCommand.activeCampsCount', { count: camps.length })}</span>
+                <span>{t('govCommand.occupancyPercent', { percent: occupancyPercentage })}</span>
               </div>
             </div>
 
@@ -202,14 +208,14 @@ export const GovCommandCenter: React.FC = () => {
             <div className="bg-[#FFFFFF] dark:bg-slate-900 rounded-lg p-4 border border-[#D1D5DB] dark:border-slate-800 flex flex-col justify-between space-y-3">
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-semibold text-[#475569] dark:text-slate-400 uppercase">Scheduled Analytical Engine</span>
+                  <span className="text-xs font-semibold text-[#475569] dark:text-slate-400 uppercase">{t('govCommand.analyticalEngine')}</span>
                   <Clock className="w-4 h-4 text-[#059669]" />
                 </div>
-                <h3 className="text-xl font-bold text-[#0F172A] dark:text-white">20-Min Cron</h3>
+                <h3 className="text-xl font-bold text-[#0F172A] dark:text-white">{t('govCommand.cronInterval')}</h3>
               </div>
               <div className="pt-3 border-t border-[#D1D5DB] dark:border-slate-800 text-xs text-[#475569] dark:text-slate-400 flex justify-between font-medium">
-                <span>Evaluated: 67 Wards</span>
-                <span className="text-[#059669] font-semibold">● Engine Healthy</span>
+                <span>{t('govCommand.evaluatedWards', { count: 67 })}</span>
+                <span className="text-[#059669] font-semibold">{t('govCommand.engineHealthy')}</span>
               </div>
             </div>
           </div>
@@ -218,34 +224,34 @@ export const GovCommandCenter: React.FC = () => {
           <div className="bg-[#FFFFFF] dark:bg-slate-900 rounded-lg p-4 border border-[#D1D5DB] dark:border-slate-800 space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-bold text-[#0F172A] dark:text-white uppercase tracking-wider">
-                Active Hazard Zones Under Watch ({hazardZones.length})
+                {t('govCommand.activeZonesUnderWatch', { count: hazardZones.length })}
               </h3>
-              <span className="text-xs text-[#475569] dark:text-slate-400 font-medium">Source: risk_engine.py</span>
+              <span className="text-xs text-[#475569] dark:text-slate-400 font-medium">{t('govCommand.sourceRiskEngine')}</span>
             </div>
 
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
                 <thead>
                   <tr className="border-b border-[#D1D5DB] dark:border-slate-800 text-[#475569] dark:text-slate-400 font-semibold bg-[#F8F9FA] dark:bg-slate-950">
-                    <th className="p-3">Ward #</th>
-                    <th className="p-3">Locality Name</th>
-                    <th className="p-3">Hazard</th>
-                    <th className="p-3">Severity</th>
-                    <th className="p-3">Risk Score</th>
-                    <th className="p-3">Confidence</th>
-                    <th className="p-3">Radius</th>
-                    <th className="p-3 text-right">Actions</th>
+                    <th className="p-3">{t('govCommand.thWard')}</th>
+                    <th className="p-3">{t('govCommand.thLocality')}</th>
+                    <th className="p-3">{t('govCommand.thHazard')}</th>
+                    <th className="p-3">{t('govCommand.thSeverity')}</th>
+                    <th className="p-3">{t('govCommand.thRiskScore')}</th>
+                    <th className="p-3">{t('govCommand.thConfidence')}</th>
+                    <th className="p-3">{t('govCommand.thRadius')}</th>
+                    <th className="p-3 text-right">{t('common.actions')}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#D1D5DB]/60 dark:divide-slate-800/80">
                   {hazardZones.map(zone => (
                     <tr key={zone.id} className="hover:bg-[#F8F9FA] dark:hover:bg-slate-800/40 transition">
                       <td className="p-3 font-semibold text-[#0F172A] dark:text-slate-200">#{zone.ward_id}</td>
-                      <td className="p-3 font-bold text-[#0F172A] dark:text-white">{zone.ward_name}</td>
-                      <td className="p-3 capitalize text-[#475569] dark:text-slate-300">{(zone.hazard_type || 'HAZARD').replace('_', ' ')}</td>
+                      <td className="p-3 font-bold text-[#0F172A] dark:text-white">{tWard(zone.ward_id, zone.ward_name)}</td>
+                      <td className="p-3 capitalize text-[#475569] dark:text-slate-300">{tHazard(zone.hazard_type)}</td>
                       <td className="p-3">
                         <span className={`text-[10px] font-bold px-2 py-0.5 rounded border uppercase ${SEVERITY_BG_CLASSES[zone.severity]}`}>
-                          {zone.severity}
+                          {tSeverity(zone.severity)}
                         </span>
                       </td>
                       <td className="p-3 font-bold text-[#0F172A] dark:text-white">{zone.risk_score}/100</td>
@@ -259,7 +265,7 @@ export const GovCommandCenter: React.FC = () => {
                           }}
                           className="px-3 py-1 bg-[#F8F9FA] hover:bg-[#E2E8F0] dark:bg-slate-800 dark:hover:bg-slate-700 text-[#0F172A] dark:text-slate-200 border border-[#D1D5DB] dark:border-slate-700 rounded-md text-[11px] font-semibold transition cursor-pointer"
                         >
-                          Post Mitigation
+                          {t('govCommand.postMitigation')}
                         </button>
                       </td>
                     </tr>

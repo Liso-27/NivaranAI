@@ -137,6 +137,7 @@ export const or: Record<TranslationKey, string> = {
   'verification.DISPUTED': 'ବିବାଦିତ',
   'verification.PENDING': 'ସମୀକ୍ଷାଧୀନ',
   'verification.REJECTED': 'ଅଗ୍ରାହ୍ୟ',
+  'verification.CANCELLED': 'ବାତିଲ କରାଗଲା',
 
   // BMC Zones
   'zone.North': 'ଉତ୍ତର ଜୋନ୍',
@@ -468,10 +469,12 @@ export const or: Record<TranslationKey, string> = {
   'triage.title': 'ନାଗରିକ ରିପୋର୍ଟ ସମୀକ୍ଷା ଓ ଟ୍ରାଏଜ୍ ଡେସ୍କ',
   'triage.subtitle': '୬୭ ୱାର୍ଡରେ ନାଗରିକଙ୍କ ଦ୍ୱାରା ଦାଖଲ ହୋଇଥିବା ଫିଲ୍ଡ ନିରୀକ୍ଷଣକୁ ଯାଞ୍ଚ, ସମର୍ଥନ କିମ୍ବା ବିବାଦିତ କରନ୍ତୁ।',
   'triage.feedbackUpdated': 'ରିପୋର୍ଟ ସଫଳତାର ସହିତ {state} ରେ ଅପଡେଟ୍ ହେଲା।',
+  'triage.feedbackFailed': 'ରିପୋର୍ଟ ଅଦ୍ୟତନ କରିବାରେ ବିଫଳ: {error}',
   'triage.filterAll': 'ସମସ୍ତ ରିପୋର୍ଟ',
   'triage.filterUnverified': 'ସମୀକ୍ଷା ପାଇଁ ବାକି',
   'triage.filterVerified': 'ଯାଞ୍ଚ ହୋଇଛି',
   'triage.filterDisputed': 'ବିବାଦିତ',
+  'triage.filterCancelled': 'ବାତିଲ',
   'triage.noReportsFound': '"{filter}" ଫିଲ୍ଟର ଅଧୀନରେ କୌଣସି ରିପୋର୍ଟ ମିଳିଲା ନାହିଁ।',
   'triage.reporter': 'ରିପୋର୍ଟର୍:',
   'triage.corroborationsCount': '{count} ସମର୍ଥନ',
@@ -480,6 +483,7 @@ export const or: Record<TranslationKey, string> = {
   'triage.powerOutage': 'ବିଦ୍ୟୁତ୍ ବିଭ୍ରାଟ:',
   'triage.structuralDamage': 'ଗଠନମୂଳକ କ୍ଷତି:',
   'triage.remarksPlaceholder': 'ସରକାରୀ ସମୀକ୍ଷା ମନ୍ତବ୍ୟ ଲେଖନ୍ତୁ (ଯଥା: BMC ଟିମ୍ ପଠାଗଲା, ପମ୍ପ୍ ଲଗାଗଲା)...',
+  'triage.markCancelled': 'ବାତିଲ ଚିହ୍ନଟ କରନ୍ତୁ',
   'triage.disproveDispute': 'ଅପ୍ରମାଣିତ / ବିବାଦିତ କରନ୍ତୁ',
   'triage.verifyObservation': 'ନିରୀକ୍ଷଣ ଯାଞ୍ଚ କରନ୍ତୁ',
   'triage.officialRemarks': 'ସରକାରୀ ମନ୍ତବ୍ୟ:',
