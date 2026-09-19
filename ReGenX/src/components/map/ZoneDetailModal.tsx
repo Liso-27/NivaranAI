@@ -2,6 +2,7 @@ import React from 'react';
 import { formatBulletinDate } from '../citizen/NewsFeedView';
 import { HazardZone, SEVERITY_BG_CLASSES } from '../../types';
 import { useDisasterData } from '../../context/DisasterDataContext';
+import { useLanguage } from '../../context/LanguageContext';
 import { 
   X, 
   CloudRain, 
@@ -21,6 +22,7 @@ interface ZoneDetailModalProps {
 
 export const ZoneDetailModal: React.FC<ZoneDetailModalProps> = ({ zone, isOpen, onClose }) => {
   const { safePlaces, newsArticles } = useDisasterData();
+  const { t, tHazard, tSeverity, tWard, tx, formatTime } = useLanguage();
 
   if (!isOpen) return null;
 
@@ -49,14 +51,14 @@ export const ZoneDetailModal: React.FC<ZoneDetailModalProps> = ({ zone, isOpen, 
             <div>
               <div className="flex items-center gap-2">
                 <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded border uppercase tracking-wider ${SEVERITY_BG_CLASSES[zone.severity]}`}>
-                  {zone.severity} SEVERITY
+                  {tSeverity(zone.severity)} {t('zoneDetail.severitySuffix')}
                 </span>
                 <span className="text-xs text-[#66736F] dark:text-slate-400">
-                  Ward #{wardNum} • Centroid: [{(zone.centroid_lat ?? zone.latitude ?? 20.2961).toFixed(4)}, {(zone.centroid_lng ?? zone.longitude ?? 85.8245).toFixed(4)}]
+                  Ward #{wardNum} • {t('zoneDetail.centroid')}: [{(zone.centroid_lat ?? zone.latitude ?? 20.2961).toFixed(4)}, {(zone.centroid_lng ?? zone.longitude ?? 85.8245).toFixed(4)}]
                 </span>
               </div>
               <h2 className="text-lg md:text-xl font-black text-[#2F3E46] dark:text-white font-heading mt-0.5">
-                {zone.ward_name} Detailed Incident Assessment
+                {t('zoneDetail.assessmentTitle', { ward: tWard(zone.ward_id, zone.ward_name) })}
               </h2>
             </div>
           </div>
@@ -89,14 +91,14 @@ export const ZoneDetailModal: React.FC<ZoneDetailModalProps> = ({ zone, isOpen, 
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
                     <span className="text-[11px] font-black uppercase tracking-wider">
-                      CIVIL DEFENSE DIRECTIVE • RECOMMENDED CITIZEN ACTION
+                      {t('zoneDetail.civilDefenseDirective')}
                     </span>
                     <span className="text-[10px] font-bold px-2 py-0.2 rounded-full bg-white/60 dark:bg-black/40 border border-current">
-                      High Priority
+                      {t('zoneDetail.highPriority')}
                     </span>
                   </div>
                   <p className="text-xs md:text-sm font-bold leading-relaxed">
-                    {zone.recommended_action}
+                    {tx(zone.recommended_action)}
                   </p>
                 </div>
               </div>
@@ -106,45 +108,45 @@ export const ZoneDetailModal: React.FC<ZoneDetailModalProps> = ({ zone, isOpen, 
           {/* 2. Top Analytical Risk Banner */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <div className="p-3.5 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800 text-center">
-              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase block">Risk Score</span>
+              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase block">{t('zonePreview.riskScore')}</span>
               <span className="text-2xl font-black" style={{ color: zone.color }}>
                 {zone.risk_score}/100
               </span>
-              <span className="text-[10px] text-slate-500 block">BMC Calibrated</span>
+              <span className="text-[10px] text-slate-500 block">{t('zoneDetail.bmcCalibrated')}</span>
             </div>
 
             <div className="p-3.5 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800 text-center">
-              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase block">Confidence</span>
+              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase block">{t('zonePreview.confidence')}</span>
               <span className="text-2xl font-black text-cyan-600 dark:text-cyan-400">
                 {zone.confidence}%
               </span>
-              <span className="text-[10px] text-slate-500 block">Sensor Validation</span>
+              <span className="text-[10px] text-slate-500 block">{t('zoneDetail.sensorValidation')}</span>
             </div>
 
             <div className="p-3.5 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800 text-center">
-              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase block">Affected Radius</span>
+              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase block">{t('zoneDetail.affectedRadius')}</span>
               <span className="text-2xl font-black text-amber-600 dark:text-amber-400">
                 {zone.affected_radius_km} km
               </span>
-              <span className="text-[10px] text-slate-500 block">Perimeter Bound</span>
+              <span className="text-[10px] text-slate-500 block">{t('zoneDetail.perimeterBound')}</span>
             </div>
 
             <div className="p-3.5 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800 text-center">
-              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase block">Hazard Category</span>
+              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase block">{t('zoneDetail.hazardCategory')}</span>
               <span className="text-base font-black text-slate-900 dark:text-white capitalize block mt-1">
-                {(zone.hazard_type || 'HAZARD').replace('_', ' ')}
+                {tHazard(zone.hazard_type || 'HAZARD')}
               </span>
-              <span className="text-[10px] text-slate-500 block">Active Status</span>
+              <span className="text-[10px] text-slate-500 block">{t('zoneDetail.activeStatus')}</span>
             </div>
           </div>
 
           {/* 3. Description Overview */}
           <div className="p-4 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800 space-y-1.5">
             <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-tight block">
-              Incident Summary
+              {t('zoneDetail.incidentSummary')}
             </span>
             <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
-              {zone.description || zone.short_description}
+              {tx(zone.description || zone.short_description)}
             </p>
           </div>
 
@@ -153,33 +155,33 @@ export const ZoneDetailModal: React.FC<ZoneDetailModalProps> = ({ zone, isOpen, 
             <div className="p-4 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800 space-y-3">
               <h3 className="text-xs font-bold text-slate-900 dark:text-white font-heading uppercase tracking-wider flex items-center gap-1.5">
                 <CloudRain className="w-4 h-4 text-[#0B3D91] dark:text-cyan-400" />
-                Live Sensor & Meteorological Telemetry
+                {t('zoneDetail.liveTelemetryTitle')}
               </h3>
 
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
                 <div className="p-3 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800">
-                  <span className="text-slate-500 dark:text-slate-400 block text-[11px]">Precipitation Rate</span>
+                  <span className="text-slate-500 dark:text-slate-400 block text-[11px]">{t('zoneDetail.precipRate')}</span>
                   <strong className="text-sm font-black text-blue-600 dark:text-sky-400">
                     {zone.weather_metrics?.rainfall_mm_per_hr ?? zone.weather_data?.rainfall_mm ?? 18} mm/hr
                   </strong>
                 </div>
 
                 <div className="p-3 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800">
-                  <span className="text-slate-500 dark:text-slate-400 block text-[11px]">Water Inundation Depth</span>
+                  <span className="text-slate-500 dark:text-slate-400 block text-[11px]">{t('zoneDetail.waterDepth')}</span>
                   <strong className="text-sm font-black text-cyan-600 dark:text-cyan-400">
                     {zone.weather_metrics?.water_depth_cm ?? zone.weather_data?.water_level_cm ?? 45} cm
                   </strong>
                 </div>
 
                 <div className="p-3 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800">
-                  <span className="text-slate-500 dark:text-slate-400 block text-[11px]">Wind Velocity</span>
+                  <span className="text-slate-500 dark:text-slate-400 block text-[11px]">{t('zoneDetail.windVelocity')}</span>
                   <strong className="text-sm font-black text-amber-600 dark:text-amber-400">
                     {zone.weather_metrics?.wind_speed_kmh ?? zone.weather_data?.wind_speed_kmh ?? 38} km/h
                   </strong>
                 </div>
 
                 <div className="p-3 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800">
-                  <span className="text-slate-500 dark:text-slate-400 block text-[11px]">Ambient Temp</span>
+                  <span className="text-slate-500 dark:text-slate-400 block text-[11px]">{t('zoneDetail.ambientTemp')}</span>
                   <strong className="text-sm font-black text-slate-800 dark:text-slate-300">
                     {zone.weather_metrics?.temperature_c ?? zone.weather_data?.temperature_c ?? 29}°C
                   </strong>
@@ -192,7 +194,7 @@ export const ZoneDetailModal: React.FC<ZoneDetailModalProps> = ({ zone, isOpen, 
           {zoneNews.length > 0 && (
             <div className="space-y-3">
               <h3 className="text-xs font-bold text-slate-900 dark:text-white font-heading uppercase tracking-wider">
-                Zone-Specific Bulletins ({zone.ward_name})
+                {t('zoneDetail.zoneBulletins', { ward: tWard(zone.ward_id, zone.ward_name) })}
               </h3>
               <div className="space-y-2">
                 {zoneNews.map(news => (
@@ -208,8 +210,8 @@ export const ZoneDetailModal: React.FC<ZoneDetailModalProps> = ({ zone, isOpen, 
                         {formatBulletinDate(news.published_at)}
                       </span>
                     </div>
-                    <h4 className="text-xs font-bold text-slate-900 dark:text-white">{news.title}</h4>
-                    <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">{news.summary || news.overview}</p>
+                    <h4 className="text-xs font-bold text-slate-900 dark:text-white">{tx(news.title)}</h4>
+                    <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">{tx(news.summary || news.overview)}</p>
                   </div>
                 ))}
               </div>
@@ -219,8 +221,8 @@ export const ZoneDetailModal: React.FC<ZoneDetailModalProps> = ({ zone, isOpen, 
           {/* 6. Evacuation Shelters & Relief Camps Near This Ward */}
           <div className="space-y-3">
             <h3 className="text-xs font-bold text-slate-900 dark:text-white font-heading uppercase tracking-wider flex items-center justify-between">
-              <span>Designated Safe Shelters & Relief Camps Near Ward #{zone.ward_id}</span>
-              <span className="text-[10px] text-slate-500">{nearbySafePlaces.length} Facilities Available</span>
+              <span>{t('zoneDetail.sheltersNearWard', { id: zone.ward_id })}</span>
+              <span className="text-[10px] text-slate-500">{t('zoneDetail.facilitiesCount', { count: nearbySafePlaces.length })}</span>
             </h3>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -230,7 +232,7 @@ export const ZoneDetailModal: React.FC<ZoneDetailModalProps> = ({ zone, isOpen, 
                   className="p-3.5 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800 space-y-2 text-xs"
                 >
                   <div className="flex items-center justify-between">
-                    <strong className="text-slate-900 dark:text-white font-heading">{place.name}</strong>
+                    <strong className="text-slate-900 dark:text-white font-heading">{tx(place.name)}</strong>
                     <span className="text-[10px] font-bold text-slate-600 dark:text-slate-400 bg-white dark:bg-slate-900 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-800">
                       {place.distance_km} km
                     </span>
@@ -238,12 +240,12 @@ export const ZoneDetailModal: React.FC<ZoneDetailModalProps> = ({ zone, isOpen, 
 
                   <p className="text-[11px] text-slate-600 dark:text-slate-400 flex items-center gap-1">
                     <MapPin className="w-3 h-3 text-slate-400 shrink-0" />
-                    <span>{place.address}</span>
+                    <span>{tx(place.address)}</span>
                   </p>
 
                   <div className="flex items-center justify-between pt-1 border-t border-slate-200 dark:border-slate-800/80 text-[11px]">
                     <span className="text-emerald-700 dark:text-emerald-400 font-semibold">
-                      {place.total_capacity - place.occupied_capacity} spots free
+                      {t('zoneDetail.spotsFree', { count: place.total_capacity - place.occupied_capacity })}
                     </span>
                     <a
                       href={`https://www.google.com/maps/dir/?api=1&destination=${place.latitude},${place.longitude}`}
@@ -251,7 +253,7 @@ export const ZoneDetailModal: React.FC<ZoneDetailModalProps> = ({ zone, isOpen, 
                       rel="noopener noreferrer"
                       className="text-[#0B3D91] dark:text-sky-400 hover:underline flex items-center gap-1 font-bold"
                     >
-                      <span>Directions</span>
+                      <span>{t('zoneDetail.directions')}</span>
                       <ExternalLink className="w-3 h-3" />
                     </a>
                   </div>
@@ -265,13 +267,13 @@ export const ZoneDetailModal: React.FC<ZoneDetailModalProps> = ({ zone, isOpen, 
         <div className="p-4 bg-slate-50 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
           <span className="text-[11px] text-slate-500 flex items-center gap-1">
             <Clock className="w-3 h-3" />
-            Last Updated: {zone.last_updated ? new Date(zone.last_updated).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Live'}
+            {t('zoneDetail.lastUpdated')}: {zone.last_updated ? formatTime(zone.last_updated, { hour: '2-digit', minute: '2-digit' }) : t('common.active')}
           </span>
           <button
             onClick={onClose}
             className="px-4 py-2 bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-white rounded-xl text-xs font-bold transition cursor-pointer"
           >
-            Close Assessment
+            {t('zoneDetail.closeBtn')}
           </button>
         </div>
       </div>

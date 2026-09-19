@@ -6,6 +6,9 @@
 
 import L from 'leaflet';
 import { OfficialFieldUpdate } from '../../../types';
+import { translate, formatTime } from '../../../i18n/translate';
+import { tMitigationStatus, tWard } from '../../../i18n/domain';
+import { tx } from '../../../i18n/dynamicText';
 
 export function renderOfficialUpdatesLayer(
   layerGroup: L.LayerGroup,
@@ -43,7 +46,7 @@ export function renderOfficialUpdatesLayer(
           cursor: pointer;
           white-space: nowrap;
         ">
-          ⚡ <span>${(update.mitigation_status || 'ACTION').replace('_', ' ')}</span>
+          ⚡ <span>${tMitigationStatus(update.mitigation_status || 'ACTION')}</span>
         </div>
       `,
       iconAnchor: [45, 16]
@@ -51,12 +54,12 @@ export function renderOfficialUpdatesLayer(
 
     const marker = L.marker([lat, lng], { icon });
 
-    let formattedTime = 'Active';
+    let formattedTime = translate('common.active');
     if (update.submitted_at) {
       try {
         const d = new Date(update.submitted_at);
         if (!isNaN(d.getTime())) {
-          formattedTime = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+          formattedTime = formatTime(d, { hour: '2-digit', minute: '2-digit' });
         }
       } catch {}
     }
@@ -64,25 +67,25 @@ export function renderOfficialUpdatesLayer(
     marker.bindPopup(`
       <div style="padding: 6px 8px; font-size: 11px; min-width: 190px; line-height: 1.4; color: #f8fafc;">
         <div style="font-size: 10px; text-transform: uppercase; font-weight: 800; color: #38bdf8; margin-bottom: 2px;">
-          OFFICIAL BMC MITIGATION ACTION
+          ${translate('map.officialBmcMitigationAction')}
         </div>
         <h4 style="font-size: 12px; font-weight: 700; color: #ffffff; margin: 2px 0 4px;">
-          ${update.ward_name}
+          ${tWard(update.ward_id, update.ward_name)}
         </h4>
         <p style="font-size: 11px; color: #e2e8f0; margin-bottom: 4px;">
-          <strong>Status:</strong> <span style="color: ${markerColor};">${(update.mitigation_status || update.official_status || update.status || 'ACTION').replace('_', ' ')}</span>
+          <strong>${translate('map.status')}:</strong> <span style="color: ${markerColor};">${tMitigationStatus(update.mitigation_status || update.official_status || update.status || 'ACTION')}</span>
         </p>
         <p style="font-size: 11px; color: #94a3b8; margin-bottom: 4px; line-height: 1.35;">
-          ${update.official_note}
+          ${tx(update.official_note)}
         </p>
         ${update.action_taken ? `
           <p style="font-size: 10px; color: #34d399; margin-bottom: 4px;">
-            <b>Action:</b> ${update.action_taken}
+            <b>${translate('map.action')}:</b> ${tx(update.action_taken)}
           </p>
         ` : ''}
         <div style="font-size: 10px; color: #64748b; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 4px;">
-          <div>Officer: ${update.official_name} (${update.official_department})</div>
-          <div style="margin-top: 2px;">Logged at: ${formattedTime}</div>
+          <div>${translate('map.officer')}: ${update.official_name} (${tx(update.official_department)})</div>
+          <div style="margin-top: 2px;">${translate('map.loggedAt')}: ${formattedTime}</div>
         </div>
       </div>
     `);
