@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useDisasterData } from '../../context/DisasterDataContext';
+import { useLanguage } from '../../context/LanguageContext';
 import { SafePlace } from '../../types';
 import { 
   Building2, 
@@ -37,6 +38,7 @@ const calculateHaversineDistance = (
 
 export const SafePlaceFinder: React.FC = () => {
   const { safePlaces, userLocation } = useDisasterData();
+  const { t, tx, tWard } = useLanguage();
   const [filterType, setFilterType] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState<string>('');
 
@@ -148,11 +150,11 @@ export const SafePlaceFinder: React.FC = () => {
               <Building2 className="w-5 h-5" />
             </span>
             <h2 className="text-xl md:text-2xl font-bold text-[#0F172A] dark:text-white">
-              Safe Places & Evacuation Shelters
+              {t('safePlaces.title')}
             </h2>
           </div>
           <p className="text-xs text-[#475569] dark:text-slate-400 mt-1">
-            Verified emergency locations with live bed capacity and automatic hazard-zone exclusion.
+            {t('safePlaces.subtitle')}
           </p>
         </div>
 
@@ -161,7 +163,7 @@ export const SafePlaceFinder: React.FC = () => {
           <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
           <input
             type="text"
-            placeholder="Search hospitals, cyclone shelters, camps..."
+            placeholder={t('safePlaces.searchPlaceholder')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full bg-[#FFFFFF] dark:bg-slate-900 border border-[#D1D5DB] dark:border-slate-800 rounded-md pl-9 pr-3 py-2 text-xs text-[#0F172A] dark:text-white placeholder-slate-400 focus:outline-none focus:border-[#059669]"
@@ -172,11 +174,11 @@ export const SafePlaceFinder: React.FC = () => {
       {/* Filter Tabs */}
       <div className="flex items-center gap-2 overflow-x-auto pb-1 text-xs">
         {[
-          { id: 'ALL', label: 'All Safe Facilities' },
-          { id: 'hospital', label: 'Hospitals & Trauma Centers' },
-          { id: 'cyclone_shelter', label: 'Cyclone Shelters' },
-          { id: 'government_camp', label: 'Government Relief Camps' },
-          { id: 'fire_station', label: 'Fire & Rescue Stations' }
+          { id: 'ALL', label: t('safePlaces.filterAll') },
+          { id: 'hospital', label: t('safePlaces.filterHospital') },
+          { id: 'cyclone_shelter', label: t('safePlaces.filterCycloneShelter') },
+          { id: 'government_camp', label: t('safePlaces.filterGovCamp') },
+          { id: 'fire_station', label: t('safePlaces.filterFireStation') }
         ].map(tab => (
           <button
             key={tab.id}
@@ -198,10 +200,10 @@ export const SafePlaceFinder: React.FC = () => {
           <div className="col-span-full bg-[#FFFFFF] dark:bg-slate-900 rounded-lg p-8 border border-[#D1D5DB] dark:border-slate-800 text-center space-y-2">
             <Building2 className="w-8 h-8 text-[#475569] dark:text-slate-400 mx-auto opacity-60" />
             <h4 className="text-sm font-semibold text-[#0F172A] dark:text-white">
-              No matching emergency facilities found.
+              {t('safePlaces.noMatching')}
             </h4>
             <p className="text-xs text-[#475569] dark:text-slate-400">
-              Try adjusting your search query or category filter.
+              {t('safePlaces.noMatchingSub')}
             </p>
           </div>
         ) : (
@@ -210,11 +212,11 @@ export const SafePlaceFinder: React.FC = () => {
             const pType = place.type || 'official_shelter';
 
             // Determine capacity wording label
-            let capacityLabel = 'AVAILABLE CAPACITY';
+            let capacityLabel = t('safePlaces.availableCapacity');
             if (pType === 'hospital') {
-              capacityLabel = 'AVAILABLE BEDS';
+              capacityLabel = t('safePlaces.availableBeds');
             } else if (pType === 'fire_station' || pType === 'police_station') {
-              capacityLabel = 'RESCUE CAPACITY';
+              capacityLabel = t('safePlaces.rescueCapacity');
             }
 
             // Left severity indicator rail styling
@@ -237,35 +239,35 @@ export const SafePlaceFinder: React.FC = () => {
                   <div className="flex items-start justify-between gap-2">
                     {/* Facility Type Badge */}
                     <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-[#F8F9FA] dark:bg-slate-800 text-[#0F172A] dark:text-slate-200 border border-[#D1D5DB] dark:border-slate-700 uppercase tracking-wider">
-                      {pType === 'hospital' ? 'Hospital & Trauma Center' :
-                       pType === 'cyclone_shelter' || pType === 'official_shelter' ? 'Cyclone & Evacuation Shelter' :
-                       pType === 'government_camp' || pType === 'temporary_camp' || pType === 'relief_centre' ? 'Government Relief Camp' :
-                       pType === 'fire_station' ? 'Fire & Rescue Station' :
-                       pType === 'police_station' ? 'Police & Response Post' : 'Emergency Facility'}
+                      {pType === 'hospital' ? t('safePlaces.typeHospital') :
+                       pType === 'cyclone_shelter' || pType === 'official_shelter' ? t('safePlaces.typeCycloneShelter') :
+                       pType === 'government_camp' || pType === 'temporary_camp' || pType === 'relief_centre' ? t('safePlaces.typeGovCamp') :
+                       pType === 'fire_station' ? t('safePlaces.typeFireStation') :
+                       pType === 'police_station' ? t('safePlaces.typePoliceStation') : t('safePlaces.typeEmergencyFacility')}
                     </span>
 
                     {/* Operational Status Pill */}
                     {place.availabilityStatus === 'INACTIVE' ? (
                       <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-rose-50 text-rose-800 dark:bg-rose-950/40 dark:text-rose-300 border border-rose-300 dark:border-rose-700/60 flex items-center gap-1 shrink-0">
                         <AlertTriangle className="w-3 h-3 text-rose-600" />
-                        Inactive (Hazard Zone)
+                        {t('safePlaces.inactiveHazard')}
                       </span>
                     ) : place.availabilityStatus === 'FULL' ? (
                       <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-rose-50 text-rose-800 dark:bg-rose-950/40 dark:text-rose-300 border border-rose-300 dark:border-rose-700/60 shrink-0">
-                        Full (0 Available)
+                        {t('safePlaces.fullStatus')}
                       </span>
                     ) : place.availabilityStatus === 'NEAR_FULL' ? (
                       <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-orange-50 text-orange-800 dark:bg-orange-950/40 dark:text-orange-300 border border-orange-300 dark:border-orange-700/60 shrink-0">
-                        Near Full
+                        {t('safePlaces.nearFull')}
                       </span>
                     ) : place.availabilityStatus === 'FILLING_UP' ? (
                       <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-amber-50 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300 border border-amber-300 dark:border-amber-700/60 shrink-0">
-                        Filling Up
+                        {t('safePlaces.fillingUp')}
                       </span>
                     ) : (
                       <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700/60 shrink-0 flex items-center gap-1">
                         <ShieldCheck className="w-3 h-3 text-emerald-600" />
-                        Open
+                        {t('safePlaces.open')}
                       </span>
                     )}
                   </div>
@@ -273,11 +275,11 @@ export const SafePlaceFinder: React.FC = () => {
                   {/* Facility Name & Address */}
                   <div>
                     <h3 className="text-sm font-bold text-[#0F172A] dark:text-white leading-snug">
-                      {place.name}
+                      {tx(place.name)}
                     </h3>
                     <p className="text-xs text-[#475569] dark:text-slate-400 mt-1 flex items-start gap-1 leading-normal">
                       <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5" />
-                      <span>{place.address}</span>
+                      <span>{tx(place.address)}</span>
                     </p>
                   </div>
                 </div>
@@ -301,7 +303,7 @@ export const SafePlaceFinder: React.FC = () => {
                         ? 'bg-[#D97706]/10 text-[#D97706] border-[#D97706]/30'
                         : 'bg-[#DC2626]/10 text-[#DC2626] border-[#DC2626]/30'
                     }`}>
-                      {place.percentAvail}% Available
+                      {t('safePlaces.percentAvailable', { percent: place.percentAvail })}
                     </span>
                   </div>
 
@@ -323,15 +325,15 @@ export const SafePlaceFinder: React.FC = () => {
                 {/* 3. LOCATION & PROXIMITY */}
                 <div className="flex items-center justify-between text-xs pt-1">
                   <span className="text-[#475569] dark:text-slate-400 font-semibold bg-[#F8F9FA] dark:bg-slate-800 px-2 py-0.5 rounded border border-[#D1D5DB] dark:border-slate-700">
-                    Ward #{place.ward_id}
+                    {t('common.ward')} #{place.ward_id}{place.ward_name ? ` • ${tWard(place.ward_id, place.ward_name)}` : ''}
                   </span>
 
                   <span className="font-semibold text-[#0F172A] dark:text-slate-200 flex items-center gap-1">
                     <MapPin className="w-3.5 h-3.5 text-[#D97706]" />
                     {place.computedDistanceKm !== undefined ? (
-                      <span>{place.computedDistanceKm} km away</span>
+                      <span>{t('safePlaces.distanceAway', { dist: place.computedDistanceKm })}</span>
                     ) : (
-                      <span className="text-slate-400">Location Required</span>
+                      <span className="text-slate-400">{t('safePlaces.locationRequired')}</span>
                     )}
                   </span>
                 </div>
@@ -342,10 +344,10 @@ export const SafePlaceFinder: React.FC = () => {
                   <a
                     href={`tel:${contactPhone}`}
                     className="px-3 py-1.5 bg-[#F8F9FA] hover:bg-[#E2E8F0] dark:bg-slate-800 dark:hover:bg-slate-700 text-[#0F172A] dark:text-slate-200 border border-[#D1D5DB] dark:border-slate-700 rounded-md text-xs font-semibold transition flex items-center gap-1.5 cursor-pointer"
-                    title={`Call ${place.name}: ${contactPhone}`}
+                    title={t('safePlaces.callFacility', { name: tx(place.name), phone: contactPhone })}
                   >
                     <Phone className="w-3.5 h-3.5 text-[#D97706]" />
-                    <span>Call</span>
+                    <span>{t('safePlaces.call')}</span>
                   </a>
 
                   {/* Get Directions Button */}
@@ -356,7 +358,7 @@ export const SafePlaceFinder: React.FC = () => {
                     className="px-3.5 py-1.5 bg-[#059669] hover:bg-[#047857] text-white rounded-md text-xs font-semibold transition flex items-center gap-1.5 cursor-pointer"
                   >
                     <Navigation className="w-3.5 h-3.5" />
-                    <span>Get Directions</span>
+                    <span>{t('safePlaces.getDirections')}</span>
                   </a>
                 </div>
               </div>

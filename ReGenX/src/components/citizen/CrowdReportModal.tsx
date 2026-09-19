@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useDisasterData } from '../../context/DisasterDataContext';
 import { useAuth } from '../../context/AuthContext';
+import { useLanguage } from '../../context/LanguageContext';
 import { BMC_WARDS } from '../../data/bmcWards';
 import { 
   X, 
@@ -20,6 +21,7 @@ interface CrowdReportModalProps {
 export const CrowdReportModal: React.FC<CrowdReportModalProps> = ({ isOpen, onClose }) => {
   const { userLocation, submitCrowdReport } = useDisasterData();
   const { user } = useAuth();
+  const { t, tWard, tZone } = useLanguage();
 
   const [selectedWardId, setSelectedWardId] = useState<number>(userLocation.ward_id || 57);
   const [description, setDescription] = useState('');
@@ -45,12 +47,12 @@ export const CrowdReportModal: React.FC<CrowdReportModalProps> = ({ isOpen, onCl
 
     const descClean = description.trim();
     if (!descClean) {
-      setValidationError('Please provide a detailed situation description before submitting.');
+      setValidationError(t('crowdReport.errDescription'));
       return;
     }
 
     if (!selectedWardId || selectedWardId < 1 || selectedWardId > 67) {
-      setValidationError('Please select a valid BMC ward.');
+      setValidationError(t('crowdReport.errWard'));
       return;
     }
 
@@ -90,7 +92,7 @@ export const CrowdReportModal: React.FC<CrowdReportModalProps> = ({ isOpen, onCl
       }, 2000);
     } catch (err: any) {
       setIsSubmitting(false);
-      setValidationError(err?.message || 'Failed to submit report. Please try again.');
+      setValidationError(err?.message || t('crowdReport.errSubmit'));
     }
   };
 
@@ -105,15 +107,16 @@ export const CrowdReportModal: React.FC<CrowdReportModalProps> = ({ isOpen, onCl
             </span>
             <div>
               <h3 className="text-sm font-black font-heading uppercase tracking-wide text-white">
-                Submit Ground Observation
+                {t('crowdReport.title')}
               </h3>
               <p className="text-xs text-slate-300">
-                Direct crowd-sourced intelligence to BMC emergency triage
+                {t('crowdReport.subtitle')}
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
+            aria-label={t('common.close')}
             className="p-1 rounded-md hover:bg-slate-800 text-slate-400 hover:text-white transition cursor-pointer"
           >
             <X className="w-5 h-5" />
@@ -127,10 +130,10 @@ export const CrowdReportModal: React.FC<CrowdReportModalProps> = ({ isOpen, onCl
               <CheckCircle2 className="w-7 h-7 text-[#059669]" />
             </div>
             <h4 className="text-base font-black text-[#0F172A] dark:text-white font-heading">
-              Observation Submitted Successfully!
+              {t('crowdReport.successTitle')}
             </h4>
             <p className="text-xs text-[#475569] dark:text-slate-400 max-w-xs">
-              Thank you for contributing. Your observation has been dispatched to the BMC emergency triage queue.
+              {t('crowdReport.successDesc')}
             </p>
           </div>
         ) : (
@@ -144,7 +147,7 @@ export const CrowdReportModal: React.FC<CrowdReportModalProps> = ({ isOpen, onCl
             {/* Ward Selector */}
             <div>
               <label className="block text-[#0F172A] dark:text-slate-200 font-bold mb-1">
-                Select Observed BMC Ward
+                {t('crowdReport.selectWard')}
               </label>
               <select
                 value={selectedWardId}
@@ -153,7 +156,7 @@ export const CrowdReportModal: React.FC<CrowdReportModalProps> = ({ isOpen, onCl
               >
                 {BMC_WARDS.map(w => (
                   <option key={w.ward_id} value={w.ward_id}>
-                    Ward #{w.ward_id}: {w.ward_name} ({w.zone} Zone)
+                    {t('common.ward')} #{w.ward_id}: {tWard(w.ward_id, w.ward_name)} ({tZone(w.zone)})
                   </option>
                 ))}
               </select>
@@ -162,12 +165,12 @@ export const CrowdReportModal: React.FC<CrowdReportModalProps> = ({ isOpen, onCl
             {/* Section: Structured Questions */}
             <div className="p-4 bg-[#F8F9FA] dark:bg-slate-950 rounded-md border border-[#D1D5DB] dark:border-slate-800 space-y-3">
               <span className="font-bold text-[#0F172A] dark:text-white block uppercase tracking-wider text-[11px]">
-                Ground Condition Checklist
+                {t('crowdReport.checklistTitle')}
               </span>
 
               {/* Waterlogging */}
               <div className="flex items-center justify-between gap-2">
-                <span className="text-[#0F172A] dark:text-slate-300">Is waterlogging present?</span>
+                <span className="text-[#0F172A] dark:text-slate-300">{t('crowdReport.qWaterlogging')}</span>
                 <div className="flex gap-1">
                   {(['YES', 'NO', 'UNKNOWN'] as const).map(opt => (
                     <button
@@ -182,7 +185,7 @@ export const CrowdReportModal: React.FC<CrowdReportModalProps> = ({ isOpen, onCl
                           : 'bg-[#FFFFFF] dark:bg-slate-900 text-[#475569] dark:text-slate-400 border-[#D1D5DB] dark:border-slate-800'
                       }`}
                     >
-                      {opt}
+                      {opt === 'YES' ? t('common.yes') : opt === 'NO' ? t('common.no') : t('common.unknown')}
                     </button>
                   ))}
                 </div>
@@ -190,7 +193,7 @@ export const CrowdReportModal: React.FC<CrowdReportModalProps> = ({ isOpen, onCl
 
               {/* Road Passable */}
               <div className="flex items-center justify-between gap-2">
-                <span className="text-[#0F172A] dark:text-slate-300">Are primary roads passable?</span>
+                <span className="text-[#0F172A] dark:text-slate-300">{t('crowdReport.qRoadPassable')}</span>
                 <div className="flex gap-1">
                   {(['YES', 'NO', 'UNKNOWN'] as const).map(opt => (
                     <button
@@ -205,7 +208,7 @@ export const CrowdReportModal: React.FC<CrowdReportModalProps> = ({ isOpen, onCl
                           : 'bg-[#FFFFFF] dark:bg-slate-900 text-[#475569] dark:text-slate-400 border-[#D1D5DB] dark:border-slate-800'
                       }`}
                     >
-                      {opt}
+                      {opt === 'YES' ? t('common.yes') : opt === 'NO' ? t('common.no') : t('common.unknown')}
                     </button>
                   ))}
                 </div>
@@ -213,7 +216,7 @@ export const CrowdReportModal: React.FC<CrowdReportModalProps> = ({ isOpen, onCl
 
               {/* Power Outage */}
               <div className="flex items-center justify-between gap-2">
-                <span className="text-[#0F172A] dark:text-slate-300">Electricity / Power Outage?</span>
+                <span className="text-[#0F172A] dark:text-slate-300">{t('crowdReport.qPowerOutage')}</span>
                 <div className="flex gap-1">
                   {(['YES', 'NO', 'UNKNOWN'] as const).map(opt => (
                     <button
@@ -228,7 +231,7 @@ export const CrowdReportModal: React.FC<CrowdReportModalProps> = ({ isOpen, onCl
                           : 'bg-[#FFFFFF] dark:bg-slate-900 text-[#475569] dark:text-slate-400 border-[#D1D5DB] dark:border-slate-800'
                       }`}
                     >
-                      {opt}
+                      {opt === 'YES' ? t('common.yes') : opt === 'NO' ? t('common.no') : t('common.unknown')}
                     </button>
                   ))}
                 </div>
@@ -236,7 +239,7 @@ export const CrowdReportModal: React.FC<CrowdReportModalProps> = ({ isOpen, onCl
 
               {/* Structural Damage */}
               <div className="flex items-center justify-between gap-2">
-                <span className="text-[#0F172A] dark:text-slate-300">Trees fallen / structural damage?</span>
+                <span className="text-[#0F172A] dark:text-slate-300">{t('crowdReport.qStructuralDamage')}</span>
                 <div className="flex gap-1">
                   {(['YES', 'NO', 'UNKNOWN'] as const).map(opt => (
                     <button
@@ -251,7 +254,7 @@ export const CrowdReportModal: React.FC<CrowdReportModalProps> = ({ isOpen, onCl
                           : 'bg-[#FFFFFF] dark:bg-slate-900 text-[#475569] dark:text-slate-400 border-[#D1D5DB] dark:border-slate-800'
                       }`}
                     >
-                      {opt}
+                      {opt === 'YES' ? t('common.yes') : opt === 'NO' ? t('common.no') : t('common.unknown')}
                     </button>
                   ))}
                 </div>
@@ -262,7 +265,7 @@ export const CrowdReportModal: React.FC<CrowdReportModalProps> = ({ isOpen, onCl
             {waterloggingPresent === 'YES' && (
               <div>
                 <label className="block text-[#0F172A] dark:text-slate-200 font-bold mb-1">
-                  Estimated Inundation Depth: <strong className="text-[#D97706]">{waterloggingDepthCm} cm</strong>
+                  {t('crowdReport.depthLabel', { depth: waterloggingDepthCm })}
                 </label>
                 <input
                   type="range"
@@ -279,14 +282,14 @@ export const CrowdReportModal: React.FC<CrowdReportModalProps> = ({ isOpen, onCl
             {/* Observations Description */}
             <div>
               <label className="block text-[#0F172A] dark:text-slate-200 font-bold mb-1">
-                Detailed Situation Description
+                {t('crowdReport.descLabel')}
               </label>
               <textarea
                 rows={3}
                 required
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder="Describe current street conditions, drain overflow, or emergency needs..."
+                placeholder={t('crowdReport.descPlaceholder')}
                 className="w-full bg-[#FFFFFF] dark:bg-slate-950 border border-[#D1D5DB] dark:border-slate-800 rounded-md p-3 text-[#0F172A] dark:text-white placeholder-slate-400 focus:outline-none focus:border-[#D97706]"
               />
             </div>
@@ -295,7 +298,7 @@ export const CrowdReportModal: React.FC<CrowdReportModalProps> = ({ isOpen, onCl
             <div className="p-3 bg-[#F8F9FA] dark:bg-slate-950 border border-[#D1D5DB] dark:border-slate-800 rounded-md text-[11px] text-[#475569] dark:text-slate-400 flex items-start gap-2">
               <Info className="w-4 h-4 text-[#D97706] shrink-0 mt-0.5" />
               <span>
-                Note: Ground reports are displayed alongside official data and reviewed in the triage queue. They do not alter backend mathematical risk formulas.
+                {t('crowdReport.sourceTruthNote')}
               </span>
             </div>
 
@@ -306,7 +309,7 @@ export const CrowdReportModal: React.FC<CrowdReportModalProps> = ({ isOpen, onCl
               className="w-full py-2.5 bg-[#D97706] hover:bg-[#B45309] text-white rounded-md font-bold text-xs transition shadow-2xs flex items-center justify-center gap-2 cursor-pointer"
             >
               <Send className="w-3.5 h-3.5" />
-              <span>{isSubmitting ? 'Transmitting...' : 'Submit Ground Observation'}</span>
+              <span>{isSubmitting ? t('crowdReport.transmitting') : t('crowdReport.submitBtn')}</span>
             </button>
           </form>
         )}

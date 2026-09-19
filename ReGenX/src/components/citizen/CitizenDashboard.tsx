@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useDisasterData } from '../../context/DisasterDataContext';
+import { useLanguage } from '../../context/LanguageContext';
 import { DisasterMap } from '../map/DisasterMap';
 import { CrowdReportModal } from './CrowdReportModal';
 import { ZoneDetailModal } from '../map/ZoneDetailModal';
@@ -39,6 +40,7 @@ export const CitizenDashboard: React.FC = () => {
     crowdReports,
     setSelectedZone
   } = useDisasterData();
+  const { t, tx, tWard, tZone, tHazard, tSeverity } = useLanguage();
 
   const [activeView, setActiveView] = useState<'OVERVIEW' | 'MAP'>('OVERVIEW');
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
@@ -96,7 +98,7 @@ export const CitizenDashboard: React.FC = () => {
             }`}
           >
             <LayoutDashboard className="w-3.5 h-3.5" />
-            <span>Disaster Awareness Overview</span>
+            <span>{t('citizenDashboard.viewOverview')}</span>
           </button>
 
           <button
@@ -108,7 +110,7 @@ export const CitizenDashboard: React.FC = () => {
             }`}
           >
             <MapIcon className="w-3.5 h-3.5" />
-            <span>Interactive 67-Ward Map</span>
+            <span>{t('citizenDashboard.viewMap')}</span>
           </button>
         </div>
 
@@ -117,7 +119,7 @@ export const CitizenDashboard: React.FC = () => {
           {userLocation.latitude && userLocation.longitude ? (
             <div className="flex items-center gap-1.5 text-[#059669] font-semibold bg-[#059669]/10 px-2.5 py-1 rounded-md border border-[#059669]/30">
               <span className="w-2 h-2 rounded-full bg-[#059669]" />
-              <span>GPS Active: {userLocation.latitude.toFixed(4)}°N, {userLocation.longitude.toFixed(4)}°E</span>
+              <span>{t('citizenDashboard.gpsActive', { lat: userLocation.latitude.toFixed(4), lng: userLocation.longitude.toFixed(4) })}</span>
             </div>
           ) : (
             <button
@@ -130,7 +132,7 @@ export const CitizenDashboard: React.FC = () => {
               ) : (
                 <Crosshair className="w-3 h-3" />
               )}
-              <span>{userLocation.isLoading ? 'Locating...' : 'Enable GPS Location'}</span>
+              <span>{userLocation.isLoading ? t('citizenDashboard.locating') : t('citizenDashboard.enableGps')}</span>
             </button>
           )}
         </div>
@@ -145,10 +147,10 @@ export const CitizenDashboard: React.FC = () => {
             </div>
             <div>
               <h3 className="text-xs md:text-sm font-bold tracking-wide uppercase flex items-center gap-2">
-                <span>⚠️ Immediate Evacuation Advisory: High-Risk Inundation Zone!</span>
+                <span>{t('citizenDashboard.evacTitle')}</span>
               </h3>
               <p className="text-[11px] text-rose-100 mt-0.5">
-                Current Ward: <strong>{userLocation.ward_name || `Ward #${userLocation.ward_id}`}</strong>. Move immediately to higher elevation or designated relief center.
+                {t('citizenDashboard.currentWard')} <strong>{userLocation.ward_id ? tWard(userLocation.ward_id, userLocation.ward_name) : (userLocation.ward_name || '')}</strong>{t('citizenDashboard.evacInstructions')}
               </p>
             </div>
           </div>
@@ -161,7 +163,7 @@ export const CitizenDashboard: React.FC = () => {
                 rel="noopener noreferrer"
                 className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 bg-white text-rose-700 hover:bg-rose-50 rounded-xl text-xs font-bold transition shadow-sm"
               >
-                <span>Navigate to {nearestShelter.name} ({nearestShelter.distance_km} km)</span>
+                <span>{t('citizenDashboard.navigateShelter', { name: tx(nearestShelter.name), dist: nearestShelter.distance_km ?? 0 })}</span>
                 <Navigation className="w-3.5 h-3.5" />
               </a>
 
@@ -183,53 +185,53 @@ export const CitizenDashboard: React.FC = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
             <div className="bg-[#FFFFFF] dark:bg-slate-900 p-4 rounded-r-lg border-y border-r border-[#D1D5DB] dark:border-slate-800 border-l-4 border-l-[#DC2626] space-y-1">
               <div className="flex items-center justify-between text-[#DC2626]">
-                <span className="text-[11px] font-semibold uppercase tracking-wider text-[#475569] dark:text-slate-400">Active Hazards</span>
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-[#475569] dark:text-slate-400">{t('citizenDashboard.activeHazards')}</span>
                 <ShieldAlert className="w-4 h-4" />
               </div>
               <div className="text-2xl font-bold text-[#0F172A] dark:text-white">
                 {hazardZones.length}
               </div>
               <p className="text-[10px] text-[#DC2626] font-semibold">
-                {emergencyZonesCount} Emergency • {highZonesCount} High Risk
+                {t('citizenDashboard.hazardCounts', { emergency: emergencyZonesCount, high: highZonesCount })}
               </p>
             </div>
 
             <div className="bg-[#FFFFFF] dark:bg-slate-900 p-4 rounded-r-lg border-y border-r border-[#D1D5DB] dark:border-slate-800 border-l-4 border-l-[#059669] space-y-1">
               <div className="flex items-center justify-between text-[#059669]">
-                <span className="text-[11px] font-semibold uppercase tracking-wider text-[#475569] dark:text-slate-400">BMC Ward Coverage</span>
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-[#475569] dark:text-slate-400">{t('citizenDashboard.bmcCoverage')}</span>
                 <ShieldCheck className="w-4 h-4" />
               </div>
               <div className="text-2xl font-bold text-[#0F172A] dark:text-white">
-                67 Wards
+                {t('citizenDashboard.totalWardsCount')}
               </div>
               <p className="text-[10px] text-[#059669] font-semibold">
-                100% Geo-Centroids Monitored
+                {t('citizenDashboard.centroidsMonitored')}
               </p>
             </div>
 
             <div className="bg-[#FFFFFF] dark:bg-slate-900 p-4 rounded-r-lg border-y border-r border-[#D1D5DB] dark:border-slate-800 border-l-4 border-l-[#D97706] space-y-1">
               <div className="flex items-center justify-between text-[#D97706]">
-                <span className="text-[11px] font-semibold uppercase tracking-wider text-[#475569] dark:text-slate-400">Citizen Reports</span>
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-[#475569] dark:text-slate-400">{t('citizenDashboard.citizenReports')}</span>
                 <Radio className="w-4 h-4" />
               </div>
               <div className="text-2xl font-bold text-[#0F172A] dark:text-white">
                 {crowdReports.length}
               </div>
               <p className="text-[10px] text-[#D97706] font-semibold">
-                {crowdReports.filter(r => r.verification_state === 'VERIFIED').length} Verified Observations
+                {t('citizenDashboard.verifiedObservations', { count: crowdReports.filter(r => r.verification_state === 'VERIFIED').length })}
               </p>
             </div>
 
             <div className="bg-[#FFFFFF] dark:bg-slate-900 p-4 rounded-r-lg border-y border-r border-[#D1D5DB] dark:border-slate-800 border-l-4 border-l-[#0F172A] dark:border-l-slate-400 space-y-1">
               <div className="flex items-center justify-between text-[#0F172A] dark:text-slate-300">
-                <span className="text-[11px] font-semibold uppercase tracking-wider text-[#475569] dark:text-slate-400">Field Actions</span>
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-[#475569] dark:text-slate-400">{t('citizenDashboard.fieldActions')}</span>
                 <Activity className="w-4 h-4" />
               </div>
               <div className="text-2xl font-bold text-[#0F172A] dark:text-white">
                 {officialUpdates.length}
               </div>
               <p className="text-[10px] text-[#475569] dark:text-slate-400 font-semibold">
-                BMC Pumps & Response Active
+                {t('citizenDashboard.bmcResponseActive')}
               </p>
             </div>
           </div>
@@ -240,10 +242,10 @@ export const CitizenDashboard: React.FC = () => {
             <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 pb-1.5 border-b border-slate-200 dark:border-slate-800">
               <div className="space-y-0.5">
                 <h3 className="text-sm font-black text-slate-900 dark:text-white font-heading uppercase tracking-wide">
-                  PREPAREDNESS & RESPONSE
+                  {t('citizenDashboard.preparednessTitle')}
                 </h3>
                 <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-                  Field response • Flood awareness • Cyclone preparedness
+                  {t('citizenDashboard.preparednessSubtitle')}
                 </p>
               </div>
             </div>
@@ -254,44 +256,44 @@ export const CitizenDashboard: React.FC = () => {
                 {
                   id: 1,
                   src: '/images/preparedness/photo1_flood_rescue.jpg',
-                  label: 'Flood Rescue',
-                  supportingText: 'Field rescue operation',
-                  alt: 'Flood rescue operation using an inflatable rescue boat'
+                  label: t('citizenDashboard.photoFloodRescue'),
+                  supportingText: t('citizenDashboard.photoFloodRescueSub'),
+                  alt: t('citizenDashboard.photoFloodRescueAlt')
                 },
                 {
                   id: 2,
                   src: '/images/preparedness/photo2_urban_waterlogging.png',
-                  label: 'Urban Waterlogging',
-                  supportingText: 'Flooded-road conditions',
-                  alt: 'Urban road affected by heavy waterlogging'
+                  label: t('citizenDashboard.photoUrbanWaterlogging'),
+                  supportingText: t('citizenDashboard.photoUrbanWaterloggingSub'),
+                  alt: t('citizenDashboard.photoUrbanWaterloggingAlt')
                 },
                 {
                   id: 3,
                   src: '/images/preparedness/photo3_coastal_response.jpg',
-                  label: 'Coastal Response',
-                  supportingText: 'Pre-cyclone field assessment',
-                  alt: 'Disaster response personnel assessing a coastal area'
+                  label: t('citizenDashboard.photoCoastalResponse'),
+                  supportingText: t('citizenDashboard.photoCoastalResponseSub'),
+                  alt: t('citizenDashboard.photoCoastalResponseAlt')
                 },
                 {
                   id: 4,
                   src: '/images/preparedness/photo4_rescue_operations.png',
-                  label: 'Rescue Operations',
-                  supportingText: 'Emergency field response',
-                  alt: 'Rescue teams conducting flood evacuation using inflatable boats'
+                  label: t('citizenDashboard.photoRescueOps'),
+                  supportingText: t('citizenDashboard.photoRescueOpsSub'),
+                  alt: t('citizenDashboard.photoRescueOpsAlt')
                 },
                 {
                   id: 5,
                   src: '/images/preparedness/photo5_cyclone_shelter.jpg',
-                  label: 'Cyclone Shelter',
-                  supportingText: 'Community preparedness',
-                  alt: 'Multipurpose cyclone shelter for disaster preparedness'
+                  label: t('citizenDashboard.photoCycloneShelter'),
+                  supportingText: t('citizenDashboard.photoCycloneShelterSub'),
+                  alt: t('citizenDashboard.photoCycloneShelterAlt')
                 },
                 {
                   id: 6,
                   src: '/images/preparedness/photo6_disaster_awareness.jpg',
-                  label: 'Disaster Awareness',
-                  supportingText: 'Public safety guidance',
-                  alt: 'Odisha disaster awareness and safety guidance poster',
+                  label: t('citizenDashboard.photoDisasterAwareness'),
+                  supportingText: t('citizenDashboard.photoDisasterAwarenessSub'),
+                  alt: t('citizenDashboard.photoDisasterAwarenessAlt'),
                   contain: true
                 }
               ].map((photo, index) => (
@@ -299,7 +301,7 @@ export const CitizenDashboard: React.FC = () => {
                   key={photo.id}
                   tabIndex={0}
                   role="button"
-                  aria-label={`View image: ${photo.label}`}
+                  aria-label={t('citizenDashboard.viewImageAria', { label: photo.label })}
                   onClick={() => setSelectedPhoto(photo)}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
@@ -346,25 +348,25 @@ export const CitizenDashboard: React.FC = () => {
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#FFFFFF] dark:bg-slate-900 p-4 rounded-lg border border-[#D1D5DB] dark:border-slate-800">
                   <div>
                     <h3 className="text-base font-bold text-[#0F172A] dark:text-white">
-                      Active Hazard Zones in Bhubaneswar
+                      {t('citizenDashboard.activeZonesTitle')}
                     </h3>
                     <p className="text-xs text-[#475569] dark:text-slate-400 mt-0.5">
-                      Data-calibrated hazard severity and affected perimeters across 67 wards.
+                      {t('citizenDashboard.activeZonesSubtitle')}
                     </p>
                   </div>
 
                   <div className="flex flex-wrap items-center gap-2.5">
                     <div className="flex items-center gap-2">
-                      <label className="text-xs font-semibold text-[#0F172A] dark:text-slate-300 shrink-0">Ward:</label>
+                      <label className="text-xs font-semibold text-[#0F172A] dark:text-slate-300 shrink-0">{t('common.ward')}:</label>
                       <select
                         value={selectedWardId}
                         onChange={(e) => setSelectedWardId(e.target.value === 'ALL' ? 'ALL' : Number(e.target.value))}
                         className="bg-[#FFFFFF] dark:bg-slate-950 border border-[#D1D5DB] dark:border-slate-700 rounded-md px-3 py-1.5 text-xs text-[#0F172A] dark:text-white font-semibold focus:outline-none focus:ring-2 focus:ring-[#D97706] transition cursor-pointer"
                       >
-                        <option value="ALL">All Wards (67 Wards)</option>
+                        <option value="ALL">{t('citizenDashboard.allWardsFilter')}</option>
                         {BMC_WARDS.map(w => (
                           <option key={w.ward_id} value={w.ward_id}>
-                            Ward #{w.ward_id}: {w.ward_name} ({w.zone} Zone)
+                            {t('common.ward')} #{w.ward_id}: {tWard(w.ward_id, w.ward_name)} ({tZone(w.zone)})
                           </option>
                         ))}
                       </select>
@@ -375,7 +377,7 @@ export const CitizenDashboard: React.FC = () => {
                       className="px-3 py-1.5 bg-[#D97706] hover:bg-[#B45309] text-white rounded-md text-xs font-semibold transition flex items-center gap-1.5 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#D97706]"
                     >
                       <MapIcon className="w-3.5 h-3.5" />
-                      <span>View Full Map</span>
+                      <span>{t('citizenDashboard.viewFullMap')}</span>
                     </button>
                   </div>
                 </div>
@@ -386,20 +388,20 @@ export const CitizenDashboard: React.FC = () => {
                     <table className="w-full text-left border-collapse text-xs">
                       <thead>
                         <tr className="bg-[#0F172A] text-slate-300 border-b border-[#1E293B] text-[11px] font-semibold uppercase tracking-wider">
-                          <th className="py-3 px-4">Hazard & Ward</th>
-                          <th className="py-3 px-3">Severity</th>
-                          <th className="py-3 px-3">Risk Score</th>
-                          <th className="py-3 px-3">Confidence</th>
-                          <th className="py-3 px-3">Radius</th>
-                          <th className="py-3 px-4">Telemetry / Inundation</th>
-                          <th className="py-3 px-4 text-right">Actions</th>
+                          <th className="py-3 px-4">{t('citizenDashboard.thHazardWard')}</th>
+                          <th className="py-3 px-3">{t('citizenDashboard.thSeverity')}</th>
+                          <th className="py-3 px-3">{t('citizenDashboard.thRiskScore')}</th>
+                          <th className="py-3 px-3">{t('citizenDashboard.thConfidence')}</th>
+                          <th className="py-3 px-3">{t('citizenDashboard.thRadius')}</th>
+                          <th className="py-3 px-4">{t('citizenDashboard.thTelemetry')}</th>
+                          <th className="py-3 px-4 text-right">{t('citizenDashboard.thActions')}</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-[#D1D5DB]/60 dark:divide-slate-800/80">
                         {displayedHazards.length === 0 ? (
                           <tr>
                             <td colSpan={7} className="py-8 text-center text-[#475569] dark:text-slate-400 font-medium">
-                              No active hazard records found for the selected ward filter.
+                              {t('citizenDashboard.noHazardsFound')}
                             </td>
                           </tr>
                         ) : (
@@ -412,17 +414,17 @@ export const CitizenDashboard: React.FC = () => {
                                   </div>
                                   <div>
                                     <div className="font-bold text-[#0F172A] dark:text-white capitalize">
-                                      {zone.hazard_type.replace('_', ' ')}
+                                      {tHazard(zone.hazard_type)}
                                     </div>
                                     <div className="text-[11px] text-[#475569] dark:text-slate-400 font-medium">
-                                      Ward #{zone.ward_id}: {zone.ward_name}
+                                      {t('common.ward')} #{zone.ward_id}: {tWard(zone.ward_id, zone.ward_name)}
                                     </div>
                                   </div>
                                 </div>
                               </td>
                               <td className="py-3 px-3 whitespace-nowrap">
                                 <span className={`text-[9px] font-bold px-2 py-0.5 rounded-md border uppercase ${SEVERITY_BG_CLASSES[zone.severity]}`}>
-                                  {zone.severity}
+                                  {tSeverity(zone.severity)}
                                 </span>
                               </td>
                               <td className="py-3 px-3 whitespace-nowrap">
@@ -437,7 +439,7 @@ export const CitizenDashboard: React.FC = () => {
                                 {zone.affected_radius_km} km
                               </td>
                               <td className="py-3 px-4 text-[#475569] dark:text-slate-300 font-medium text-[11px]">
-                                {zone.weather_data?.rainfall_mm ?? 45}mm rain • {zone.weather_data?.water_level_cm ?? 30}cm water
+                                {t('citizenDashboard.telemetryReading', { rain: zone.weather_data?.rainfall_mm ?? 45, water: zone.weather_data?.water_level_cm ?? 30 })}
                               </td>
                               <td className="py-3 px-4 text-right whitespace-nowrap">
                                 <div className="flex items-center justify-end gap-1.5">
@@ -445,14 +447,14 @@ export const CitizenDashboard: React.FC = () => {
                                     onClick={() => setInspectedZone(zone)}
                                     className="px-2.5 py-1 bg-[#F8F9FA] hover:bg-[#E2E8F0] dark:bg-slate-800 dark:hover:bg-slate-700 text-[#0F172A] dark:text-slate-200 border border-[#D1D5DB] rounded-md font-bold text-[11px] transition cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#D97706]"
                                   >
-                                    Inspect
+                                    {t('citizenDashboard.inspect')}
                                   </button>
                                   <button
                                     onClick={() => handleJumpToMapZone(zone)}
                                     className="px-2.5 py-1 bg-[#D97706] hover:bg-[#B45309] text-white rounded-md font-bold text-[11px] transition flex items-center gap-1 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#D97706]"
                                   >
                                     <MapIcon className="w-3 h-3" />
-                                    <span>Map</span>
+                                    <span>{t('citizenDashboard.mapBtn')}</span>
                                   </button>
                                 </div>
                               </td>
@@ -475,11 +477,11 @@ export const CitizenDashboard: React.FC = () => {
                             <Building2 className="w-4 h-4" />
                           </span>
                           <h4 className="text-base font-bold text-[#0F172A] dark:text-white tracking-tight">
-                            Bhubaneswar Municipal Corporation (BMC)
+                            {t('citizenDashboard.bmcTitle')}
                           </h4>
                         </div>
                         <p className="text-xs text-[#475569] dark:text-slate-400 font-semibold mt-0.5">
-                          Prevention Today. Protection Tomorrow.
+                          {t('citizenDashboard.bmcSlogan')}
                         </p>
                       </div>
 
@@ -489,7 +491,7 @@ export const CitizenDashboard: React.FC = () => {
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-[#059669] hover:bg-[#047857] text-white rounded-md font-semibold text-xs transition cursor-pointer w-fit"
                       >
-                        <span>BMC Services</span>
+                        <span>{t('citizenDashboard.bmcServices')}</span>
                         <ExternalLink className="w-3.5 h-3.5" />
                       </a>
                     </div>
@@ -500,35 +502,35 @@ export const CitizenDashboard: React.FC = () => {
                       <div className="space-y-2">
                         <h5 className="font-semibold text-[11px] uppercase tracking-wider text-[#475569] dark:text-slate-400 flex items-center gap-1.5">
                           <Phone className="w-3.5 h-3.5 text-[#D97706]" />
-                          <span>Official Helplines & Contacts</span>
+                          <span>{t('citizenDashboard.helplinesTitle')}</span>
                         </h5>
                         <ul className="space-y-1.5 text-xs">
                           <li className="flex items-center justify-between">
-                            <span className="text-[#475569] dark:text-slate-400">Bhubaneswar One:</span>
+                            <span className="text-[#475569] dark:text-slate-400">{t('citizenDashboard.bhubaneswarOne')}</span>
                             <a href="tel:1929" className="font-semibold text-[#0F172A] dark:text-slate-200 hover:text-[#D97706] hover:underline">
-                              1929 (Toll-Free)
+                              {t('citizenDashboard.tollFree')}
                             </a>
                           </li>
                           <li className="flex items-center justify-between">
-                            <span className="text-[#475569] dark:text-slate-400">BMC Head Office:</span>
+                            <span className="text-[#475569] dark:text-slate-400">{t('citizenDashboard.bmcHeadOffice')}</span>
                             <a href="tel:06742431403" className="font-semibold text-[#0F172A] dark:text-slate-200 hover:text-[#D97706] hover:underline">
                               0674-2431403
                             </a>
                           </li>
                           <li className="flex items-center justify-between">
-                            <span className="text-[#475569] dark:text-slate-400">BMC Contact:</span>
+                            <span className="text-[#475569] dark:text-slate-400">{t('citizenDashboard.bmcContact')}</span>
                             <a href="tel:8280282000" className="font-semibold text-[#0F172A] dark:text-slate-200 hover:text-[#D97706] hover:underline">
                               8280282000
                             </a>
                           </li>
                           <li className="flex items-center justify-between pt-1 border-t border-[#D1D5DB]/60 dark:border-slate-800">
-                            <span className="text-[#475569] dark:text-slate-400">Official Email:</span>
+                            <span className="text-[#475569] dark:text-slate-400">{t('citizenDashboard.officialEmail')}</span>
                             <a href="mailto:info@bmc.gov.in" className="font-semibold text-[#0F172A] dark:text-slate-200 hover:text-[#D97706] hover:underline">
                               info@bmc.gov.in
                             </a>
                           </li>
                           <li className="flex items-center justify-between">
-                            <span className="text-[#475569] dark:text-slate-400">Grievance Portal:</span>
+                            <span className="text-[#475569] dark:text-slate-400">{t('citizenDashboard.grievancePortal')}</span>
                             <a href="mailto:grievance@bmc.gov.in" className="font-semibold text-[#0F172A] dark:text-slate-200 hover:text-[#D97706] hover:underline">
                               grievance@bmc.gov.in
                             </a>
@@ -540,7 +542,7 @@ export const CitizenDashboard: React.FC = () => {
                       <div className="space-y-2">
                         <h5 className="font-bold text-[11px] uppercase tracking-wider text-[#475569] dark:text-slate-400 flex items-center gap-1.5">
                           <Globe className="w-3.5 h-3.5 text-[#059669]" />
-                          <span>Official Links</span>
+                          <span>{t('citizenDashboard.officialLinks')}</span>
                         </h5>
                         <ul className="space-y-2 text-xs font-medium">
                           <li>
@@ -550,7 +552,7 @@ export const CitizenDashboard: React.FC = () => {
                               rel="noopener noreferrer"
                               className="flex items-center justify-between font-bold text-[#0F172A] dark:text-slate-200 hover:text-[#059669] group"
                             >
-                              <span>BMC Official Website</span>
+                              <span>{t('citizenDashboard.bmcOfficialWebsite')}</span>
                               <ExternalLink className="w-3 h-3 text-slate-400 group-hover:text-[#059669]" />
                             </a>
                           </li>
@@ -561,7 +563,7 @@ export const CitizenDashboard: React.FC = () => {
                               rel="noopener noreferrer"
                               className="flex items-center justify-between text-[#475569] dark:text-slate-300 hover:text-[#059669] group"
                             >
-                              <span>BMC Citizen Services</span>
+                              <span>{t('citizenDashboard.bmcCitizenServices')}</span>
                               <ExternalLink className="w-3 h-3 text-slate-400 group-hover:text-[#059669]" />
                             </a>
                           </li>
@@ -572,7 +574,7 @@ export const CitizenDashboard: React.FC = () => {
                               rel="noopener noreferrer"
                               className="flex items-center justify-between text-[#475569] dark:text-slate-300 hover:text-[#059669] group"
                             >
-                              <span>BMC Grievance / Complaint</span>
+                              <span>{t('citizenDashboard.bmcGrievance')}</span>
                               <ExternalLink className="w-3 h-3 text-slate-400 group-hover:text-[#059669]" />
                             </a>
                           </li>
@@ -589,12 +591,12 @@ export const CitizenDashboard: React.FC = () => {
                           />
                           <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A]/85 to-transparent flex items-end p-2">
                             <span className="text-[10px] font-bold text-white tracking-wide">
-                              Bhubaneswar Civic Safety & Preparedness
+                              {t('citizenDashboard.civicSafetyPreparedness')}
                             </span>
                           </div>
                         </div>
                         <p className="text-[11px] text-[#475569] dark:text-slate-400 leading-normal">
-                          Official municipal public safety information provided in collaboration with BMC & Odisha State Disaster Management Authority (OSDMA).
+                          {t('citizenDashboard.osdmaFooterNote')}
                         </p>
                       </div>
                     </div>
@@ -618,10 +620,10 @@ export const CitizenDashboard: React.FC = () => {
         <button
           onClick={() => setIsReportModalOpen(true)}
           className="flex items-center gap-2 px-4 py-2.5 bg-[#D97706] hover:bg-[#B45309] text-white rounded-lg font-semibold text-xs transition cursor-pointer shadow-md"
-          title="Submit Live Ground Observation / Hazard Survey"
+          title={t('citizenDashboard.reportSurveyTooltip')}
         >
           <Plus className="w-4 h-4" />
-          <span>Report Hazard / Observation</span>
+          <span>{t('citizenDashboard.reportHazardObservation')}</span>
         </button>
       </div>
 
@@ -665,7 +667,7 @@ export const CitizenDashboard: React.FC = () => {
               <button
                 onClick={() => setSelectedPhoto(null)}
                 className="p-1 rounded-md hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white transition cursor-pointer"
-                aria-label="Close image lightbox"
+                aria-label={t('citizenDashboard.closeLightbox')}
               >
                 <X className="w-5 h-5" />
               </button>

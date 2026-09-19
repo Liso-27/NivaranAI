@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNotifications } from '../../context/NotificationContext';
 import { useAuth } from '../../context/AuthContext';
+import { useLanguage } from '../../context/LanguageContext';
 import { 
   X, 
   Bell, 
@@ -31,6 +32,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
     permissionStatus 
   } = useNotifications();
   const { user, updateSmsPreference } = useAuth();
+  const { t, tx } = useLanguage();
 
   const [copiedToken, setCopiedToken] = useState(false);
 
@@ -55,16 +57,17 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
             </div>
             <div>
               <h3 className="text-base font-black text-[#2F3E46] dark:text-white font-heading">
-                Disaster Alert & Notification Channels
+                {t('notifSettings.title')}
               </h3>
               <p className="text-xs text-[#66736F] dark:text-slate-400">
-                FCM Push Tokens and Twilio SMS Preferences
+                {t('notifSettings.subtitle')}
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-xl hover:bg-[#F3EFEA] dark:hover:bg-slate-800 text-slate-400 hover:text-slate-700 dark:hover:text-white transition"
+            aria-label={t('common.close')}
+            className="p-1.5 rounded-xl hover:bg-[#F3EFEA] dark:hover:bg-slate-800 text-slate-400 hover:text-slate-700 dark:hover:text-white transition cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -76,7 +79,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Smartphone className="w-4 h-4 text-[#8A9A86]" />
-                <strong className="text-[#2F3E46] dark:text-white">Firebase Cloud Messaging (FCM)</strong>
+                <strong className="text-[#2F3E46] dark:text-white">{t('notifSettings.fcmTitle')}</strong>
               </div>
               <span className={`text-[10px] font-bold px-2 py-0.5 rounded border uppercase ${
                 permissionStatus === 'granted'
@@ -85,7 +88,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                   ? 'bg-[#C53030]/10 text-[#C53030] border-[#C53030]/30'
                   : 'bg-[#C68A27]/10 text-[#C68A27] border-[#C68A27]/30'
               }`}>
-                {permissionStatus}
+                {permissionStatus === 'granted' ? t('notifSettings.granted') : permissionStatus === 'denied' ? t('notifSettings.denied') : t('notifSettings.default')}
               </span>
             </div>
 
@@ -93,13 +96,13 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
               <div className="p-2.5 bg-[#C53030]/10 border border-[#C53030]/30 rounded-lg text-[#C53030] text-[11px] flex items-start gap-2">
                 <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-[#C53030]" />
                 <div className="flex-1 space-y-1">
-                  <p>{fcmError}</p>
+                  <p>{tx(fcmError)}</p>
                   {permissionStatus !== 'denied' && (
                     <button
                       onClick={requestNotificationPermission}
                       className="text-[#C53030] font-bold underline hover:no-underline flex items-center gap-1 cursor-pointer"
                     >
-                      <RefreshCw className="w-3 h-3" /> Retry Token Generation
+                      <RefreshCw className="w-3 h-3" /> {t('notifSettings.retryToken')}
                     </button>
                   )}
                 </div>
@@ -116,10 +119,10 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                     onClick={handleCopyToken}
                     className="text-[11px] text-[#8A9A86] font-bold hover:underline cursor-pointer"
                   >
-                    {copiedToken ? '✓ Copied Token to Clipboard' : 'Copy FCM Device Token'}
+                    {copiedToken ? t('notifSettings.copiedToken') : t('notifSettings.copyToken')}
                   </button>
                   <span className="text-[10px] text-[#4D8B63] font-semibold">
-                    ● Real FCM Token Active
+                    {t('notifSettings.tokenActive')}
                   </span>
                 </div>
               </div>
@@ -136,12 +139,12 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                 {fcmLoading ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>Generating Secure FCM Token...</span>
+                    <span>{t('notifSettings.generatingToken')}</span>
                   </>
                 ) : permissionStatus === 'denied' ? (
-                  <span>Notifications Blocked in Browser</span>
+                  <span>{t('notifSettings.notificationsBlocked')}</span>
                 ) : (
-                  <span>Enable Browser FCM Push Notifications</span>
+                  <span>{t('notifSettings.enablePush')}</span>
                 )}
               </button>
             )}
@@ -154,10 +157,10 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
             <div className="space-y-0.5">
               <div className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-                <strong className="text-slate-900 dark:text-white">Twilio SMS Disaster Dispatch</strong>
+                <strong className="text-slate-900 dark:text-white">{t('notifSettings.smsTitle')}</strong>
               </div>
               <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                Direct SMS for HIGH and EMERGENCY hazard warnings
+                {t('notifSettings.smsSubtitle')}
               </p>
             </div>
 
@@ -174,10 +177,10 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
             <div className="space-y-0.5">
               <div className="flex items-center gap-2">
                 <Volume2 className="w-4 h-4 text-amber-600 dark:text-amber-400" />
-                <strong className="text-slate-900 dark:text-white">Alert Audio Chime</strong>
+                <strong className="text-slate-900 dark:text-white">{t('notifSettings.audioTitle')}</strong>
               </div>
               <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                Play acoustic chime on new emergency bulletin
+                {t('notifSettings.audioSubtitle')}
               </p>
             </div>
 
@@ -189,7 +192,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                   : 'bg-white text-slate-400 border-slate-200 dark:bg-slate-800 dark:border-slate-700'
               }`}
             >
-              {soundEnabled ? 'Enabled' : 'Muted'}
+              {soundEnabled ? t('common.enabled') : t('common.muted')}
             </button>
           </div>
         </div>
