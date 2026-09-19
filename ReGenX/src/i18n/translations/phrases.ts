@@ -107,6 +107,22 @@ export const PHRASES: Record<string, PhraseTranslation> = {
     hi: 'BMC अस्थायी राहत शिविर - आईआरसी विलेज हाई स्कूल',
     or: 'BMC ଅସ୍ଥାୟୀ ରିଲିଫ୍ ଶିବିର - ଆଇଆରସି ଭିଲେଜ୍ ହାଇସ୍କୁଲ୍',
   },
+  'KIMS Medical College & Emergency Hospital': {
+    hi: 'किम्स मेडिकल कॉलेज एवं आपातकालीन अस्पताल',
+    or: 'କିମ୍ସ ମେଡିକାଲ କଲେଜ ଏବଂ ଜରୁରୀକାଳୀନ ଡାକ୍ତରଖାନା',
+  },
+  'Multipurpose Cyclone & Evacuation Shelter - Old Town': {
+    hi: 'बहुउद्देशीय चक्रवात एवं निकासी आश्रय - ओल्ड टाउन',
+    or: 'ବହୁମୁଖୀ ବାତ୍ୟା ଓ ଆଶ୍ରୟସ୍ଥଳ - ଓଲ୍ଡ ଟାଉନ୍',
+  },
+  'BMC Community Relief Camp - Niladri Vihar Kalyan Mandap': {
+    hi: 'BMC सामुदायिक राहत शिविर - नीलाद्री विहार कल्याण मंडप',
+    or: 'BMC ସାମୁଦାୟିକ ରିଲିଫ୍ ଶିବିର - ନୀଳାଦ୍ରି ବିହାର କଲ୍ୟାଣ ମଣ୍ଡପ',
+  },
+  'ODRAF Disaster Response HQ & Fire Station - Chandaka': {
+    hi: 'ओड्राफ (ODRAF) आपदा प्रतिक्रिया मुख्यालय एवं अग्निशमन स्टेशन - चंडका',
+    or: 'ଓଡ୍ରାଫ୍ (ODRAF) ବିପର୍ଯ୍ୟୟ ପ୍ରଶମନ ମୁଖ୍ୟାଳୟ ଓ ଅଗ୍ନିଶମ କେନ୍ଦ୍ର - ଚନ୍ଦକା',
+  },
 
   // Safe Place Addresses
   'Sijua, Patrapada, Bhubaneswar, Odisha 751019': {
@@ -141,6 +157,38 @@ export const PHRASES: Record<string, PhraseTranslation> = {
     hi: 'आईआरसी विलेज सेक्टर 2, नयापल्ली, भुवनेश्वर 751015',
     or: 'ଆଇଆରସି ଭିଲେଜ୍ ସେକ୍ଟର 2, ନୟାପଲ୍ଲୀ, ଭୁବନେଶ୍ୱର 751015',
   },
+  'KIIT Road, Patia, Bhubaneswar, Odisha 751024': {
+    hi: 'केआईआईटी रोड, पटिया, भुवनेश्वर, ओडिशा 751024',
+    or: 'କିଟ୍ ରୋଡ୍, ପଟିଆ, ଭୁବନେଶ୍ୱର, ଓଡ଼ିଶା 751024',
+  },
+  'Near Bindusagar Lake, Old Town, Bhubaneswar 751002': {
+    hi: 'बिंदुसागर झील के पास, ओल्ड टाउन, भुवनेश्वर 751002',
+    or: 'ବିନ୍ଦୁସାଗର ହ୍ରଦ ନିକଟ, ଓଲ୍ଡ ଟାଉନ୍, ଭୁବନେଶ୍ୱର 751002',
+  },
+  'Sector 3, Niladri Vihar, Chandrasekharpur, Bhubaneswar 751021': {
+    hi: 'सेक्टर 3, नीलाद्री विहार, चंद्रशेखरपुर, भुवनेश्वर 751021',
+    or: 'ସେକ୍ଟର 3, ନୀଳାଦ୍ରି ବିହାର, ଚନ୍ଦ୍ରଶେଖରପୁର, ଭୁବନେଶ୍ୱର 751021',
+  },
+  'Chandaka Industrial Area, Bhubaneswar 751024': {
+    hi: 'चंडका औद्योगिक क्षेत्र, भुवनेश्वर 751024',
+    or: 'ଚନ୍ଦକା ଶିଳ୍ପାଞ୍ଚଳ, ଭୁବନେଶ୍ୱର 751024',
+  },
+  'Patia / KIIT Campus': {
+    hi: 'पटिया / केआईआईटी परिसर',
+    or: 'ପଟିଆ / କିଟ୍ କ୍ୟାମ୍ପସ',
+  },
+  'Old Town / Lingaraj Temple': {
+    hi: 'ओल्ड टाउन / लिंगराज मंदिर',
+    or: 'ଓଲ୍ଡ ଟାଉନ୍ / ଲିଙ୍ଗରାଜ ମନ୍ଦିର',
+  },
+  'Niladri Vihar / Chandrasekharpur': {
+    hi: 'नीलाद्री विहार / चंद्रशेखरपुर',
+    or: 'ନୀଳାଦ୍ରି ବିହାର / ଚନ୍ଦ୍ରଶେଖରପୁର',
+  },
+  'Chandaka Industrial Belt': {
+    hi: 'चंडका औद्योगिक क्षेत्र',
+    or: 'ଚନ୍ଦକା ଶିଳ୍ପାଞ୍ଚଳ',
+  },
 
   // Safe Place Facilities
   '24x7 Emergency': { hi: '24x7 आपातकालीन सेवा', or: '24x7 ଜରୁରୀକାଳୀନ ସେବା' },
@@ -173,6 +221,18 @@ export const PHRASES: Record<string, PhraseTranslation> = {
   'Dry Food Distribution': { hi: 'सूखा भोजन वितरण', or: 'ଶୁଖିଲା ଖାଦ୍ୟ ବଣ୍ଟନ' },
   'Doctor on Call': { hi: 'ऑन-कॉल चिकित्सक', or: 'ଡାକ୍ତର ଉପଲବ୍ଧ' },
   'Mattresses': { hi: 'गद्दे व बिस्तर', or: 'ଶେଯ ଓ ବିଛଣା' },
+  'Trauma Center': { hi: 'ट्रॉमा सेंटर', or: 'ଟ୍ରମା ସେଣ୍ଟର' },
+  '24x7 Ambulance': { hi: '24x7 एम्बुलेंस', or: '24x7 ଆମ୍ବୁଲାନ୍ସ' },
+  'Emergency ICU': { hi: 'आपातकालीन आईसीयू', or: 'ଜରୁରୀକାଳୀନ ଆଇସିୟୁ' },
+  'Emergency Power': { hi: 'आपातकालीन बिजली', or: 'ଜରୁରୀକାଳୀନ ବିଦ୍ୟୁତ ସେବା' },
+  'Food Storage': { hi: 'खाद्य भंडारण', or: 'ଖାଦ୍ୟ ଭଣ୍ଡାର' },
+  'Water Supply': { hi: 'जल आपूर्ति', or: 'ଜଳ ଯୋଗାଣ' },
+  'Medical Assistance': { hi: 'चिकित्सा सहायता', or: 'ଚିକିତ୍ସା ସହାୟତା' },
+  'Childcare Corner': { hi: 'शिशु देखभाल केंद्र', or: 'ଶିଶୁ ଯତ୍ନ କେନ୍ଦ୍ର' },
+  'Heavy Rescue Vehicles': { hi: 'भारी बचाव वाहन', or: 'ଭାରୀ ଉଦ୍ଧାରକାରୀ ଯାନ' },
+  'Tree Cutters': { hi: 'पेड़ काटने वाले उपकरण', or: 'ଗଛ କଟା ଯନ୍ତ୍ର' },
+  'High-Volume Dewatering Pumps': { hi: 'उच्च-क्षमता वाले डीवाटरिंग पंप', or: 'ଉଚ୍ଚ କ୍ଷମତା ସମ୍ପନ୍ନ ଜଳ ନିଷ୍କାସନ ପମ୍ପ' },
+  'High-Mobility Craft': { hi: 'उच्च-गतिशीलता बचाव नौका', or: 'ଦ୍ରୁତଗାମୀ ଉଦ୍ଧାରକାରୀ ଡଙ୍ଗା' },
 
   // News Titles & Overviews
   'Gangua Canal Breaches Embankment in Kalinga Nagar: 400 Families Relocated': {
@@ -436,6 +496,54 @@ export const PHRASES: Record<string, PhraseTranslation> = {
   'Description is required': {
     hi: 'विवरण आवश्यक है',
     or: 'ବିବରଣୀ ପ୍ରଦାନ କରିବା ଆବଶ୍ୟକ',
+  },
+  'Failed to request password recovery. Please verify your email.': {
+    hi: 'पासवर्ड पुनर्प्राप्ति अनुरोध विफल रहा। कृपया अपना ईमेल सत्यापित करें।',
+    or: 'ପାସୱାର୍ଡ ପୁନରୁଦ୍ଧାର ଅନୁରୋଧ ବିଫଳ ହେଲା। ଦୟାକରି ଆପଣଙ୍କ ଇମେଲ୍ ଯାଞ୍ଚ କରନ୍ତୁ।',
+  },
+  'Invalid or expired recovery link. Please request a new password reset.': {
+    hi: 'अमान्य या समाप्त हो चुका रिकवरी लिंक। कृपया एक नया पासवर्ड रीसेट का अनुरोध करें।',
+    or: 'ଅବୈଧ କିମ୍ବା ସମୟ ସମାପ୍ତ ହୋଇଥିବା ଲିଙ୍କ୍। ଦୟାକରି ଏକ ନୂତନ ପାସୱାର୍ଡ ରିସେଟ୍ ଅନୁରୋଧ କରନ୍ତୁ।',
+  },
+  'Please enter a valid email address.': {
+    hi: 'कृपया एक मान्य ईमेल पता दर्ज करें।',
+    or: 'ଦୟାକରି ଏକ ବୈଧ ଇମେଲ୍ ଠିକଣା ପ୍ରବେଶ କରନ୍ତୁ।',
+  },
+  'Unable to process recovery request. Please verify your internet connection and email address.': {
+    hi: 'पुनर्प्राप्ति अनुरोध संसाधित करने में असमर्थ। कृपया अपना इंटरनेट कनेक्शन और ईमेल पता सत्यापित करें।',
+    or: 'ପୁନରୁଦ୍ଧାର ଅନୁରୋଧ ପ୍ରକ୍ରିୟାକରଣ କରିବାରେ ଅସମର୍ଥ। ଦୟାକରି ଆପଣଙ୍କ ଇଣ୍ଟରନେଟ୍ ସଂଯୋଗ ଏବଂ ଇମେଲ୍ ଯାଞ୍ଚ କରନ୍ତୁ।',
+  },
+  'Invalid or missing password recovery link parameters. Please request a new link.': {
+    hi: 'पासवर्ड पुनर्प्राप्ति लिंक पैरामीटर अमान्य या अनुपलब्ध हैं। कृपया एक नया लिंक अनुरोध करें।',
+    or: 'ପାସୱାର୍ଡ ପୁନରୁଦ୍ଧାର ଲିଙ୍କ୍ ମିଳୁନାହିଁ କିମ୍ବା ଅବୈଧ ଅଛି। ଦୟାକରି ଏକ ନୂତନ ଲିଙ୍କ୍ ଅନୁରୋଧ କରନ୍ତୁ।',
+  },
+  'Invalid or expired password recovery link. Please request a new link.': {
+    hi: 'अमान्य या समाप्त पासवर्ड पुनर्प्राप्ति लिंक। कृपया एक नया लिंक अनुरोध करें।',
+    or: 'ଅବୈଧ କିମ୍ବା ମିଆଦ ପୂରିଯାଇଥିବା ଲିଙ୍କ୍। ଦୟାକରି ଏକ ନୂତନ ଲିଙ୍କ୍ ଅନୁରୋଧ କରନ୍ତୁ।',
+  },
+  'Password must be at least 8 characters long.': {
+    hi: 'पासवर्ड कम से कम 8 वर्णों का होना चाहिए।',
+    or: 'ପାସୱାର୍ଡ ଅତିକମରେ 8 ଟି ଅକ୍ଷର ହେବା ଆବଶ୍ୟକ।',
+  },
+  'Passwords do not match. Please re-enter matching passwords.': {
+    hi: 'पासवर्ड मेल नहीं खाते। कृपया समान पासवर्ड पुनः दर्ज करें।',
+    or: 'ପାସୱାର୍ଡ ମେଳ ଖାଉନାହିଁ। ଦୟାକରି ସମାନ ପାସୱାର୍ଡ ପୁନର୍ବାର ପ୍ରବେଶ କରନ୍ତୁ।',
+  },
+  'Failed to reset password. The recovery link may have expired or already been used.': {
+    hi: 'पासवर्ड रीसेट करने में विफल। रिकवरी लिंक समाप्त हो चुका हो सकता है या पहले ही उपयोग किया जा चुका है।',
+    or: 'ପାସୱାର୍ଡ ରିସେଟ୍ ବିଫଳ ହେଲା। ପୁନରୁଦ୍ଧାର ଲିଙ୍କ୍ ଅବଧି ସରିଯାଇଛି କିମ୍ବା ପୂର୍ବରୁ ବ୍ୟବହୃତ ହୋଇଛି।',
+  },
+  'Disaster observation reported by citizen.': {
+    hi: 'नागरिक द्वारा दर्ज आपदा अवलोकन।',
+    or: 'ନାଗରିକଙ୍କ ଦ୍ୱାରା ଦାଖଲ କରାଯାଇଥିବା ବିପର୍ଯ୍ୟୟ ବିବରଣୀ।',
+  },
+  'Demo Citizen': {
+    hi: 'डेमो नागरिक',
+    or: 'ଡେମୋ ନାଗରିକ',
+  },
+  'Facility surrounded by 1.1m floodwaters from Gangua Nallah breach. Diverted to SUM Ultimate Camp Annex.': {
+    hi: 'गंगुआ नाले के टूटने से 1.1 मीटर बाढ़ के पानी से परिसर घिरा हुआ है। सम अल्टीमेट कैंप एनेक्स में डायवर्ट किया गया।',
+    or: 'ଗଙ୍ଗୁଆ ନାଳ ବନ୍ଧ ଭାଙ୍ଗିବା ଯୋଗୁଁ 1.1 ମିଟର ବନ୍ୟା ଜଳରେ ଘେରି ରହିଛି। ସମ୍ ଅଲ୍ଟିମେଟ୍ କ୍ୟାମ୍ପ ଆନେକ୍ସକୁ ସ୍ଥାନାନ୍ତରିତ କରାଯାଇଛି।',
   },
   'User is in a safe, low-risk area.': {
     hi: 'उपयोगकर्ता सुरक्षित, कम जोखिम वाले क्षेत्र में है।',
