@@ -147,6 +147,12 @@ export const hi: Record<TranslationKey, string> = {
   'header.returnHome': 'होम पर वापस जाएं',
   'header.brandSubtitle': 'भुवनेश्वर नगर निगम • 67 वार्ड विश्लेषणात्मक नेटवर्क',
   'header.bmcRiskEngine': 'BMC जोखिम इंजन',
+  'header.logoAlt': 'NivaranAI लोगो',
+  'header.liveTelemetry': 'LIVE TELEMETRY',
+  'header.bmcWardEngine': 'भुवनेश्वर नगर निगम • 67-वार्ड जोखिम इंजन',
+  'header.emergencyRisk': '{count} आपातकालीन',
+  'header.highRiskBadge': '{count} उच्च जोखिम',
+  'header.activeIncidentsBadge': '{count} सक्रिय घटनाएं',
   'header.emergencyZone.one': '{count} आपातकालीन क्षेत्र',
   'header.emergencyZone.other': '{count} आपातकालीन क्षेत्र',
   'header.highRisk.one': '{count} उच्च जोखिम',
@@ -195,6 +201,7 @@ export const hi: Record<TranslationKey, string> = {
 
   // News Ticker
   'ticker.liveWire': 'लाइव अपडेट:',
+  'ticker.liveBulletins': 'लाइव बुलेटिन:',
   'ticker.readOriginal': 'मूल समाचार पढ़ें',
 
   // Notification Drawer

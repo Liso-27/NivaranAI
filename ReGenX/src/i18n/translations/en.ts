@@ -145,6 +145,12 @@ export const en = {
   'header.returnHome': 'Return to Home',
   'header.brandSubtitle': 'Bhubaneswar Municipal Corporation • 67 Wards Analytical Network',
   'header.bmcRiskEngine': 'BMC Risk Engine',
+  'header.logoAlt': 'NivaranAI Logo',
+  'header.liveTelemetry': 'LIVE TELEMETRY',
+  'header.bmcWardEngine': 'Bhubaneswar Municipal Corporation • 67-Ward Risk Engine',
+  'header.emergencyRisk': '{count} EMERGENCY',
+  'header.highRiskBadge': '{count} HIGH RISK',
+  'header.activeIncidentsBadge': '{count} ACTIVE INCIDENTS',
   'header.emergencyZone.one': '{count} Emergency Zone',
   'header.emergencyZone.other': '{count} Emergency Zones',
   'header.highRisk.one': '{count} High Risk',
@@ -193,6 +199,7 @@ export const en = {
 
   // News Ticker
   'ticker.liveWire': 'LIVE WIRE:',
+  'ticker.liveBulletins': 'LIVE BULLETINS:',
   'ticker.readOriginal': 'Read Original Article',
 
   // Notification Drawer

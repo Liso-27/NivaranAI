@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ThemeProvider } from './context/ThemeContext';
+import { LanguageProvider, useLanguage } from './context/LanguageContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { DisasterDataProvider, useDisasterData } from './context/DisasterDataContext';
 import { NotificationProvider } from './context/NotificationContext';
@@ -31,6 +32,7 @@ const ADMIN_TABS = ['ADMIN_OVERVIEW', 'ADMIN_SCHEDULER', 'ADMIN_HEALTH', 'ADMIN_
 const MainAppContent: React.FC = () => {
   const { role, user } = useAuth();
   const { isLoading, error, refreshData } = useDisasterData();
+  const { t, tx } = useLanguage();
 
   const getDefaultTab = (userRole: string) => {
     if (userRole === 'GOVERNMENT_OFFICIAL') return 'GOV_COMMAND';
@@ -97,7 +99,7 @@ const MainAppContent: React.FC = () => {
             <div className="p-6 bg-[#FFFDF9] dark:bg-slate-900 rounded-lg border border-[#D9D6CF] dark:border-slate-800 shadow-xl flex flex-col items-center gap-3">
               <Loader2 className="w-8 h-8 text-[#8A9A86] animate-spin" />
               <p className="text-xs font-semibold text-[#2F3E46] dark:text-slate-300 font-heading">
-                Syncing BMC 67-Ward Risk Engine Telemetry...
+                {t('app.syncingTelemetry')}
               </p>
             </div>
           </div>
@@ -107,14 +109,14 @@ const MainAppContent: React.FC = () => {
           <div className="m-4 p-4 bg-rose-50 dark:bg-rose-500/15 border border-rose-200 dark:border-rose-500/40 rounded-lg text-rose-800 dark:text-rose-200 text-xs flex items-center justify-between gap-3 shadow-xs shrink-0">
             <div className="flex items-center gap-2">
               <AlertCircle className="w-5 h-5 text-rose-600 dark:text-rose-400 shrink-0" />
-              <span>{error}</span>
+              <span>{tx(error)}</span>
             </div>
             <button
               onClick={() => refreshData()}
               className="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl font-bold text-xs flex items-center gap-1 transition shadow-xs"
             >
               <RefreshCw className="w-3.5 h-3.5" />
-              <span>Retry</span>
+              <span>{t('common.retry')}</span>
             </button>
           </div>
         )}
@@ -198,11 +200,13 @@ const RootNavigation: React.FC = () => {
 export function App() {
   return (
     <ThemeProvider>
-      <AuthProvider>
-        <NotificationProvider>
-          <RootNavigation />
-        </NotificationProvider>
-      </AuthProvider>
+      <LanguageProvider>
+        <AuthProvider>
+          <NotificationProvider>
+            <RootNavigation />
+          </NotificationProvider>
+        </AuthProvider>
+      </LanguageProvider>
     </ThemeProvider>
   );
 }

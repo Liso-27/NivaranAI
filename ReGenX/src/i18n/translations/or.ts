@@ -147,6 +147,12 @@ export const or: Record<TranslationKey, string> = {
   'header.returnHome': 'ମୂଳ ପୃଷ୍ଠାକୁ ଫେରନ୍ତୁ',
   'header.brandSubtitle': 'ଭୁବନେଶ୍ୱର ମହାନଗର ନିଗମ • 67 ୱାର୍ଡ ବିଶ୍ଳେଷଣ ନେଟୱାର୍କ',
   'header.bmcRiskEngine': 'BMC ବିପଦ ଇଞ୍ଜିନ୍',
+  'header.logoAlt': 'NivaranAI ଲୋଗୋ',
+  'header.liveTelemetry': 'LIVE TELEMETRY',
+  'header.bmcWardEngine': 'ଭୁବନେଶ୍ୱର ମହାନଗର ନିଗମ • ୬୭-ୱାର୍ଡ ବିପଦ ଇଞ୍ଜିନ୍',
+  'header.emergencyRisk': '{count} ଜରୁରୀକାଳୀନ',
+  'header.highRiskBadge': '{count} ଉଚ୍ଚ ବିପଦ',
+  'header.activeIncidentsBadge': '{count} ସକ୍ରିୟ ଘଟଣାବଳୀ',
   'header.emergencyZone.one': '{count} ଜରୁରୀକାଳୀନ ଜୋନ୍',
   'header.emergencyZone.other': '{count} ଜରୁରୀକାଳୀନ ଜୋନ୍',
   'header.highRisk.one': '{count} ଉଚ୍ଚ ବିପଦ',
@@ -195,6 +201,7 @@ export const or: Record<TranslationKey, string> = {
 
   // News Ticker
   'ticker.liveWire': 'ଲାଇଭ୍ ଅପଡେଟ୍:',
+  'ticker.liveBulletins': 'ଲାଇଭ୍ ବୁଲେଟିନ୍:',
   'ticker.readOriginal': 'ମୂଳ ଖବର ପଢ଼ନ୍ତୁ',
 
   // Notification Drawer

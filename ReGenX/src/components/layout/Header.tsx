@@ -3,6 +3,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useDisasterData } from '../../context/DisasterDataContext';
 import { useNotifications } from '../../context/NotificationContext';
 import { useTheme } from '../../context/ThemeContext';
+import { useLanguage } from '../../context/LanguageContext';
 import { 
   Shield, 
   Bell, 
@@ -10,18 +11,20 @@ import {
   Flame, 
   AlertTriangle, 
   Radio,
-  Sun,
-  Moon,
-  Loader2
+  Sun, 
+  Moon, 
+  Loader2 
 } from 'lucide-react';
 import { NotificationDrawer } from './NotificationDrawer';
 import { AuthModal } from '../auth/AuthModal';
+import { LanguageSwitcher } from './LanguageSwitcher';
 
 export const Header: React.FC = () => {
   const { user, role, isAuthenticated } = useAuth();
   const { hazardZones, userLocation, requestUserLocation } = useDisasterData();
   const { unreadCount } = useNotifications();
   const { theme, toggleTheme } = useTheme();
+  const { t } = useLanguage();
 
   const [isNotifDrawerOpen, setIsNotifDrawerOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
@@ -37,14 +40,14 @@ export const Header: React.FC = () => {
           <div className="flex items-center gap-3">
             <img 
               src="/nivaran-logo.png" 
-              alt="NivaranAI Logo" 
+              alt={t('header.logoAlt') || "NivaranAI Logo"} 
               className="w-9 h-9 object-contain rounded-full bg-white p-0.5 shadow-xs shrink-0" 
             />
 
             <div 
               className="cursor-pointer group flex flex-col"
               onClick={() => window.dispatchEvent(new CustomEvent('navigateHome'))}
-              title="Return to Home"
+              title={t('header.returnHome')}
             >
               <div className="flex items-center gap-2">
                 <h1 className="text-base font-bold text-white tracking-tight flex items-center gap-1 m-0 group-hover:text-[#D97706] transition-colors">
@@ -52,11 +55,11 @@ export const Header: React.FC = () => {
                 </h1>
                 <span className="hidden md:inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded bg-[#1E293B] border border-[#334155] text-emerald-400">
                   <Radio className="w-2.5 h-2.5 text-emerald-400" />
-                  LIVE TELEMETRY
+                  {t('header.liveTelemetry')}
                 </span>
               </div>
               <p className="text-[11px] text-slate-400 hidden sm:block group-hover:text-slate-200 transition-colors">
-                Bhubaneswar Municipal Corporation • 67-Ward Risk Engine
+                {t('header.bmcWardEngine')}
               </p>
             </div>
           </div>
@@ -67,28 +70,31 @@ export const Header: React.FC = () => {
               <span className="flex items-center gap-1 text-red-400 font-semibold bg-[#DC2626]/20 px-2 py-0.5 rounded border border-[#DC2626]/40">
                 <span className="inline-block h-2 w-2 rounded-full bg-red-500 mr-0.5"></span>
                 <Flame className="w-3.5 h-3.5" />
-                {emergencyCount} EMERGENCY
+                {t('header.emergencyRisk', { count: emergencyCount })}
               </span>
             )}
             {highCount > 0 && (
               <span className="flex items-center gap-1 text-orange-400 font-semibold bg-[#EA580C]/20 px-2 py-0.5 rounded border border-[#EA580C]/40">
                 <AlertTriangle className="w-3.5 h-3.5" />
-                {highCount} HIGH RISK
+                {t('header.highRiskBadge', { count: highCount })}
               </span>
             )}
             <span className="text-slate-300 text-[11px] font-medium">
-              {hazardZones.length} ACTIVE INCIDENTS
+              {t('header.activeIncidentsBadge', { count: hazardZones.length })}
             </span>
           </div>
 
           {/* Right Action Icons & Role Indicator */}
           <div className="flex items-center gap-2">
+            {/* Language Switcher (Immediately to the LEFT of Theme Toggle) */}
+            <LanguageSwitcher />
+
             {/* Theme Toggle (Light / Dark) */}
             <button
               onClick={toggleTheme}
               className="p-2 bg-[#1E293B] hover:bg-[#334155] text-slate-200 border border-[#334155] rounded-lg transition duration-150 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#D97706]"
-              title={theme === 'light' ? 'Switch to Dark Theme' : 'Switch to Light Theme'}
-              aria-label="Toggle Theme"
+              title={theme === 'light' ? t('header.switchToDark') : t('header.switchToLight')}
+              aria-label={t('header.toggleTheme')}
             >
               {theme === 'light' ? (
                 <Moon className="w-4 h-4 text-slate-200" />
@@ -114,14 +120,14 @@ export const Header: React.FC = () => {
               }`}
               title={
                 userLocation.isLoading
-                  ? 'Acquiring GPS location...'
+                  ? t('header.gps.locatingTooltip')
                   : userLocation.isInsideHazardZone
-                  ? 'Warning: Inside active hazard zone!'
+                  ? t('header.gps.hazardZoneTooltip')
                   : userLocation.permissionGranted
-                  ? 'GPS Active - Click to refresh coordinates'
+                  ? t('header.gps.activeTooltip')
                   : userLocation.permissionStatus === 'denied'
-                  ? 'Location permission denied - Click to retry'
-                  : 'Click to detect current GPS location'
+                  ? t('header.gps.deniedTooltip')
+                  : t('header.gps.detectTooltip')
               }
             >
               {userLocation.isLoading ? (
@@ -139,14 +145,14 @@ export const Header: React.FC = () => {
               )}
               <span className="hidden md:inline text-[11px] font-semibold truncate max-w-[120px]">
                 {userLocation.isLoading 
-                  ? 'Locating...' 
+                  ? t('header.gps.locating') 
                   : userLocation.isInsideHazardZone 
-                  ? 'Hazard Zone!' 
+                  ? t('header.gps.hazardZone') 
                   : userLocation.permissionGranted 
-                  ? 'GPS Active' 
+                  ? t('header.gps.active') 
                   : userLocation.permissionStatus === 'denied'
-                  ? 'GPS Blocked'
-                  : 'Locate Me'}
+                  ? t('header.gps.denied') 
+                  : t('header.gps.locateMe')}
               </span>
             </button>
 
@@ -154,7 +160,8 @@ export const Header: React.FC = () => {
             <button
               onClick={() => setIsNotifDrawerOpen(true)}
               className="p-2 bg-[#1E293B] hover:bg-[#334155] text-slate-200 border border-[#334155] rounded-lg relative transition duration-150 cursor-pointer"
-              title="Disaster Notifications"
+              title={t('header.notificationsTitle')}
+              aria-label={t('header.notificationsTitle')}
             >
               <Bell className="w-4 h-4" />
               {unreadCount > 0 && (
@@ -170,7 +177,7 @@ export const Header: React.FC = () => {
             >
               <span className="w-1.5 h-1.5 rounded-full shrink-0 bg-slate-400" />
               <span className="text-[11px] uppercase tracking-wider font-semibold">
-                {role === 'GOVERNMENT_OFFICIAL' ? 'Gov Official' : role === 'SYSTEM_ADMIN' ? 'Sys Admin' : 'Citizen'}
+                {role === 'GOVERNMENT_OFFICIAL' ? t('header.role.govOfficial') : role === 'SYSTEM_ADMIN' ? t('header.role.sysAdmin') : t('header.role.citizen')}
               </span>
             </div>
 
@@ -180,7 +187,7 @@ export const Header: React.FC = () => {
                 <button
                   onClick={() => setIsAuthModalOpen(true)}
                   className="flex items-center gap-1.5 p-1.5 bg-[#1E293B] hover:bg-[#334155] rounded-lg border border-[#334155] text-xs text-slate-200 transition cursor-pointer"
-                  title={`${user?.name} (Click for Account Details / Sign Out)`}
+                  title={`${user?.name || ''} (${t('header.accountDetails')})`}
                 >
                   <div className="w-6 h-6 rounded bg-[#D97706] text-white flex items-center justify-center font-bold text-[11px]">
                     {user?.name?.charAt(0) || 'U'}
@@ -192,7 +199,7 @@ export const Header: React.FC = () => {
                 onClick={() => setIsAuthModalOpen(true)}
                 className="px-3 py-1.5 bg-[#D97706] hover:bg-[#B45309] text-white rounded-lg font-semibold text-xs transition cursor-pointer"
               >
-                Sign In
+                {t('common.signIn')}
               </button>
             )}
           </div>
