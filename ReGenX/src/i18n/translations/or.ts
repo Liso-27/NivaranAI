@@ -877,6 +877,21 @@ export const or: Record<TranslationKey, string> = {
   'auth.officerNamePlaceholder': 'ଯଥା: ଡା. ସଞ୍ଜୀବ ମହାପାତ୍ର',
   'auth.deptPlaceholder': 'BMC ବିପର୍ଯ୍ୟୟ ପ୍ରକୋଷ୍ଠ',
   'auth.designationPlaceholder': 'ନିର୍ବାହୀ ଯନ୍ତ୍ରୀ',
+  'auth.sysAdminQuickAccess': 'ସିଷ୍ଟମ ପ୍ରଶାସକ ଶୀଘ୍ର ପ୍ରବେଶ:',
+  'auth.fillCredentials': 'ଆପଣଙ୍କର ପରିଚୟପତ୍ର ପୂରଣ କରନ୍ତୁ',
+  'auth.sysAdminSavedCredentialsDesc': 'ଶୀଘ୍ର ସିଷ୍ଟମ ପ୍ରଶାସକ ପ୍ରମାଣୀକରଣ ପାଇଁ ସଂରକ୍ଷିତ ପରିଚୟପତ୍ର ବ୍ୟବହାର କରନ୍ତୁ',
+  'auth.citizenSavedCredentialsDesc': 'ଶୀଘ୍ର ନାଗରିକ ପ୍ରମାଣୀକରଣ ପାଇଁ ସଂରକ୍ଷିତ ପରିଚୟପତ୍ର ବ୍ୟବହାର କରନ୍ତୁ',
+  'auth.officialSavedCredentialsDesc': 'ଶୀଘ୍ର ସରକାରୀ ଅଧିକାରୀ ପ୍ରମାଣୀକରଣ ପାଇଁ ସଂରକ୍ଷିତ ପରିଚୟପତ୍ର ବ୍ୟବହାର କରନ୍ତୁ',
+  'auth.privacyPolicy': 'ଗୋପନୀୟତା ନୀତି',
+  'auth.termsConditions': 'ନିୟମ ଓ ସର୍ତ୍ତାବଳୀ',
+  'auth.cookiePreferences': 'କୁକି ପସନ୍ଦ',
+  'auth.platformPortal': 'ଅଫିସିଆଲ୍ ଜରୁରୀକାଳୀନ ପରିଚାଳନା ପୋର୍ଟାଲ୍',
+  'auth.platformSubtitle': 'ଭୁବନେଶ୍ୱର ମହାନଗର ନିଗମ ବିପର୍ଯ୍ୟୟ ବିପଦ ଟେଲିମେଟ୍ରି ଓ ସାର୍ବଜନୀନ ସୁରକ୍ଷା ପ୍ଲାଟଫର୍ମ',
+  'auth.platformDesc': 'ଭୁବନେଶ୍ୱରରେ ରିଅଲ୍-ଟାଇମ୍ ଭୂ-ସ୍ଥାନିକ ଗୁଇନ୍ଦା, ୬୭-ୱାର୍ଡ ବିପଦ ଇଞ୍ଜିନ୍ ସ୍କୋରିଂ, ଯାଞ୍ଚ ହୋଇଥିବା ନାଗରିକ ରିପୋର୍ଟ ଟ୍ରାଇଜ୍ ଏବଂ ଜରୁରୀକାଳୀନ ରିଲିଫ୍ ଶିବିର ରୁଟିଂ।',
+  'auth.securityFootnote': 'ଏନକ୍ରିପ୍ଟେଡ୍ ଘଟଣା ରିପୋର୍ଟିଂ ଓ ଭୂମିକା-ଅଧିକୃତ ଜରୁରୀକାଳୀନ ପ୍ରେରଣ ପୋର୍ଟାଲ୍ |',
+  'auth.citizenNamePlaceholder': 'ନାଗରିକଙ୍କ ନାମ',
+  'auth.officialFullNamePlaceholder': 'ଅଧିକାରୀଙ୍କ ପୂରା ନାମ',
+  'auth.errRegistrationFailed': 'ପଞ୍ଜୀକରଣ ବିଫଳ',
 };
 
 

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { useLanguage } from '../../context/LanguageContext';
 import { 
   Shield, 
   X, 
@@ -30,6 +31,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
     logout, 
     updateSmsPreference 
   } = useAuth();
+  const { t, tx, tRole, tOfficialStatus } = useLanguage();
 
   const [activeTab, setActiveTab] = useState<'CITIZEN' | 'OFFICIAL' | 'ADMIN'>('CITIZEN');
 
@@ -87,10 +89,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             </div>
             <div>
               <h3 className="text-base font-black text-[#2F3E46] dark:text-white font-heading">
-                {isAuthenticated ? 'User Account Details' : 'Account & Access Portal'}
+                {isAuthenticated ? t('auth.userAccountDetails') : t('auth.accountAccessPortal')}
               </h3>
               <p className="text-xs text-[#66736F] dark:text-slate-400">
-                Authentication & Role Credentials
+                {t('auth.authRoleCredentials')}
               </p>
             </div>
           </div>
@@ -111,25 +113,25 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                   <p className="text-xs text-[#66736F] dark:text-slate-400">{user?.email}</p>
                 </div>
                 <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#8A9A86]/20 text-[#2F3E46] dark:bg-emerald-500/20 dark:text-emerald-300 uppercase">
-                  {user?.role.replace('_', ' ')}
+                  {tRole(user?.role || '')}
                 </span>
               </div>
 
               {user?.phone_number && (
                 <div className="text-xs text-[#66736F] dark:text-slate-400 pt-1 border-t border-[#D9D6CF] dark:border-slate-800/80">
-                  📱 Phone: <strong className="text-[#2F3E46] dark:text-slate-300">{user.phone_number}</strong>
+                  📱 {t('auth.phoneLabel')}: <strong className="text-[#2F3E46] dark:text-slate-300">{user.phone_number}</strong>
                 </div>
               )}
 
               {user?.department && (
                 <div className="text-xs text-[#66736F] dark:text-slate-400">
-                  🏛️ Dept: <strong className="text-[#2F3E46] dark:text-slate-300">{user.department}</strong> ({user.designation})
+                  🏛️ {t('auth.deptLabel')}: <strong className="text-[#2F3E46] dark:text-slate-300">{tx(user.department)}</strong> ({tx(user.designation)})
                 </div>
               )}
 
               {user?.role === 'GOVERNMENT_OFFICIAL' && (
                 <div className="text-xs">
-                  Official Verification: <span className="font-bold text-[#C68A27]">{user.official_status}</span>
+                  {t('auth.officialVerification')}: <span className="font-bold text-[#C68A27]">{tOfficialStatus(user.official_status || '')}</span>
                 </div>
               )}
             </div>
@@ -137,9 +139,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             {/* Twilio SMS Toggle (Section 15) */}
             <div className="p-4 bg-[#F9F7F3] dark:bg-slate-950 rounded-xl border border-[#D9D6CF] dark:border-slate-800 flex items-center justify-between">
               <div>
-                <span className="text-xs font-bold text-[#2F3E46] dark:text-white block">Twilio SMS Alerts</span>
+                <span className="text-xs font-bold text-[#2F3E46] dark:text-white block">{t('auth.twilioSmsAlerts')}</span>
                 <span className="text-[11px] text-[#66736F] dark:text-slate-400">
-                  Receive HIGH/EMERGENCY severity SMS
+                  {t('auth.receiveSeveritySms')}
                 </span>
               </div>
               <input
@@ -158,7 +160,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
               className="w-full py-2.5 bg-[#C53030]/10 hover:bg-[#C53030]/20 text-[#C53030] dark:bg-rose-600/20 dark:hover:bg-rose-600/30 dark:text-rose-300 border border-[#C53030]/30 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition"
             >
               <LogOut className="w-4 h-4" />
-              <span>Sign Out Current Session</span>
+              <span>{t('auth.signOutCurrentSession')}</span>
             </button>
           </div>
         ) : (
@@ -172,7 +174,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                   activeTab === 'CITIZEN' ? 'bg-[#8A9A86] text-white shadow-2xs' : 'text-[#66736F] dark:text-slate-400 hover:text-[#2F3E46] dark:hover:text-white'
                 }`}
               >
-                Citizen
+                {t('auth.citizenRoleTitle')}
               </button>
               <button
                 type="button"
@@ -181,7 +183,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                   activeTab === 'OFFICIAL' ? 'bg-[#8A9A86] text-white shadow-2xs' : 'text-[#66736F] dark:text-slate-400 hover:text-[#2F3E46] dark:hover:text-white'
                 }`}
               >
-                BMC Official
+                {t('auth.bmcOfficial')}
               </button>
               <button
                 type="button"
@@ -190,7 +192,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                   activeTab === 'ADMIN' ? 'bg-[#8A9A86] text-white shadow-2xs' : 'text-[#66736F] dark:text-slate-400 hover:text-[#2F3E46] dark:hover:text-white'
                 }`}
               >
-                Admin
+                {t('auth.admin')}
               </button>
             </div>
 
@@ -198,7 +200,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             {activeTab === 'CITIZEN' && (
               <form onSubmit={handleCitizenSubmit} className="space-y-3 text-xs">
                 <div>
-                  <label className="block text-[#2F3E46] dark:text-slate-300 font-semibold mb-1">Full Name</label>
+                  <label className="block text-[#2F3E46] dark:text-slate-300 font-semibold mb-1">{t('auth.fullName')}</label>
                   <div className="relative">
                     <User className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-3" />
                     <input
@@ -207,13 +209,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                       value={citizenName}
                       onChange={(e) => setCitizenName(e.target.value)}
                       className="w-full bg-[#FFFDF9] dark:bg-slate-950 border border-[#D9D6CF] dark:border-slate-800 rounded-xl pl-9 pr-3 py-2 text-[#2F3E46] dark:text-white focus:outline-none focus:border-[#8A9A86]"
-                      placeholder="Full Name"
+                      placeholder={t('auth.namePlaceholder')}
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-[#2F3E46] dark:text-slate-300 font-semibold mb-1">Email Address</label>
+                  <label className="block text-[#2F3E46] dark:text-slate-300 font-semibold mb-1">{t('auth.emailAddress')}</label>
                   <div className="relative">
                     <Mail className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-3" />
                     <input
@@ -222,14 +224,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                       value={citizenEmail}
                       onChange={(e) => setCitizenEmail(e.target.value)}
                       className="w-full bg-[#FFFDF9] dark:bg-slate-950 border border-[#D9D6CF] dark:border-slate-800 rounded-xl pl-9 pr-3 py-2 text-[#2F3E46] dark:text-white focus:outline-none focus:border-[#8A9A86]"
-                      placeholder="citizen@example.com"
+                      placeholder={t('auth.emailPlaceholder')}
                     />
                   </div>
                 </div>
 
                 <div>
                   <label className="block text-[#2F3E46] dark:text-slate-300 font-semibold mb-1">
-                    Phone Number (for Twilio Disaster SMS)
+                    {t('auth.phoneTwilioSms')}
                   </label>
                   <div className="relative">
                     <Phone className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-3" />
@@ -237,14 +239,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                       type="tel"
                       value={citizenPhone}
                       onChange={(e) => setCitizenPhone(e.target.value)}
-                      className="w-full bg-[#FFFDF9] dark:bg-slate-950 border border-[#D9D6CF] dark:border-slate-800 rounded-xl pl-9 pr-3 py-2 text-[#2F3E46] dark:text-white focus:outline-none focus:border-[#8A9A86]"
+                      className="w-full bg-[#FFFDF9] dark:bg-slate-950 border border-[#D9D6CF] dark:border-slate-800 rounded-xl pl-9 pr-3 py-2 text-[#2F3E46] dark:text-white font-mono focus:outline-none focus:border-[#8A9A86]"
                       placeholder="+919876543210"
                     />
                   </div>
                 </div>
 
                 <div className="flex items-center justify-between p-3 bg-[#F9F7F3] dark:bg-slate-950/60 rounded-xl border border-[#D9D6CF] dark:border-slate-800">
-                  <span className="text-[#2F3E46] dark:text-slate-300 font-medium">Opt-in to Emergency SMS</span>
+                  <span className="text-[#2F3E46] dark:text-slate-300 font-medium">{t('auth.optInEmergencySms')}</span>
                   <input
                     type="checkbox"
                     checked={smsEnabled}
@@ -258,7 +260,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                   className="w-full py-2.5 bg-[#8A9A86] hover:bg-[#778873] text-white rounded-xl font-bold transition shadow-xs flex items-center justify-center gap-2"
                 >
                   <LogIn className="w-4 h-4" />
-                  <span>Continue as Citizen</span>
+                  <span>{t('auth.continueAsCitizen')}</span>
                 </button>
               </form>
             )}
@@ -267,7 +269,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             {activeTab === 'OFFICIAL' && (
               <form onSubmit={handleOfficialSubmit} className="space-y-3 text-xs">
                 <div>
-                  <label className="block text-[#2F3E46] dark:text-slate-300 font-semibold mb-1">Officer Name</label>
+                  <label className="block text-[#2F3E46] dark:text-slate-300 font-semibold mb-1">{t('auth.officerName')}</label>
                   <input
                     type="text"
                     required
@@ -278,7 +280,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                 </div>
 
                 <div>
-                  <label className="block text-[#2F3E46] dark:text-slate-300 font-semibold mb-1">Official Gov Email</label>
+                  <label className="block text-[#2F3E46] dark:text-slate-300 font-semibold mb-1">{t('auth.officialGovEmail')}</label>
                   <input
                     type="email"
                     required
@@ -290,7 +292,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
 
                 <div className="grid grid-cols-2 gap-2">
                   <div>
-                    <label className="block text-[#2F3E46] dark:text-slate-300 font-semibold mb-1">Department</label>
+                    <label className="block text-[#2F3E46] dark:text-slate-300 font-semibold mb-1">{t('auth.department')}</label>
                     <input
                       type="text"
                       required
@@ -300,7 +302,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                     />
                   </div>
                   <div>
-                    <label className="block text-[#2F3E46] dark:text-slate-300 font-semibold mb-1">Designation</label>
+                    <label className="block text-[#2F3E46] dark:text-slate-300 font-semibold mb-1">{t('auth.designation')}</label>
                     <input
                       type="text"
                       required
@@ -312,14 +314,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                 </div>
 
                 <div className="p-3 bg-[#C68A27]/10 border border-[#C68A27]/30 rounded-xl text-[11px] text-[#C68A27] dark:text-amber-300 leading-relaxed">
-                  ⚠️ Official accounts require System Admin approval before command privileges are activated.
+                  {t('auth.officialApprovalNote')}
                 </div>
 
                 <button
                   type="submit"
                   className="w-full py-2.5 bg-[#8A9A86] hover:bg-[#778873] text-white rounded-xl font-bold transition shadow-xs"
                 >
-                  Register Official Account
+                  {t('auth.registerOfficialAccount')}
                 </button>
               </form>
             )}
@@ -328,9 +330,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             {activeTab === 'ADMIN' && (
               <div className="space-y-4 text-xs">
                 <div className="p-4 bg-[#F9F7F3] dark:bg-slate-950 rounded-xl border border-[#D9D6CF] dark:border-slate-800 space-y-2">
-                  <span className="text-xs font-bold text-[#2F3E46] dark:text-white block">System Administrator Bypass</span>
+                  <span className="text-xs font-bold text-[#2F3E46] dark:text-white block">{t('auth.adminBypassTitle')}</span>
                   <p className="text-[#66736F] dark:text-slate-400 leading-relaxed">
-                    Direct authentication as Senior Operations Engineer with access to the 20-minute scheduler telemetry, external API health matrix, and official authorization controls.
+                    {t('auth.adminBypassDesc')}
                   </p>
                 </div>
 
@@ -338,7 +340,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                   onClick={handleAdminSubmit}
                   className="w-full py-2.5 bg-[#C53030] hover:bg-[#A82828] text-white rounded-xl font-bold transition shadow-xs"
                 >
-                  Authenticate as System Admin
+                  {t('auth.authenticateAsAdmin')}
                 </button>
               </div>
             )}

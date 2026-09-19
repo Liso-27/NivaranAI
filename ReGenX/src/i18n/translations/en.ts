@@ -875,6 +875,21 @@ export const en = {
   'auth.officerNamePlaceholder': 'e.g. Dr. Sanjeev Mohapatra',
   'auth.deptPlaceholder': 'BMC Disaster Cell',
   'auth.designationPlaceholder': 'Executive Engineer',
+  'auth.sysAdminQuickAccess': 'System Admin Quick Access:',
+  'auth.fillCredentials': 'Fill your credentials',
+  'auth.sysAdminSavedCredentialsDesc': 'Use saved credentials for quick System Administrator authentication',
+  'auth.citizenSavedCredentialsDesc': 'Use saved credentials for quick Citizen authentication',
+  'auth.officialSavedCredentialsDesc': 'Use saved credentials for quick Government Official authentication',
+  'auth.privacyPolicy': 'Privacy Policy',
+  'auth.termsConditions': 'Terms & Conditions',
+  'auth.cookiePreferences': 'Cookie Preferences',
+  'auth.platformPortal': 'Official Emergency Management Portal',
+  'auth.platformSubtitle': 'Bhubaneswar Municipal Corporation Disaster Risk Telemetry & Public Safety Platform',
+  'auth.platformDesc': 'Real-time geospatial intelligence, 67-ward risk engine scoring, verified citizen report triage, and emergency relief camp routing across Bhubaneswar.',
+  'auth.securityFootnote': 'Encrypted incident reporting & role-authorized emergency dispatch portal.',
+  'auth.citizenNamePlaceholder': 'Citizen Name',
+  'auth.officialFullNamePlaceholder': 'Official Full Name',
+  'auth.errRegistrationFailed': 'Registration failed',
 };
 
 export type TranslationKey = keyof typeof en;

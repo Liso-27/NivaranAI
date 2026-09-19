@@ -877,6 +877,21 @@ export const hi: Record<TranslationKey, string> = {
   'auth.officerNamePlaceholder': 'उदा. डॉ. संजीव महापात्रा',
   'auth.deptPlaceholder': 'BMC आपदा प्रकोष्ठ',
   'auth.designationPlaceholder': 'कार्यकारी अभियंता',
+  'auth.sysAdminQuickAccess': 'सिस्टम व्यवस्थापक त्वरित पहुंच:',
+  'auth.fillCredentials': 'अपने क्रेडेंशियल भरें',
+  'auth.sysAdminSavedCredentialsDesc': 'त्वरित सिस्टम व्यवस्थापक प्रमाणीकरण के लिए सहेजे गए क्रेडेंशियल का उपयोग करें',
+  'auth.citizenSavedCredentialsDesc': 'त्वरित नागरिक प्रमाणीकरण के लिए सहेजे गए क्रेडेंशियल का उपयोग करें',
+  'auth.officialSavedCredentialsDesc': 'त्वरित सरकारी अधिकारी प्रमाणीकरण के लिए सहेजे गए क्रेडेंशियल का उपयोग करें',
+  'auth.privacyPolicy': 'गोपनीयता नीति',
+  'auth.termsConditions': 'नियम और शर्तें',
+  'auth.cookiePreferences': 'कुकी प्राथमिकताएं',
+  'auth.platformPortal': 'आधिकारिक आपातकालीन प्रबंधन पोर्टल',
+  'auth.platformSubtitle': 'भुवनेश्वर नगर निगम आपदा जोखिम टेलीमेट्री एवं सार्वजनिक सुरक्षा मंच',
+  'auth.platformDesc': 'भुवनेश्वर में वास्तविक समय भू-स्थानिक बुद्धिमत्ता, 67-वार्ड जोखिम इंजन स्कोरिंग, सत्यापित नागरिक रिपोर्ट ट्राइएज और आपातकालीन राहत शिविर रूटिंग।',
+  'auth.securityFootnote': 'एन्क्रिप्टेड घटना रिपोर्टिंग और भूमिका-अधिकृत आपातकालीन प्रेषण पोर्टल।',
+  'auth.citizenNamePlaceholder': 'नागरिक का नाम',
+  'auth.officialFullNamePlaceholder': 'अधिकारी का पूरा नाम',
+  'auth.errRegistrationFailed': 'पंजीकरण विफल',
 };
 
 
