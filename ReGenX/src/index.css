@@ -28,8 +28,8 @@
     --color-emergency: #DC2626;  /* Operational Crimson (Immediate Evacuation) */
 
     /* Typography: Universal System UI Stack */
-    --font-heading: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-    --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    --font-heading: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, 'Noto Sans Devanagari', 'Noto Sans Oriya', Arial, sans-serif;
+    --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, 'Noto Sans Devanagari', 'Noto Sans Oriya', Arial, sans-serif;
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   }
 

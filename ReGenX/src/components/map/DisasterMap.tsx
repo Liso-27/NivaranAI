@@ -1,17 +1,18 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import L from 'leaflet';
 import { useDisasterData } from '../../context/DisasterDataContext';
+import { useLanguage } from '../../context/LanguageContext';
 import { HazardZone } from '../../types';
 import { BHUBANESWAR_CENTER, BMC_WARDS } from '../../data/bmcWards';
 import { 
   Layers, 
   Crosshair, 
   Search, 
-  Info,
-  X,
-  Loader2,
-  AlertCircle,
-  RefreshCw
+  Info, 
+  X, 
+  Loader2, 
+  AlertCircle, 
+  RefreshCw 
 } from 'lucide-react';
 import { ZonePreviewCard } from './ZonePreviewCard';
 import { ZoneDetailModal } from './ZoneDetailModal';
@@ -48,6 +49,8 @@ export const DisasterMap: React.FC = () => {
     setSelectedZone
   } = useDisasterData();
 
+  const { t, tx, tSeverity, language } = useLanguage();
+
   const [previewZone, setPreviewZone] = useState<HazardZone | null>(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -75,7 +78,12 @@ export const DisasterMap: React.FC = () => {
     });
 
     // OpenStreetMap Raster Tiles (Clean, free, high contrast)
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    const mapApiKey = import.meta.env.VITE_MAP_API_KEY;
+    const tileUrl = mapApiKey
+      ? `https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png?key=${mapApiKey}`
+      : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+
+    L.tileLayer(tileUrl, {
       maxZoom: 19,
       attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
@@ -130,7 +138,7 @@ export const DisasterMap: React.FC = () => {
       layerState,
       handleZoneSelect
     );
-  }, [hazardZones, layerState, handleZoneSelect]);
+  }, [hazardZones, layerState, handleZoneSelect, language]);
 
   // 3. Render Safe Places Layer (Hospitals & Shelters)
   useEffect(() => {
@@ -140,7 +148,7 @@ export const DisasterMap: React.FC = () => {
       safePlaces,
       layerState.showSafePlaces
     );
-  }, [safePlaces, layerState.showSafePlaces]);
+  }, [safePlaces, layerState.showSafePlaces, language]);
 
   // 4. Render Government Relief Camps Layer
   useEffect(() => {
@@ -150,7 +158,7 @@ export const DisasterMap: React.FC = () => {
       safePlaces,
       layerState.showGovernmentCamps
     );
-  }, [safePlaces, layerState.showGovernmentCamps]);
+  }, [safePlaces, layerState.showGovernmentCamps, language]);
 
   // 5. Render Crowd Reports Layer (Observations & Verification Status)
   useEffect(() => {
@@ -160,7 +168,7 @@ export const DisasterMap: React.FC = () => {
       crowdReports,
       layerState.showCrowdReports
     );
-  }, [crowdReports, layerState.showCrowdReports]);
+  }, [crowdReports, layerState.showCrowdReports, language]);
 
   // 6. Render Official Field Updates Layer (BMC Mitigation Interventions)
   useEffect(() => {
@@ -170,7 +178,7 @@ export const DisasterMap: React.FC = () => {
       officialUpdates,
       layerState.showOfficialUpdates
     );
-  }, [officialUpdates, layerState.showOfficialUpdates]);
+  }, [officialUpdates, layerState.showOfficialUpdates, language]);
 
   // 7. Render User Current Location Marker & Accuracy Radius
   useEffect(() => {
@@ -179,7 +187,7 @@ export const DisasterMap: React.FC = () => {
       layerGroupsRef.current.userLocation,
       userLocation
     );
-  }, [userLocation]);
+  }, [userLocation, language]);
 
   // Center on searched ward
   const handleSearchWard = (e: React.FormEvent) => {
@@ -224,7 +232,7 @@ export const DisasterMap: React.FC = () => {
           <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
           <input
             type="text"
-            placeholder="Search 67 Wards (e.g. Kalinga Nagar, Baramunda)..."
+            placeholder={t('map.searchWardsPlaceholder')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full bg-[#FFFFFF]/95 dark:bg-slate-900/95 border border-[#D1D5DB] dark:border-slate-700/80 rounded-lg pl-10 pr-4 py-2.5 text-xs text-[#0F172A] dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#D97706]/30 focus:border-[#D97706] shadow-2xs transition-all"
@@ -238,7 +246,7 @@ export const DisasterMap: React.FC = () => {
               ? 'bg-[#0F172A] text-[#D97706] border-[#0F172A]' 
               : 'bg-[#FFFFFF]/95 dark:bg-slate-900/95 text-[#0F172A] dark:text-slate-300 border-[#D1D5DB] dark:border-slate-700 hover:bg-[#F8F9FA]'
           }`}
-          title="Toggle Layers & Filters"
+          title={t('map.toggleLayersTitle')}
         >
           <Layers className="w-4 h-4" />
         </button>
@@ -255,10 +263,12 @@ export const DisasterMap: React.FC = () => {
           }`}
           title={
             userLocation.isLoading 
-              ? 'Acquiring GPS location...' 
+              ? t('map.gpsAcquiring') 
               : userLocation.permissionGranted 
-              ? 'Center on My GPS Location' 
-              : 'Detect Location'
+              ? t('map.gpsCenter') 
+              : userLocation.permissionStatus === 'denied'
+              ? t('map.gpsDenied')
+              : t('map.gpsLocate')
           }
         >
           {userLocation.isLoading ? (
@@ -274,14 +284,14 @@ export const DisasterMap: React.FC = () => {
         <div className="absolute top-16 left-3 right-3 md:right-auto md:max-w-md z-30 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border border-rose-200 dark:border-rose-800/80 rounded-lg p-3 shadow-xl animate-fade-in flex items-start gap-2.5 text-xs text-rose-800 dark:text-rose-200">
           <AlertCircle className="w-4 h-4 text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" />
           <div className="flex-1 space-y-1">
-            <p className="font-bold">Device Geolocation Notice</p>
-            <p className="text-[11px] text-slate-600 dark:text-slate-300 leading-snug">{userLocation.error}</p>
+            <p className="font-bold">{t('map.geoNoticeTitle')}</p>
+            <p className="text-[11px] text-slate-600 dark:text-slate-300 leading-snug">{userLocation.error ? tx(userLocation.error) : ''}</p>
             <div className="flex items-center gap-3 pt-1">
               <button
                 onClick={() => requestUserLocation()}
                 className="text-[11px] font-bold text-[#0B3D91] dark:text-sky-400 hover:underline flex items-center gap-1 cursor-pointer"
               >
-                <RefreshCw className="w-3 h-3" /> Retry Location Request
+                <RefreshCw className="w-3 h-3" /> {t('map.retryLocation')}
               </button>
             </div>
           </div>
@@ -292,15 +302,15 @@ export const DisasterMap: React.FC = () => {
       {showLayerPanel && (
         <div className="absolute top-14 left-3 z-30 w-72 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded-lg p-4 border border-slate-200/90 dark:border-slate-700 shadow-xl animate-fade-in text-xs space-y-3">
           <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2">
-            <span className="font-bold text-slate-900 dark:text-white font-heading">Map Layers</span>
-            <span className="text-[10px] text-slate-500 dark:text-slate-400">BMC Live Data</span>
+            <span className="font-bold text-slate-900 dark:text-white font-heading">{t('map.layersTitle')}</span>
+            <span className="text-[10px] text-slate-500 dark:text-slate-400">{t('map.bmcLiveData')}</span>
           </div>
 
           <div className="space-y-2">
             <label className="flex items-center justify-between text-slate-700 dark:text-slate-300 cursor-pointer">
               <span className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
-                Hazard Zones
+                {t('map.layerHazardZones')}
               </span>
               <input
                 type="checkbox"
@@ -313,7 +323,7 @@ export const DisasterMap: React.FC = () => {
             <label className="flex items-center justify-between text-slate-700 dark:text-slate-300 cursor-pointer">
               <span className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-                Safe Places (Hospitals, Shelters)
+                {t('map.layerSafePlaces')}
               </span>
               <input
                 type="checkbox"
@@ -326,7 +336,7 @@ export const DisasterMap: React.FC = () => {
             <label className="flex items-center justify-between text-slate-700 dark:text-slate-300 cursor-pointer">
               <span className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-cyan-500"></span>
-                Government Relief Camps
+                {t('map.layerGovCamps')}
               </span>
               <input
                 type="checkbox"
@@ -339,7 +349,7 @@ export const DisasterMap: React.FC = () => {
             <label className="flex items-center justify-between text-slate-700 dark:text-slate-300 cursor-pointer">
               <span className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
-                Crowd Observations
+                {t('map.layerCrowdReports')}
               </span>
               <input
                 type="checkbox"
@@ -352,7 +362,7 @@ export const DisasterMap: React.FC = () => {
             <label className="flex items-center justify-between text-slate-700 dark:text-slate-300 cursor-pointer">
               <span className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
-                Official Field Updates
+                {t('map.layerOfficialUpdates')}
               </span>
               <input
                 type="checkbox"
@@ -365,7 +375,7 @@ export const DisasterMap: React.FC = () => {
 
           {/* Severity Filter */}
           <div className="pt-2 border-t border-slate-200 dark:border-slate-800">
-            <span className="font-semibold text-slate-600 dark:text-slate-400 block mb-1.5 text-[11px]">Filter by Severity:</span>
+            <span className="font-semibold text-slate-600 dark:text-slate-400 block mb-1.5 text-[11px]">{t('map.filterBySeverity')}</span>
             <div className="grid grid-cols-2 gap-1 text-[10px]">
               {(['ALL', 'LOW', 'MODERATE', 'HIGH', 'EMERGENCY'] as const).map(sev => (
                 <button
@@ -377,7 +387,7 @@ export const DisasterMap: React.FC = () => {
                       : 'bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:text-slate-900 dark:hover:text-white'
                   }`}
                 >
-                  {sev}
+                  {sev === 'ALL' ? t('common.all') : tSeverity(sev)}
                 </button>
               ))}
             </div>
@@ -390,7 +400,7 @@ export const DisasterMap: React.FC = () => {
         <button
           onClick={centerOnUser}
           className="absolute bottom-24 right-4 z-30 p-3 bg-white/95 dark:bg-slate-900/95 hover:bg-slate-50 dark:hover:bg-slate-800 text-[#0B3D91] dark:text-cyan-400 border border-slate-200/90 dark:border-slate-700 rounded-full backdrop-blur-md shadow-xl transition-all duration-150 hover:scale-105 active:scale-95 cursor-pointer animate-fade-in"
-          title="Recenter Map to My Location"
+          title={t('map.recenterTitle')}
         >
           <Crosshair className="w-5 h-5" />
         </button>
@@ -406,7 +416,7 @@ export const DisasterMap: React.FC = () => {
             <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-1.5">
               <span className="font-black text-slate-900 dark:text-white font-heading uppercase tracking-wider text-[10px] flex items-center gap-1.5">
                 <Info className="w-3.5 h-3.5 text-[#0B3D91] dark:text-[#F58220]" />
-                Map Legend & Severity
+                {t('map.legendTitle')}
               </span>
               <button
                 onClick={() => setShowLegend(false)}
@@ -418,50 +428,50 @@ export const DisasterMap: React.FC = () => {
 
             {/* Hazard Severity Levels */}
             <div className="space-y-1">
-              <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-tight block">Hazard Severity</span>
+              <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-tight block">{t('map.hazardSeverity')}</span>
               <div className="grid grid-cols-2 gap-1 text-[10px]">
                 <div className="flex items-center gap-1.5 p-1 rounded-lg bg-rose-50 dark:bg-rose-500/10 border border-rose-200 dark:border-rose-500/30">
                   <span className="w-2.5 h-2.5 rounded-full bg-rose-500 shrink-0" />
-                  <span className="font-black text-rose-800 dark:text-rose-300">EMERGENCY</span>
+                  <span className="font-black text-rose-800 dark:text-rose-300">{tSeverity('EMERGENCY')}</span>
                 </div>
                 <div className="flex items-center gap-1.5 p-1 rounded-lg bg-orange-50 dark:bg-orange-500/10 border border-orange-200 dark:border-orange-500/30">
                   <span className="w-2.5 h-2.5 rounded-full bg-orange-500 shrink-0" />
-                  <span className="font-bold text-orange-800 dark:text-orange-300">HIGH</span>
+                  <span className="font-bold text-orange-800 dark:text-orange-300">{tSeverity('HIGH')}</span>
                 </div>
                 <div className="flex items-center gap-1.5 p-1 rounded-lg bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30">
                   <span className="w-2.5 h-2.5 rounded-full bg-amber-500 shrink-0" />
-                  <span className="font-bold text-amber-800 dark:text-amber-300">MODERATE</span>
+                  <span className="font-bold text-amber-800 dark:text-amber-300">{tSeverity('MODERATE')}</span>
                 </div>
                 <div className="flex items-center gap-1.5 p-1 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/30">
                   <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0" />
-                  <span className="font-bold text-emerald-800 dark:text-emerald-300">LOW</span>
+                  <span className="font-bold text-emerald-800 dark:text-emerald-300">{tSeverity('LOW')}</span>
                 </div>
               </div>
             </div>
 
             {/* Marker Symbols */}
             <div className="space-y-1 pt-1 border-t border-slate-200 dark:border-slate-800">
-              <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-tight block">Marker Symbols</span>
+              <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-tight block">{t('map.markerSymbols')}</span>
               <div className="space-y-1 text-[10px] text-slate-700 dark:text-slate-300">
                 <div className="flex items-center gap-2">
                   <span className="w-4 h-4 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[9px] font-bold shrink-0">H</span>
-                  <span>Hospitals & Safe Centers</span>
+                  <span>{t('map.symbolHospitals')}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="w-4 h-4 rounded-full bg-cyan-600 text-white flex items-center justify-center text-[9px] font-bold shrink-0">C</span>
-                  <span>Relief & Evacuation Camps</span>
+                  <span>{t('map.symbolCamps')}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="w-4 h-4 rounded-full bg-amber-500 text-slate-950 flex items-center justify-center text-[9px] font-bold shrink-0">📢</span>
-                  <span>Citizen Crowd Observations</span>
+                  <span>{t('map.symbolCrowd')}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="w-4 h-4 rounded-full bg-blue-600 text-white flex items-center justify-center text-[9px] font-bold shrink-0">⚡</span>
-                  <span>Official Field Updates</span>
+                  <span>{t('map.symbolOfficial')}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="w-4 h-4 rounded-full bg-blue-500 text-white flex items-center justify-center text-[9px] font-bold shrink-0 animate-pulse">📍</span>
-                  <span>Your GPS Location</span>
+                  <span>{t('map.symbolUserGps')}</span>
                 </div>
               </div>
             </div>
@@ -477,7 +487,7 @@ export const DisasterMap: React.FC = () => {
           }`}
         >
           <Info className="w-3.5 h-3.5" />
-          <span>{showLegend ? 'Hide Legend' : 'Map Legend'}</span>
+          <span>{showLegend ? t('map.hideLegend') : t('map.showLegend')}</span>
         </button>
       </div>
 

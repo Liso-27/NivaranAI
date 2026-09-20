@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
+import { useLanguage } from '../../context/LanguageContext';
 import { UserRole } from '../../types';
 import {
   Shield,
@@ -37,6 +38,7 @@ export const LoginPage: React.FC = () => {
   } = useAuth();
 
   const { theme, toggleTheme } = useTheme();
+  const { t, tx } = useLanguage();
 
   // Step Navigation State (Role Gate -> Admin Login or Non-Admin Selection)
   const [authStep, setAuthStep] = useState<AuthStep>('ROLE_GATE');
@@ -133,16 +135,16 @@ export const LoginPage: React.FC = () => {
     setSuccessMessage(null);
 
     if (phoneNumber.length < 10) {
-      setErrorMessage('Please enter a valid 10-digit mobile number');
+      setErrorMessage(t('auth.errValidMobile'));
       return;
     }
 
     try {
       setIsOtpSent(true);
       setResendTimer(30);
-      setSuccessMessage(`OTP sent to +91 ${phoneNumber}`);
+      setSuccessMessage(t('auth.successOtpSent', { phoneNumber }));
     } catch {
-      setErrorMessage('An unexpected error occurred while sending OTP.');
+      setErrorMessage(t('auth.errSendingOtp'));
     }
   };
 
@@ -192,14 +194,14 @@ export const LoginPage: React.FC = () => {
 
     const fullOtp = otpDigits.join('');
     if (fullOtp.length < 6) {
-      setErrorMessage('Please enter the complete 6-digit OTP code');
+      setErrorMessage(t('auth.errCompleteOtp'));
       return;
     }
 
     try {
       if (authTab === 'SIGN_UP' && selectedRole === 'CITIZEN') {
         if (!fullName.trim()) {
-          setErrorMessage('Please provide your full name for registration');
+          setErrorMessage(t('auth.errFullNameReq'));
           return;
         }
         await registerCitizen({
@@ -212,7 +214,7 @@ export const LoginPage: React.FC = () => {
         await login(phoneNumber, fullOtp, selectedRole);
       }
     } catch {
-      setErrorMessage('Verification failed. Please try again.');
+      setErrorMessage(t('auth.errVerificationFailed'));
     }
   };
 
@@ -223,17 +225,17 @@ export const LoginPage: React.FC = () => {
     e.preventDefault();
     setErrorMessage(null);
     if (!citizenEmail.trim()) {
-      setErrorMessage('Please enter your email address.');
+      setErrorMessage(t('auth.errEmailReq'));
       return;
     }
     if (!citizenPassword) {
-      setErrorMessage('Please enter your password.');
+      setErrorMessage(t('auth.errPasswordReq'));
       return;
     }
     try {
       await login(citizenEmail.trim(), citizenPassword, 'CITIZEN');
     } catch {
-      setErrorMessage('Citizen sign-in failed. Please verify credentials.');
+      setErrorMessage(t('auth.errCitizenSignIn'));
     }
   };
 
@@ -244,7 +246,7 @@ export const LoginPage: React.FC = () => {
     try {
       await login(adminEmail, adminPassword, 'SYSTEM_ADMIN');
     } catch {
-      setErrorMessage('Admin login failed. Please verify credentials.');
+      setErrorMessage(t('auth.errAdminLogin'));
     }
   };
 
@@ -253,17 +255,17 @@ export const LoginPage: React.FC = () => {
     e.preventDefault();
     setErrorMessage(null);
     if (!officialEmail.trim()) {
-      setErrorMessage('Please enter your official government email.');
+      setErrorMessage(t('auth.errGovEmailReq'));
       return;
     }
     if (!officialPassword) {
-      setErrorMessage('Please enter your password.');
+      setErrorMessage(t('auth.errPasswordReq'));
       return;
     }
     try {
       await login(officialEmail.trim(), officialPassword, 'GOVERNMENT_OFFICIAL');
     } catch {
-      setErrorMessage('Official sign-in failed. Please verify credentials.');
+      setErrorMessage(t('auth.errOfficialSignIn'));
     }
   };
 
@@ -271,7 +273,7 @@ export const LoginPage: React.FC = () => {
   const handleSubmitAuthRequest = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!officialForm.name || !officialForm.email || !officialForm.phone) {
-      setErrorMessage('Please fill in all required official contact details');
+      setErrorMessage(t('auth.errFillRequiredDetails'));
       return;
     }
 
@@ -296,10 +298,10 @@ export const LoginPage: React.FC = () => {
             designation: 'Executive Engineer',
             idNumber: ''
           });
-          setSuccessMessage('Authorization request submitted to State Disaster Authority IT Division!');
+          setSuccessMessage(t('auth.successAuthSubmitted'));
         }, 2200);
     } catch {
-      setErrorMessage('Failed to submit authorization request.');
+      setErrorMessage(t('auth.errSubmitAuth'));
     }
   };
 
@@ -321,11 +323,11 @@ export const LoginPage: React.FC = () => {
                 </span>
                 <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded bg-[#F8F9FA] dark:bg-slate-900 border border-[#D1D5DB] dark:border-slate-800 text-[#0F172A] dark:text-slate-300">
                   <Radio className="w-2.5 h-2.5 text-emerald-500" />
-                  BMC Risk Grid Active
+                  {t('auth.riskGridActive')}
                 </span>
               </div>
               <p className="text-[11px] text-[#475569] dark:text-slate-400 font-medium hidden md:block">
-                Bhubaneswar Municipal Corporation • Disaster Management Authority
+                {t('auth.bmcSubheading')}
               </p>
             </div>
           </div>
@@ -334,8 +336,8 @@ export const LoginPage: React.FC = () => {
             <button
               onClick={toggleTheme}
               className="p-2 bg-[#F8F9FA] hover:bg-[#E2E8F0] dark:bg-slate-900 dark:hover:bg-slate-800 text-[#0F172A] dark:text-slate-300 border border-[#D1D5DB] dark:border-slate-800 rounded-lg transition duration-150 cursor-pointer"
-              title={theme === 'light' ? 'Switch to Dark Theme' : 'Switch to Light Theme'}
-              aria-label="Toggle Theme"
+              title={theme === 'light' ? t('auth.switchDark') : t('auth.switchLight')}
+              aria-label={t('auth.toggleTheme')}
             >
               {theme === 'light' ? (
                 <Moon className="w-4 h-4 text-[#0F172A]" />
@@ -353,7 +355,7 @@ export const LoginPage: React.FC = () => {
         <div className="lg:col-span-5 space-y-5">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded bg-[#059669]/10 border border-[#059669]/30 text-xs font-semibold text-[#059669] dark:text-emerald-400">
             <span className="h-2 w-2 rounded-full bg-[#059669]" />
-            Official Emergency Management Portal
+            {t('auth.platformPortal')}
           </div>
 
           <div className="space-y-2">
@@ -361,27 +363,27 @@ export const LoginPage: React.FC = () => {
               Nivaran <span className="text-[#D97706]">AI</span>
             </h1>
             <p className="text-sm font-semibold text-[#475569] dark:text-slate-300 leading-normal">
-              Bhubaneswar Municipal Corporation Disaster Risk Telemetry & Public Safety Platform
+              {t('auth.platformSubtitle')}
             </p>
           </div>
 
           <p className="text-xs text-[#475569] dark:text-slate-400 leading-normal">
-            Real-time geospatial intelligence, 67-ward risk engine scoring, verified citizen report triage, and emergency relief camp routing across Bhubaneswar.
+            {t('auth.platformDesc')}
           </p>
 
           {/* Quick Metrics Cards */}
           <div className="grid grid-cols-3 gap-3 pt-1">
             <div className="p-3 bg-[#FFFFFF] dark:bg-slate-900 rounded-lg border border-[#D1D5DB] dark:border-slate-800">
               <div className="text-lg font-bold text-[#0F172A] dark:text-white">67</div>
-              <div className="text-[11px] font-medium text-[#475569] dark:text-slate-400">BMC Wards</div>
+              <div className="text-[11px] font-medium text-[#475569] dark:text-slate-400">{t('auth.bmcWards')}</div>
             </div>
             <div className="p-3 bg-[#FFFFFF] dark:bg-slate-900 rounded-lg border border-[#D1D5DB] dark:border-slate-800">
-              <div className="text-lg font-bold text-[#D97706]">20 min</div>
-              <div className="text-[11px] font-medium text-[#475569] dark:text-slate-400">Sync Cycle</div>
+              <div className="text-lg font-bold text-[#D97706]">{t('auth.syncDuration')}</div>
+              <div className="text-[11px] font-medium text-[#475569] dark:text-slate-400">{t('auth.syncCycle')}</div>
             </div>
             <div className="p-3 bg-[#FFFFFF] dark:bg-slate-900 rounded-lg border border-[#D1D5DB] dark:border-slate-800">
               <div className="text-lg font-bold text-[#059669]">100%</div>
-              <div className="text-[11px] font-medium text-[#475569] dark:text-slate-400">Verified Camps</div>
+              <div className="text-[11px] font-medium text-[#475569] dark:text-slate-400">{t('auth.verifiedCamps')}</div>
             </div>
           </div>
 
@@ -391,7 +393,7 @@ export const LoginPage: React.FC = () => {
               <Lock className="w-4 h-4" />
             </div>
             <span className="font-medium">
-              Encrypted incident reporting & role-authorized emergency dispatch portal.
+              {t('auth.securityFootnote')}
             </span>
           </div>
         </div>
@@ -407,13 +409,13 @@ export const LoginPage: React.FC = () => {
               <div className="space-y-2">
                 <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#F9F7F3] dark:bg-slate-800 text-[11px] font-bold text-[#66736F] dark:text-slate-400">
                   <Shield className="w-3.5 h-3.5 text-[#8A9A86] dark:text-[#B86B52]" />
-                  <span>Identity & Access Gateway</span>
+                  <span>{t('auth.identityGateway')}</span>
                 </div>
                 <h2 className="text-2xl sm:text-3xl font-black font-heading text-[#2F3E46] dark:text-white">
-                  Are you a System Admin?
+                  {t('auth.areYouAdmin')}
                 </h2>
                 <p className="text-xs sm:text-sm text-[#66736F] dark:text-slate-400 font-medium">
-                  Please select your role category to proceed with authentication.
+                  {t('auth.selectRoleCategory')}
                 </p>
               </div>
 
@@ -438,14 +440,14 @@ export const LoginPage: React.FC = () => {
                     <div>
                       <div className="flex items-center gap-2">
                         <h3 className="text-base font-black font-heading text-[#2F3E46] dark:text-white group-hover:text-[#C53030] transition-colors">
-                          Yes, I'm a System Admin
+                          {t('auth.yesAdmin')}
                         </h3>
                         <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-[#C53030]/10 text-[#C53030]">
-                          Restricted
+                          {t('auth.restricted')}
                         </span>
                       </div>
                       <p className="text-xs text-[#66736F] dark:text-slate-400 mt-1">
-                        BMC IT Operations Hub, cron telemetry, API health matrix & server controls.
+                        {t('auth.adminCardDesc')}
                       </p>
                     </div>
                   </div>
@@ -473,14 +475,14 @@ export const LoginPage: React.FC = () => {
                     <div>
                       <div className="flex items-center gap-2">
                         <h3 className="text-base font-black font-heading text-[#2F3E46] dark:text-white group-hover:text-[#8A9A86] transition-colors">
-                          No, I'm not a System Admin
+                          {t('auth.noAdmin')}
                         </h3>
                         <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-[#8A9A86]/10 text-[#8A9A86]">
-                          Citizens & Officials
+                          {t('auth.citizensAndOfficials')}
                         </span>
                       </div>
                       <p className="text-xs text-[#66736F] dark:text-slate-400 mt-1">
-                        Public citizens, emergency volunteers, ward officers & BMC command staff.
+                        {t('auth.nonAdminCardDesc')}
                       </p>
                     </div>
                   </div>
@@ -493,7 +495,7 @@ export const LoginPage: React.FC = () => {
               {/* Security Note */}
               <div className="p-3.5 bg-slate-50 dark:bg-slate-950/60 rounded-lg border border-slate-200/80 dark:border-slate-800 flex items-center gap-2.5 text-xs text-slate-500 dark:text-slate-400">
                 <Info className="w-4 h-4 text-slate-400 shrink-0" />
-                <span>Role selection directs you to the appropriate verification protocol.</span>
+                <span>{t('auth.roleSelectionProtocol')}</span>
               </div>
             </div>
           )}
@@ -515,20 +517,20 @@ export const LoginPage: React.FC = () => {
                   className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition cursor-pointer"
                 >
                   <ArrowLeft className="w-4 h-4" />
-                  <span>Back to Role Selection</span>
+                  <span>{t('auth.backToRoleSelection')}</span>
                 </button>
                 <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800">
-                  System Admin Portal
+                  {t('auth.systemAdminPortal')}
                 </span>
               </div>
 
               <div className="space-y-1">
                 <h2 className="text-xl sm:text-2xl font-black font-heading text-slate-900 dark:text-white flex items-center gap-2">
                   <Lock className="w-5 h-5 text-rose-600" />
-                  <span>System Administrator Sign In</span>
+                  <span>{t('auth.adminSignInTitle')}</span>
                 </h2>
                 <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium">
-                  Enter your administrator credentials to access the Operations Hub
+                  {t('auth.adminSignInDesc')}
                 </p>
               </div>
 
@@ -536,14 +538,14 @@ export const LoginPage: React.FC = () => {
               {errorMessage && (
                 <div className="p-3.5 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-800 dark:text-rose-200 rounded-xl text-xs flex items-start gap-2.5 animate-fade-in shadow-xs">
                   <AlertTriangle className="w-4 h-4 text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" />
-                  <span className="font-medium leading-relaxed">{errorMessage}</span>
+                  <span className="font-medium leading-relaxed">{tx(errorMessage)}</span>
                 </div>
               )}
 
               {successMessage && (
                 <div className="p-3.5 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-200 rounded-xl text-xs flex items-center gap-2.5 animate-fade-in shadow-xs">
                   <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                  <span className="font-medium">{successMessage}</span>
+                  <span className="font-medium">{tx(successMessage)}</span>
                 </div>
               )}
 
@@ -558,7 +560,7 @@ export const LoginPage: React.FC = () => {
                       : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
                   }`}
                 >
-                  Sign In
+                  {t('auth.signIn')}
                 </button>
                 <button
                   type="button"
@@ -569,7 +571,7 @@ export const LoginPage: React.FC = () => {
                       : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
                   }`}
                 >
-                  Sign Up
+                  {t('auth.signUp')}
                 </button>
               </div>
 
@@ -579,7 +581,7 @@ export const LoginPage: React.FC = () => {
                   <form onSubmit={handleAdminLogin} className="space-y-3">
                     <div>
                       <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                        Administrator Email
+                        {t('auth.adminEmail')}
                       </label>
                       <div className="relative">
                         <Mail className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-3" />
@@ -597,14 +599,14 @@ export const LoginPage: React.FC = () => {
                     <div>
                       <div className="flex items-center justify-between mb-1">
                         <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                          Password Key
+                          {t('auth.passwordKey')}
                         </label>
                         <button
                           type="button"
                           onClick={() => setShowForgotModal(true)}
                           className="text-[11px] font-bold text-rose-600 dark:text-rose-400 hover:underline cursor-pointer"
                         >
-                          Forgot Password?
+                          {t('auth.forgotPassword')}
                         </button>
                       </div>
                       <div className="relative">
@@ -631,7 +633,7 @@ export const LoginPage: React.FC = () => {
                     <div className="pt-2">
                       <div className="p-3 bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-800/60 rounded-xl space-y-1.5 text-xs text-rose-900 dark:text-rose-200">
                         <div className="flex items-center justify-between font-bold">
-                          <span>System Admin Quick Access:</span>
+                          <span>{t('auth.sysAdminQuickAccess')}</span>
                           <button
                             type="button"
                             onClick={() => {
@@ -640,11 +642,11 @@ export const LoginPage: React.FC = () => {
                             }}
                             className="text-[11px] underline hover:text-rose-700 dark:hover:text-rose-300 cursor-pointer font-bold"
                           >
-                            Fill your credentials
+                            {t('auth.fillCredentials')}
                           </button>
                         </div>
                         <p className="text-[11px] text-rose-700 dark:text-rose-300">
-                          Use saved credentials for quick System Administrator authentication
+                          {t('auth.sysAdminSavedCredentialsDesc')}
                         </p>
                       </div>
                     </div>
@@ -659,13 +661,13 @@ export const LoginPage: React.FC = () => {
                       ) : (
                         <>
                           <Lock className="w-3.5 h-3.5" />
-                          <span>Sign In</span>
+                          <span>{t('auth.signIn')}</span>
                         </>
                       )}
                     </button>
 
                     <p className="text-[11px] text-slate-400 dark:text-slate-500 text-center">
-                      Direct access to 20-minute cron scheduler telemetry and external API health matrix.
+                      {t('auth.adminAccessFooter')}
                     </p>
                   </form>
                 )}
@@ -677,13 +679,13 @@ export const LoginPage: React.FC = () => {
                       <Lock className="w-6 h-6" />
                     </div>
                     <h4 className="text-sm font-black font-heading text-rose-800 dark:text-rose-300">
-                      Administrator accounts are restricted.
+                      {t('auth.adminRestrictedTitle')}
                     </h4>
                     <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                      System Administrator credentials cannot be registered through public forms. Access is provisioned and audited directly by the IT Division of the State Disaster Management Authority.
+                      {t('auth.adminRestrictedDesc')}
                     </p>
                     <div className="pt-2 text-[11px] text-slate-500 dark:text-slate-400">
-                      Support Contact: sysadmin.disaster@bmc.gov.in
+                      {t('auth.supportContact')}
                     </div>
                   </div>
                 )}
@@ -708,19 +710,19 @@ export const LoginPage: React.FC = () => {
                   className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition cursor-pointer"
                 >
                   <ArrowLeft className="w-4 h-4" />
-                  <span>Back to System Admin check</span>
+                  <span>{t('auth.backToAdminCheck')}</span>
                 </button>
                 <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-blue-50 dark:bg-blue-950/60 text-[#0B3D91] dark:text-blue-400 border border-blue-200 dark:border-blue-800">
-                  Select User Type
+                  {t('auth.selectUserType')}
                 </span>
               </div>
 
               <div className="space-y-1">
                 <h2 className="text-xl sm:text-2xl font-black font-heading text-slate-900 dark:text-white">
-                  Choose Your Access Role
+                  {t('auth.chooseAccessRole')}
                 </h2>
                 <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium">
-                  Please select whether you are accessing as a Citizen or Government Official
+                  {t('auth.chooseRoleDesc')}
                 </p>
               </div>
 
@@ -744,18 +746,18 @@ export const LoginPage: React.FC = () => {
                     </div>
                     <div className="flex items-center gap-2">
                       <h3 className="text-base font-black font-heading text-slate-900 dark:text-white group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">
-                        Citizen
+                        {t('auth.citizenRoleTitle')}
                       </h3>
                       <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-emerald-100 dark:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300">
-                        Public Access
+                        {t('auth.publicAccess')}
                       </span>
                     </div>
                     <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed mt-2 line-clamp-3">
-                      Receive local hazard alerts, report incidents, find safe places and follow recommended emergency actions.
+                      {t('auth.citizenRoleDesc')}
                     </p>
                   </div>
                   <div className="mt-4 pt-3 border-t border-slate-200/80 dark:border-slate-800/80 flex items-center justify-between text-xs font-bold text-emerald-700 dark:text-emerald-400">
-                    <span>Continue as Citizen</span>
+                    <span>{t('auth.continueAsCitizen')}</span>
                     <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                   </div>
                 </button>
@@ -777,18 +779,18 @@ export const LoginPage: React.FC = () => {
                     </div>
                     <div className="flex items-center gap-2">
                       <h3 className="text-base font-black font-heading text-slate-900 dark:text-white group-hover:text-[#F58220] transition-colors">
-                        Government Official
+                        {t('auth.govRoleTitle')}
                       </h3>
                       <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-amber-100 dark:bg-amber-900/60 text-amber-800 dark:text-amber-300">
-                        Authorized
+                        {t('auth.authorized')}
                       </span>
                     </div>
                     <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed mt-2 line-clamp-3">
-                      Monitor hazards, verify field reports, issue official alerts and coordinate emergency response.
+                      {t('auth.govRoleDesc')}
                     </p>
                   </div>
                   <div className="mt-4 pt-3 border-t border-slate-200/80 dark:border-slate-800/80 flex items-center justify-between text-xs font-bold text-amber-700 dark:text-amber-400">
-                    <span>Continue to Official Sign In</span>
+                    <span>{t('auth.continueToOfficialSignIn')}</span>
                     <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                   </div>
                 </button>
@@ -797,7 +799,7 @@ export const LoginPage: React.FC = () => {
               {/* Security Footnote */}
               <div className="p-3.5 bg-slate-50 dark:bg-slate-950/60 rounded-lg border border-slate-200/80 dark:border-slate-800 flex items-center gap-2.5 text-xs text-slate-500 dark:text-slate-400">
                 <Info className="w-4 h-4 text-slate-400 shrink-0" />
-                <span>Role selection directs you to the appropriate verification protocol.</span>
+                <span>{t('auth.roleSelectionProtocol')}</span>
               </div>
             </div>
           )}
@@ -819,20 +821,20 @@ export const LoginPage: React.FC = () => {
                   className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition cursor-pointer"
                 >
                   <ArrowLeft className="w-4 h-4" />
-                  <span>Back to Role Selection</span>
+                  <span>{t('auth.backToRoleSelection')}</span>
                 </button>
                 <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
-                  Citizen Portal
+                  {t('auth.citizenPortal')}
                 </span>
               </div>
 
               <div className="space-y-1">
                 <h2 className="text-xl sm:text-2xl font-black font-heading text-slate-900 dark:text-white flex items-center gap-2">
                   <Users className="w-5 h-5 text-emerald-600" />
-                  <span>Citizen Authentication</span>
+                  <span>{t('auth.citizenAuthTitle')}</span>
                 </h2>
                 <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium">
-                  Sign in or register to receive localized alerts, view safe zones & report incidents
+                  {t('auth.citizenAuthDesc')}
                 </p>
               </div>
 
@@ -840,14 +842,14 @@ export const LoginPage: React.FC = () => {
               {errorMessage && (
                 <div className="p-3.5 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-800 dark:text-rose-200 rounded-xl text-xs flex items-start gap-2.5 animate-fade-in shadow-xs">
                   <AlertTriangle className="w-4 h-4 text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" />
-                  <span className="font-medium leading-relaxed">{errorMessage}</span>
+                  <span className="font-medium leading-relaxed">{tx(errorMessage)}</span>
                 </div>
               )}
 
               {successMessage && (
                 <div className="p-3.5 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-200 rounded-xl text-xs flex items-center gap-2.5 animate-fade-in shadow-xs">
                   <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                  <span className="font-medium">{successMessage}</span>
+                  <span className="font-medium">{tx(successMessage)}</span>
                 </div>
               )}
 
@@ -862,7 +864,7 @@ export const LoginPage: React.FC = () => {
                       : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
                   }`}
                 >
-                  Sign In
+                  {t('auth.signIn')}
                 </button>
                 <button
                   type="button"
@@ -873,7 +875,7 @@ export const LoginPage: React.FC = () => {
                       : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
                   }`}
                 >
-                  Sign Up
+                  {t('auth.signUp')}
                 </button>
               </div>
 
@@ -887,7 +889,7 @@ export const LoginPage: React.FC = () => {
                     <form onSubmit={handleCitizenLogin} className="space-y-3.5">
                       <div>
                         <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-                          Email Address
+                          {t('auth.emailAddress')}
                         </label>
                         <div className="relative">
                           <Mail className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-3" />
@@ -896,7 +898,7 @@ export const LoginPage: React.FC = () => {
                             required
                             value={citizenEmail}
                             onChange={(e) => setCitizenEmail(e.target.value)}
-                            placeholder="citizen@example.com"
+                            placeholder={t('auth.emailPlaceholder')}
                             className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-3 py-2.5 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-emerald-600 dark:focus:border-emerald-500 transition"
                           />
                         </div>
@@ -905,13 +907,13 @@ export const LoginPage: React.FC = () => {
                       <div>
                         <div className="flex items-center justify-between mb-1.5">
                           <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                            Password
+                            {t('auth.password')}
                           </label>
                           <a
                             href="/forgot-password"
                             className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 hover:underline cursor-pointer"
                           >
-                            Forgot Password?
+                            {t('auth.forgotPassword')}
                           </a>
                         </div>
                         <div className="relative">
@@ -937,7 +939,7 @@ export const LoginPage: React.FC = () => {
                       {/* Citizen Preset */}
                       <div className="pt-2">
                         <div className="text-[10px] text-slate-500 font-bold mb-1.5 flex items-center justify-between">
-                          <span>Citizen Quick Access:</span>
+                          <span>{t('auth.citizenQuickAccess')}</span>
                           <button
                             type="button"
                             onClick={() => {
@@ -946,11 +948,11 @@ export const LoginPage: React.FC = () => {
                             }}
                             className="text-[11px] underline hover:text-emerald-700 dark:hover:text-emerald-300 cursor-pointer font-bold"
                           >
-                            Fill your credentials
+                            {t('auth.fillCredentials')}
                           </button>
                         </div>
                         <div className="p-3 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/60 rounded-xl text-[11px] text-emerald-800 dark:text-emerald-300">
-                          Use saved credentials for quick Citizen authentication
+                          {t('auth.citizenSavedCredentialsDesc')}
                         </div>
                       </div>
 
@@ -964,23 +966,21 @@ export const LoginPage: React.FC = () => {
                         ) : (
                           <>
                             <Lock className="w-3.5 h-3.5" />
-                            <span>Sign In to Citizen Dashboard</span>
+                            <span>{t('auth.signInCitizenDashboard')}</span>
                           </>
                         )}
                       </button>
                     </form>
 
-
-
                     {/* Switch to Sign Up */}
                     <div className="pt-2 border-t border-slate-100 dark:border-slate-800 text-center text-xs">
-                      <span className="text-slate-500 dark:text-slate-400">New resident? </span>
+                      <span className="text-slate-500 dark:text-slate-400">{t('auth.newResident')}</span>
                       <button
                         type="button"
                         onClick={() => setAuthTab('SIGN_UP')}
                         className="font-bold text-emerald-600 dark:text-emerald-400 hover:underline cursor-pointer"
                       >
-                        Sign Up with Phone & OTP
+                        {t('auth.signUpWithPhoneOtp')}
                       </button>
                     </div>
                   </div>
@@ -995,7 +995,7 @@ export const LoginPage: React.FC = () => {
                       e.preventDefault();
                       setErrorMessage(null);
                       if (!fullName || !email || !signUpPassword) {
-                         setErrorMessage("Please fill all required fields.");
+                         setErrorMessage(t('auth.errFillAllFields'));
                          return;
                       }
                       try {
@@ -1006,36 +1006,36 @@ export const LoginPage: React.FC = () => {
                           phone_number: phoneNumber ? `+91 ${phoneNumber}` : undefined,
                           notification_sms_enabled: smsOptIn
                         });
-                        setSuccessMessage("You're signed up successfully. Please proceed to the sign-in page.");
+                        setSuccessMessage(t('auth.successSignedUp'));
                         setAuthTab('SIGN_IN');
                         setCitizenEmail(email);
                       } catch (err: any) {
-                        setErrorMessage(err.message || "Registration failed");
+                        setErrorMessage(err.message ? tx(err.message) : t('auth.errRegistrationFailed'));
                       }
                     }} className="space-y-3.5">
                       <div>
                         <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-                          Full Name *
+                          {t('auth.fullNameReq')}
                         </label>
                         <div className="relative">
                           <User className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-3" />
-                          <input type="text" required value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder="Citizen Name" className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-emerald-600 transition" />
+                          <input type="text" required value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder={t('auth.citizenNamePlaceholder')} className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-emerald-600 transition" />
                         </div>
                       </div>
                       
                       <div>
                         <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-                          Email Address *
+                          {t('auth.emailAddressReq')}
                         </label>
                         <div className="relative">
                           <Mail className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-3" />
-                          <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="citizen@example.com" className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-emerald-600 transition" />
+                          <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder={t('auth.emailPlaceholder')} className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-emerald-600 transition" />
                         </div>
                       </div>
 
                       <div>
                         <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-                          Password *
+                          {t('auth.passwordReq')}
                         </label>
                         <div className="relative">
                           <KeyRound className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-3" />
@@ -1045,7 +1045,7 @@ export const LoginPage: React.FC = () => {
 
                       <div>
                         <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-                          Mobile Number (Optional)
+                          {t('auth.mobileOptional')}
                         </label>
                         <div className="relative flex items-center">
                           <span className="absolute left-3 text-xs font-bold text-slate-500 dark:text-slate-400 select-none">+91</span>
@@ -1056,13 +1056,13 @@ export const LoginPage: React.FC = () => {
 
                       <div className="flex items-center justify-between p-2.5 bg-slate-50 dark:bg-slate-950/60 rounded-xl border border-slate-200 dark:border-slate-800">
                         <span className="text-[11px] text-slate-700 dark:text-slate-300 font-medium">
-                          Opt-in to emergency disaster SMS alerts
+                          {t('auth.optInDisasterSms')}
                         </span>
                         <input type="checkbox" checked={smsOptIn} onChange={(e) => setSmsOptIn(e.target.checked)} className="w-4 h-4 accent-emerald-600 rounded cursor-pointer" />
                       </div>
 
                       <button type="submit" disabled={isLoading} className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-300 text-white rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition shadow-md cursor-pointer">
-                        {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <span>Register Account</span>}
+                        {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <span>{t('auth.registerAccount')}</span>}
                       </button>
                     </form>
                   </div>
@@ -1075,7 +1075,7 @@ export const LoginPage: React.FC = () => {
                       <form onSubmit={handleSendOtp} className="space-y-3.5">
                         <div>
                           <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-                            Mobile Number
+                            {t('auth.mobileNumber')}
                           </label>
                           <div className="relative flex items-center">
                             <span className="absolute left-3 text-xs font-bold text-slate-500 dark:text-slate-400 select-none">
@@ -1096,23 +1096,23 @@ export const LoginPage: React.FC = () => {
                         {/* Phone Preset */}
                         <div className="pt-2">
                           <div className="text-[10px] text-slate-500 font-bold mb-1.5 flex items-center justify-between">
-                            <span>Citizen Phone Preset:</span>
+                            <span>{t('auth.citizenPhonePreset')}</span>
                             <button
                               type="button"
                               onClick={() => setPhoneNumber('9876543210')}
                               className="text-[11px] underline hover:text-emerald-700 dark:hover:text-emerald-300 cursor-pointer font-bold"
                             >
-                              Use 98765 43210
+                              {t('auth.usePhonePreset')}
                             </button>
                           </div>
                           <div className="p-3 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/60 rounded-xl text-[11px] text-emerald-800 dark:text-emerald-300">
-                            Pre-configured test phone for instant OTP verification
+                            {t('auth.testPhoneDesc')}
                           </div>
                         </div>
 
                         <div className="flex items-center justify-between p-2.5 bg-slate-50 dark:bg-slate-950/60 rounded-xl border border-slate-200 dark:border-slate-800">
                           <span className="text-[11px] text-slate-700 dark:text-slate-300 font-medium">
-                            Opt-in to emergency disaster SMS alerts
+                            {t('auth.optInDisasterSms')}
                           </span>
                           <input
                             type="checkbox"
@@ -1132,20 +1132,20 @@ export const LoginPage: React.FC = () => {
                           ) : (
                             <>
                               <Phone className="w-3.5 h-3.5" />
-                              <span>Send OTP</span>
+                              <span>{t('auth.sendOtp')}</span>
                             </>
                           )}
                         </button>
 
                         {/* Switch to Sign In */}
                         <div className="pt-2 border-t border-slate-100 dark:border-slate-800 text-center text-xs">
-                          <span className="text-slate-500 dark:text-slate-400">Already registered? </span>
+                          <span className="text-slate-500 dark:text-slate-400">{t('auth.alreadyRegistered')}</span>
                           <button
                             type="button"
                             onClick={() => setAuthTab('SIGN_IN')}
                             className="font-bold text-emerald-600 dark:text-emerald-400 hover:underline cursor-pointer"
                           >
-                            Sign In with Email
+                            {t('auth.signInWithEmail')}
                           </button>
                         </div>
                       </form>
@@ -1154,7 +1154,7 @@ export const LoginPage: React.FC = () => {
                       <form onSubmit={handleVerifyOtp} className="space-y-4 animate-fade-in">
                         <div className="text-center space-y-1">
                           <p className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                            Enter the OTP sent to your phone
+                            {t('auth.enterOtpSentToPhone')}
                           </p>
                           <p className="text-[11px] text-slate-500 dark:text-slate-400">
                             +91 {phoneNumber}
@@ -1181,14 +1181,14 @@ export const LoginPage: React.FC = () => {
                         {/* Helper Banner */}
                         <div className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center justify-between">
                           <div className="text-xs text-slate-600 dark:text-slate-400">
-                            <span>Standard OTP: <strong>123456</strong></span>
+                            <span>{t('auth.standardOtp')} <strong>123456</strong></span>
                           </div>
                           <button
                             type="button"
                             onClick={handleAutofillDemoOtp}
                             className="text-[11px] font-bold underline text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 cursor-pointer"
                           >
-                            Auto-fill
+                            {t('auth.autoFill')}
                           </button>
                         </div>
 
@@ -1202,7 +1202,7 @@ export const LoginPage: React.FC = () => {
                           ) : (
                             <>
                               <CheckCircle2 className="w-4 h-4" />
-                              <span>Verify OTP & Enter Dashboard</span>
+                              <span>{t('auth.verifyOtpAndEnter')}</span>
                             </>
                           )}
                         </button>
@@ -1213,7 +1213,7 @@ export const LoginPage: React.FC = () => {
                             onClick={() => setIsOtpSent(false)}
                             className="text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 font-medium cursor-pointer"
                           >
-                            Change Phone Number
+                            {t('auth.changePhoneNumber')}
                           </button>
                           <button
                             type="button"
@@ -1225,7 +1225,7 @@ export const LoginPage: React.FC = () => {
                                 : 'text-emerald-600 dark:text-emerald-400 hover:underline'
                             }`}
                           >
-                            {resendTimer > 0 ? `Resend OTP in ${resendTimer}s` : 'Resend OTP'}
+                            {resendTimer > 0 ? t('auth.resendOtpIn', { count: resendTimer }) : t('auth.resendOtp')}
                           </button>
                         </div>
                       </form>
@@ -1253,20 +1253,20 @@ export const LoginPage: React.FC = () => {
                   className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition cursor-pointer"
                 >
                   <ArrowLeft className="w-4 h-4" />
-                  <span>Back to Role Selection</span>
+                  <span>{t('auth.backToRoleSelection')}</span>
                 </button>
                 <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-amber-50 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800">
-                  Government Official Portal
+                  {t('auth.govPortal')}
                 </span>
               </div>
 
               <div className="space-y-1">
                 <h2 className="text-xl sm:text-2xl font-black font-heading text-slate-900 dark:text-white flex items-center gap-2">
                   <Building2 className="w-5 h-5 text-[#F58220]" />
-                  <span>Government Official Sign In</span>
+                  <span>{t('auth.govSignInTitle')}</span>
                 </h2>
                 <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium">
-                  Enter your official municipal email and credentials to enter the Command Center
+                  {t('auth.govSignInDesc')}
                 </p>
               </div>
 
@@ -1274,14 +1274,14 @@ export const LoginPage: React.FC = () => {
               {errorMessage && (
                 <div className="p-3.5 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-800 dark:text-rose-200 rounded-xl text-xs flex items-start gap-2.5 animate-fade-in shadow-xs">
                   <AlertTriangle className="w-4 h-4 text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" />
-                  <span className="font-medium leading-relaxed">{errorMessage}</span>
+                  <span className="font-medium leading-relaxed">{tx(errorMessage)}</span>
                 </div>
               )}
 
               {successMessage && (
                 <div className="p-3.5 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-200 rounded-xl text-xs flex items-center gap-2.5 animate-fade-in shadow-xs">
                   <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                  <span className="font-medium">{successMessage}</span>
+                  <span className="font-medium">{tx(successMessage)}</span>
                 </div>
               )}
 
@@ -1289,7 +1289,7 @@ export const LoginPage: React.FC = () => {
               <form onSubmit={handleOfficialLogin} className="space-y-4 pt-1">
                 <div>
                   <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-                    Official Government Email
+                    {t('auth.officialGovEmailLabel')}
                   </label>
                   <div className="relative">
                     <Mail className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-3" />
@@ -1307,13 +1307,13 @@ export const LoginPage: React.FC = () => {
                 <div>
                   <div className="flex items-center justify-between mb-1.5">
                     <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                      Official Password / Key
+                      {t('auth.officialPasswordKey')}
                     </label>
                     <a
                       href="/forgot-password"
                       className="text-[11px] font-bold text-[#F58220] hover:underline cursor-pointer"
                     >
-                      Forgot Password?
+                      {t('auth.forgotPassword')}
                     </a>
                   </div>
                   <div className="relative">
@@ -1339,7 +1339,7 @@ export const LoginPage: React.FC = () => {
                 {/* Quick Presets for Reviewers */}
                 <div className="p-3 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/60 rounded-xl space-y-1.5 text-xs text-amber-900 dark:text-amber-200">
                   <div className="flex items-center justify-between font-bold">
-                    <span>Authorized Official Preset:</span>
+                    <span>{t('auth.authorizedOfficialPreset')}</span>
                     <button
                       type="button"
                       onClick={() => {
@@ -1348,11 +1348,11 @@ export const LoginPage: React.FC = () => {
                       }}
                       className="text-[11px] underline hover:text-[#F58220] cursor-pointer font-bold"
                     >
-                      Fill your credentials
+                      {t('auth.fillCredentials')}
                     </button>
                   </div>
                   <p className="text-[11px] text-amber-700 dark:text-amber-300">
-                    Use saved credentials for quick Government Official authentication
+                    {t('auth.officialSavedCredentialsDesc')}
                   </p>
                 </div>
 
@@ -1366,21 +1366,21 @@ export const LoginPage: React.FC = () => {
                   ) : (
                     <>
                       <Lock className="w-3.5 h-3.5" />
-                      <span>Sign In to Command Center</span>
+                      <span>{t('auth.signInCommandCenter')}</span>
                     </>
                   )}
                 </button>
 
                 {/* Request Authorization Modal Link */}
                 <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
-                  <span className="text-slate-500 dark:text-slate-400">Need official department access?</span>
+                  <span className="text-slate-500 dark:text-slate-400">{t('auth.needDeptAccess')}</span>
                   <button
                     type="button"
                     onClick={() => setIsAuthRequestOpen(true)}
                     className="font-bold text-[#0B3D91] dark:text-[#F58220] hover:underline cursor-pointer flex items-center gap-1"
                   >
                     <FileCheck className="w-3.5 h-3.5" />
-                    <span>Request Authorization</span>
+                    <span>{t('auth.requestAuthorization')}</span>
                   </button>
                 </div>
               </form>
@@ -1393,12 +1393,12 @@ export const LoginPage: React.FC = () => {
       <footer className="w-full border-t border-slate-200/80 dark:border-slate-800/80 py-3 text-center text-xs text-slate-500 dark:text-slate-400">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
           <span>
-            © 2026 NivaranAI • Odisha State Disaster Management & Bhubaneswar Municipal Corporation
+            {t('auth.footerCopyright')}
           </span>
           <div className="flex items-center gap-4 text-[11px]">
-            <a href="/privacy-policy" className="hover:text-slate-800 dark:hover:text-slate-200 underline">Privacy Policy</a>
-            <a href="/terms" className="hover:text-slate-800 dark:hover:text-slate-200 underline">Terms & Conditions</a>
-            <a href="/cookie-preferences" className="hover:text-slate-800 dark:hover:text-slate-200 underline">Cookie Preferences</a>
+            <a href="/privacy-policy" className="hover:text-slate-800 dark:hover:text-slate-200 underline">{t('auth.privacyPolicy')}</a>
+            <a href="/terms" className="hover:text-slate-800 dark:hover:text-slate-200 underline">{t('auth.termsConditions')}</a>
+            <a href="/cookie-preferences" className="hover:text-slate-800 dark:hover:text-slate-200 underline">{t('auth.cookiePreferences')}</a>
           </div>
         </div>
       </footer>
@@ -1416,10 +1416,10 @@ export const LoginPage: React.FC = () => {
                 </div>
                 <div>
                   <h3 className="text-base font-black text-[#2F3E46] dark:text-white font-heading">
-                    Government Official Authorization
+                    {t('auth.govAuthTitle')}
                   </h3>
                   <p className="text-xs text-[#66736F] dark:text-slate-400">
-                    BMC & OSDMA Verified Personnel Access
+                    {t('auth.govAuthSubtitle')}
                   </p>
                 </div>
               </div>
@@ -1438,24 +1438,24 @@ export const LoginPage: React.FC = () => {
                   <CheckCircle2 className="w-6 h-6" />
                 </div>
                 <h4 className="text-base font-bold text-[#2F3E46] dark:text-white font-heading">
-                  Request Submitted Successfully
+                  {t('auth.reqSubmittedTitle')}
                 </h4>
                 <p className="text-xs text-[#66736F] dark:text-slate-400 max-w-sm mx-auto">
-                  Your credentials have been forwarded to the IT Operations Division for verification. You will receive an SMS confirmation once approved.
+                  {t('auth.reqSubmittedDesc')}
                 </p>
               </div>
             ) : (
               <form onSubmit={handleSubmitAuthRequest} className="space-y-3 text-xs">
                 <div>
                   <label className="block text-[#2F3E46] dark:text-slate-300 font-semibold mb-1">
-                    Officer Full Name *
+                    {t('auth.officerFullNameReq')}
                   </label>
                   <input
                     type="text"
                     required
                     value={officialForm.name}
                     onChange={(e) => setOfficialForm({ ...officialForm, name: e.target.value })}
-                    placeholder="Official Full Name"
+                    placeholder={t('auth.officialFullNamePlaceholder')}
                     className="w-full bg-[#FFFDF9] dark:bg-slate-950 border border-[#D9D6CF] dark:border-slate-800 rounded-xl px-3 py-2 text-[#2F3E46] dark:text-white focus:outline-none focus:border-[#8A9A86]"
                   />
                 </div>
@@ -1463,7 +1463,7 @@ export const LoginPage: React.FC = () => {
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="block text-[#2F3E46] dark:text-slate-300 font-semibold mb-1">
-                      Official Gov Email *
+                      {t('auth.officialGovEmailReq')}
                     </label>
                     <input
                       type="email"
@@ -1476,7 +1476,7 @@ export const LoginPage: React.FC = () => {
                   </div>
                   <div>
                     <label className="block text-[#2F3E46] dark:text-slate-300 font-semibold mb-1">
-                      Contact Phone *
+                      {t('auth.contactPhoneReq')}
                     </label>
                     <input
                       type="tel"
@@ -1492,27 +1492,27 @@ export const LoginPage: React.FC = () => {
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="block text-[#2F3E46] dark:text-slate-300 font-semibold mb-1">
-                      Department *
+                      {t('auth.departmentReq')}
                     </label>
                     <input
                       type="text"
                       required
                       value={officialForm.department}
                       onChange={(e) => setOfficialForm({ ...officialForm, department: e.target.value })}
-                      placeholder="BMC Disaster Cell"
+                      placeholder={t('auth.deptPlaceholder')}
                       className="w-full bg-[#FFFDF9] dark:bg-slate-950 border border-[#D9D6CF] dark:border-slate-800 rounded-xl px-3 py-2 text-[#2F3E46] dark:text-white focus:outline-none focus:border-[#8A9A86]"
                     />
                   </div>
                   <div>
                     <label className="block text-[#2F3E46] dark:text-slate-300 font-semibold mb-1">
-                      Designation *
+                      {t('auth.designationReq')}
                     </label>
                     <input
                       type="text"
                       required
                       value={officialForm.designation}
                       onChange={(e) => setOfficialForm({ ...officialForm, designation: e.target.value })}
-                      placeholder="Executive Engineer"
+                      placeholder={t('auth.designationPlaceholder')}
                       className="w-full bg-[#FFFDF9] dark:bg-slate-950 border border-[#D9D6CF] dark:border-slate-800 rounded-xl px-3 py-2 text-[#2F3E46] dark:text-white focus:outline-none focus:border-[#8A9A86]"
                     />
                   </div>
@@ -1520,7 +1520,7 @@ export const LoginPage: React.FC = () => {
 
                 <div>
                   <label className="block text-[#2F3E46] dark:text-slate-300 font-semibold mb-1">
-                    Employee / Badge ID (Optional)
+                    {t('auth.empBadgeId')}
                   </label>
                   <input
                     type="text"
@@ -1532,7 +1532,7 @@ export const LoginPage: React.FC = () => {
                 </div>
 
                 <div className="p-3 bg-[#C68A27]/10 border border-[#C68A27]/30 rounded-xl text-[11px] text-[#C68A27] leading-relaxed">
-                  ⚠️ Submitted requests are reviewed by the Chief Disaster IT Administrator within 24 hours.
+                  {t('auth.reviewedWithin24h')}
                 </div>
 
                 <div className="flex gap-2 pt-2">
@@ -1541,14 +1541,14 @@ export const LoginPage: React.FC = () => {
                     onClick={() => setIsAuthRequestOpen(false)}
                     className="flex-1 py-2.5 bg-[#F3EFEA] hover:bg-[#D9D6CF] dark:bg-slate-800 text-[#2F3E46] dark:text-slate-300 rounded-xl font-bold transition cursor-pointer"
                   >
-                    Cancel
+                    {t('common.cancel')}
                   </button>
                   <button
                     type="submit"
                     disabled={isLoading}
                     className="flex-1 py-2.5 bg-[#8A9A86] hover:bg-[#778873] text-white rounded-xl font-bold transition shadow-2xs cursor-pointer"
                   >
-                    {isLoading ? <Loader2 className="w-4 h-4 animate-spin mx-auto" /> : 'Submit Request'}
+                    {isLoading ? <Loader2 className="w-4 h-4 animate-spin mx-auto" /> : t('auth.submitRequest')}
                   </button>
                 </div>
               </form>
@@ -1568,21 +1568,21 @@ export const LoginPage: React.FC = () => {
             </div>
             <div className="text-center space-y-1">
               <h4 className="text-base font-bold text-[#2F3E46] dark:text-white font-heading">
-                Reset Administrator Key
+                {t('auth.resetAdminKeyTitle')}
               </h4>
               <p className="text-xs text-[#66736F] dark:text-slate-400 leading-relaxed">
-                For security compliance, administrator password resets must be issued by the Chief IT Operations Director at BMC Command Center.
+                {t('auth.resetAdminKeyDesc')}
               </p>
             </div>
             <div className="p-3 bg-[#F9F7F3] dark:bg-slate-950 rounded-xl border border-[#D9D6CF] dark:border-slate-800 text-[11px] text-[#66736F] dark:text-slate-400 text-center">
-              IT Support Line: +91 674 243 0001
+              {t('auth.itSupportLine')}
             </div>
             <button
               type="button"
               onClick={() => setShowForgotModal(false)}
               className="w-full py-2 bg-[#8A9A86] text-white rounded-xl font-bold text-xs cursor-pointer hover:bg-[#778873] transition"
             >
-              Close
+              {t('common.close')}
             </button>
           </div>
         </div>

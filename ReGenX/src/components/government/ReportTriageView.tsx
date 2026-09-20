@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useDisasterData } from '../../context/DisasterDataContext';
 import { useAuth } from '../../context/AuthContext';
+import { useLanguage } from '../../context/LanguageContext';
 import { VerificationState, CrowdReport } from '../../types';
 import { 
   ClipboardCheck, 
@@ -16,32 +17,33 @@ import {
   Check
 } from 'lucide-react';
 
-const formatReportTimestamp = (rawTs?: string): string => {
-  if (!rawTs) return 'Date unavailable';
-  try {
-    const d = new Date(rawTs);
-    if (!isNaN(d.getTime())) {
-      return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ', ' + d.toLocaleDateString([], { month: 'short', day: 'numeric' });
-    }
-    const cleaned = rawTs.replace(' ', 'T').split('.')[0] + 'Z';
-    const d2 = new Date(cleaned);
-    if (!isNaN(d2.getTime())) {
-      return d2.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ', ' + d2.toLocaleDateString([], { month: 'short', day: 'numeric' });
-    }
-    return 'Date unavailable';
-  } catch {
-    return 'Date unavailable';
-  }
-};
-
 export const ReportTriageView: React.FC = () => {
   const { crowdReports, verifyCrowdReport } = useDisasterData();
   const { user } = useAuth();
+  const { t, tWard, tVerification, tx, formatDateTime } = useLanguage();
 
   const [filterState, setFilterState] = useState<string>('ALL');
   const [activeReportId, setActiveReportId] = useState<string | null>(null);
   const [officialNotes, setOfficialNotes] = useState<string>('');
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+
+  const formatReportTimestamp = (rawTs?: string): string => {
+    if (!rawTs) return t('common.dateUnavailable');
+    try {
+      const d = new Date(rawTs);
+      if (!isNaN(d.getTime())) {
+        return formatDateTime(d, { hour: '2-digit', minute: '2-digit', month: 'short', day: 'numeric' });
+      }
+      const cleaned = rawTs.replace(' ', 'T').split('.')[0] + 'Z';
+      const d2 = new Date(cleaned);
+      if (!isNaN(d2.getTime())) {
+        return formatDateTime(d2, { hour: '2-digit', minute: '2-digit', month: 'short', day: 'numeric' });
+      }
+      return t('common.dateUnavailable');
+    } catch {
+      return t('common.dateUnavailable');
+    }
+  };
 
   const filteredReports = crowdReports.filter(r => {
     if (filterState === 'ALL') return true;
@@ -56,13 +58,13 @@ export const ReportTriageView: React.FC = () => {
         officialNotes || `Status updated to ${newState} by ${user?.name || 'Authorized Official'}`,
         user?.name || 'BMC Duty Officer'
       );
-      setFeedback({ type: 'success', message: `Report updated to ${newState} successfully.` });
+      setFeedback({ type: 'success', message: t('triage.feedbackUpdated', { state: tVerification(newState) }) });
       setTimeout(() => setFeedback(null), 4000);
       setActiveReportId(null);
       setOfficialNotes('');
     } catch (err: any) {
       console.error('Report triage action failed:', err);
-      setFeedback({ type: 'error', message: `Failed to update report: ${err.message || 'API request failed.'}` });
+      setFeedback({ type: 'error', message: t('triage.feedbackFailed', { error: err.message || 'API request failed.' }) });
     }
   };
 
@@ -84,7 +86,7 @@ export const ReportTriageView: React.FC = () => {
             <span>{feedback.message}</span>
           </div>
           <button onClick={() => setFeedback(null)} className="hover:underline cursor-pointer">
-            Dismiss
+            {t('common.dismiss')}
           </button>
         </div>
       )}
@@ -97,22 +99,22 @@ export const ReportTriageView: React.FC = () => {
               <ClipboardCheck className="w-5 h-5" />
             </span>
             <h2 className="text-xl md:text-2xl font-bold text-[#0F172A] dark:text-white">
-              Citizen Report Review & Triage Desk
+              {t('triage.title')}
             </h2>
           </div>
           <p className="text-xs text-[#475569] dark:text-slate-400 mt-1 font-medium">
-            Validate, corroborate, or dispute field observations submitted by citizens across 67 wards.
+            {t('triage.subtitle')}
           </p>
         </div>
 
         {/* Filter Pills */}
         <div className="flex items-center gap-2 text-xs">
           {[
-            { id: 'ALL', label: 'All Reports' },
-            { id: 'UNVERIFIED', label: 'Pending Review' },
-            { id: 'VERIFIED', label: 'Verified' },
-            { id: 'DISPUTED', label: 'Disputed' },
-            { id: 'CANCELLED', label: 'Cancelled' }
+            { id: 'ALL', label: t('triage.filterAll') },
+            { id: 'UNVERIFIED', label: t('triage.filterUnverified') },
+            { id: 'VERIFIED', label: t('triage.filterVerified') },
+            { id: 'DISPUTED', label: t('triage.filterDisputed') },
+            { id: 'CANCELLED', label: t('triage.filterCancelled') }
           ].map(tab => (
             <button
               key={tab.id}
@@ -133,7 +135,17 @@ export const ReportTriageView: React.FC = () => {
       <div className="space-y-4">
         {filteredReports.length === 0 ? (
           <div className="p-8 text-center bg-[#FFFFFF] dark:bg-slate-900 border border-[#D1D5DB] dark:border-slate-800 rounded-lg text-xs text-[#475569] dark:text-slate-400">
-            No reports found under the "{filterState === 'ALL' ? 'All' : filterState}" filter.
+            {t('triage.noReportsFound', {
+              filter: filterState === 'ALL'
+                ? t('common.all')
+                : filterState === 'UNVERIFIED'
+                ? t('triage.filterUnverified')
+                : filterState === 'VERIFIED'
+                ? t('triage.filterVerified')
+                : filterState === 'DISPUTED'
+                ? t('triage.filterDisputed')
+                : t('triage.filterCancelled')
+            })}
           </div>
         ) : (
           filteredReports.map(report => (
@@ -145,12 +157,12 @@ export const ReportTriageView: React.FC = () => {
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#D1D5DB] dark:border-slate-800 pb-3">
                 <div className="flex items-center gap-3">
                   <span className="p-1.5 bg-slate-100 dark:bg-slate-800 rounded-md text-[#0F172A] dark:text-slate-200 text-xs font-semibold">
-                    Ward #{report.ward_id || 1}
+                    {t('common.ward')} #{report.ward_id || 1}
                   </span>
                   <div>
-                    <h4 className="text-sm font-bold text-[#0F172A] dark:text-white">{report.ward_name || `Ward ${report.ward_id}`}</h4>
+                    <h4 className="text-sm font-bold text-[#0F172A] dark:text-white">{tWard(report.ward_id, report.ward_name || `Ward ${report.ward_id}`)}</h4>
                     <span className="text-[11px] text-[#475569] dark:text-slate-400">
-                      Reporter: <strong className="text-[#0F172A] dark:text-slate-300">{report.reported_by_name || 'Citizen'}</strong> • {report.corroboration_count ?? 1} corroboration(s)
+                      {t('triage.reporter')} <strong className="text-[#0F172A] dark:text-slate-300">{report.reported_by_name || t('role.CITIZEN')}</strong> • {t('triage.corroborationsCount', { count: report.corroboration_count ?? 1 })}
                     </span>
                   </div>
                 </div>
@@ -165,7 +177,7 @@ export const ReportTriageView: React.FC = () => {
                       ? 'bg-slate-200 text-slate-800 border-slate-400 dark:bg-slate-700/50 dark:text-slate-300 dark:border-slate-600'
                       : 'bg-amber-100 text-amber-800 border-amber-300 dark:bg-amber-500/20 dark:text-amber-300 dark:border-amber-500/30'
                   }`}>
-                    {report.verification_state || 'UNVERIFIED'}
+                    {tVerification(report.verification_state || 'UNVERIFIED')}
                   </span>
                   <span className="text-[11px] text-[#475569] dark:text-slate-400 font-medium">
                     {formatReportTimestamp(report.timestamp || report.created_at)}
@@ -176,21 +188,21 @@ export const ReportTriageView: React.FC = () => {
               {/* Description & Structured Answers */}
               <div className="space-y-2">
                 <p className="text-xs text-[#0F172A] dark:text-slate-300 leading-normal font-medium">
-                  "{report.description}"
+                  "{tx(report.description)}"
                 </p>
 
                 <div className="flex flex-wrap gap-2 text-[11px]">
                   <span className="px-2 py-0.5 bg-[#F8F9FA] dark:bg-slate-800/80 rounded border border-[#D1D5DB] dark:border-slate-700 text-[#0F172A] dark:text-slate-300">
-                    Waterlogging: <strong>{report.waterlogging_present || 'YES'}</strong>
+                    {t('triage.waterlogging')} <strong>{report.waterlogging_present === 'YES' ? t('common.yes') : report.waterlogging_present === 'NO' ? t('common.no') : (report.waterlogging_present || t('common.unknown'))}</strong>
                   </span>
                   <span className="px-2 py-0.5 bg-[#F8F9FA] dark:bg-slate-800/80 rounded border border-[#D1D5DB] dark:border-slate-700 text-[#0F172A] dark:text-slate-300">
-                    Roads Passable: <strong>{report.road_passable || 'YES'}</strong>
+                    {t('triage.roadsPassable')} <strong>{report.road_passable === 'YES' ? t('common.yes') : report.road_passable === 'NO' ? t('common.no') : (report.road_passable || t('common.unknown'))}</strong>
                   </span>
                   <span className="px-2 py-0.5 bg-[#F8F9FA] dark:bg-slate-800/80 rounded border border-[#D1D5DB] dark:border-slate-700 text-[#0F172A] dark:text-slate-300">
-                    Power Outage: <strong>{report.power_outage || 'NO'}</strong>
+                    {t('triage.powerOutage')} <strong>{report.power_outage === 'YES' ? t('common.yes') : report.power_outage === 'NO' ? t('common.no') : (report.power_outage || t('common.unknown'))}</strong>
                   </span>
                   <span className="px-2 py-0.5 bg-[#F8F9FA] dark:bg-slate-800/80 rounded border border-[#D1D5DB] dark:border-slate-700 text-[#0F172A] dark:text-slate-300">
-                    Structural Damage: <strong>{report.structural_damage || 'NO'}</strong>
+                    {t('triage.structuralDamage')} <strong>{report.structural_damage === 'YES' ? t('common.yes') : report.structural_damage === 'NO' ? t('common.no') : (report.structural_damage || t('common.unknown'))}</strong>
                   </span>
                 </div>
               </div>
@@ -201,7 +213,7 @@ export const ReportTriageView: React.FC = () => {
                   <div className="space-y-2 text-xs">
                     <textarea
                       rows={2}
-                      placeholder="Enter official review remarks (e.g. BMC team dispatched, pump installed)..."
+                      placeholder={t('triage.remarksPlaceholder')}
                       value={officialNotes}
                       onChange={(e) => setOfficialNotes(e.target.value)}
                       className="w-full bg-[#FFFFFF] dark:bg-slate-950 border border-[#D1D5DB] dark:border-slate-800 rounded-md p-2.5 text-[#0F172A] dark:text-white focus:outline-none focus:border-[#D97706]"
@@ -211,25 +223,25 @@ export const ReportTriageView: React.FC = () => {
                         onClick={() => setActiveReportId(null)}
                         className="px-3 py-1.5 text-[#475569] dark:text-slate-400 hover:text-[#0F172A] dark:hover:text-white font-semibold cursor-pointer"
                       >
-                        Cancel
+                        {t('common.cancel')}
                       </button>
                       <button
                         onClick={() => handleAction(report.id, 'CANCELLED')}
                         className="px-3 py-1.5 bg-slate-600 hover:bg-slate-500 text-white rounded-md font-semibold flex items-center gap-1 cursor-pointer"
                       >
-                        <AlertCircle className="w-3.5 h-3.5" /> Mark Cancelled
+                        <AlertCircle className="w-3.5 h-3.5" /> {t('triage.markCancelled')}
                       </button>
                       <button
                         onClick={() => handleAction(report.id, 'DISPUTED')}
                         className="px-3 py-1.5 bg-[#DC2626] hover:bg-[#B91C1C] text-white rounded-md font-semibold flex items-center gap-1 cursor-pointer"
                       >
-                        <XCircle className="w-3.5 h-3.5" /> Disprove / Dispute
+                        <XCircle className="w-3.5 h-3.5" /> {t('triage.disproveDispute')}
                       </button>
                       <button
                         onClick={() => handleAction(report.id, 'VERIFIED')}
                         className="px-3 py-1.5 bg-[#059669] hover:bg-[#047857] text-white rounded-md font-semibold flex items-center gap-1 cursor-pointer"
                       >
-                        <CheckCircle2 className="w-3.5 h-3.5" /> Verify Observation
+                        <CheckCircle2 className="w-3.5 h-3.5" /> {t('triage.verifyObservation')}
                       </button>
                     </div>
                   </div>
@@ -238,10 +250,10 @@ export const ReportTriageView: React.FC = () => {
                     <span className="text-[11px] text-[#475569] dark:text-slate-400 font-medium">
                       {(report.official_notes || report.official_remarks || report.official_note) ? (
                         <span className="text-[#059669] font-bold">
-                          Official Remarks: "{report.official_notes || report.official_remarks || report.official_note}"
+                          {t('triage.officialRemarks')} "{report.official_notes || report.official_remarks || report.official_note}"
                         </span>
                       ) : (
-                        'No official notes added yet.'
+                        t('triage.noNotes')
                       )}
                     </span>
                     <button
@@ -251,7 +263,7 @@ export const ReportTriageView: React.FC = () => {
                       }}
                       className="px-3 py-1.5 bg-[#F8F9FA] hover:bg-[#E2E8F0] dark:bg-slate-800 dark:hover:bg-slate-700 text-[#0F172A] dark:text-white rounded-md text-xs font-semibold transition border border-[#D1D5DB] dark:border-slate-700 cursor-pointer"
                     >
-                      Perform Triage Review
+                      {t('triage.performReview')}
                     </button>
                   </div>
                 )}

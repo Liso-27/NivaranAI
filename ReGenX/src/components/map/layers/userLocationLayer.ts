@@ -6,6 +6,7 @@
 
 import L from 'leaflet';
 import { UserLocationState } from '../../../types';
+import { translate, formatTime } from '../../../i18n/translate';
 
 export function renderUserLocationLayer(
   layerGroup: L.LayerGroup,
@@ -62,17 +63,17 @@ export function renderUserLocationLayer(
   });
 
   const formattedTime = userLocation.timestamp
-    ? new Date(userLocation.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
-    : 'Active';
+    ? formatTime(userLocation.timestamp, { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+    : translate('common.active');
 
   marker.bindPopup(`
     <div style="padding: 6px 8px; font-size: 11px; min-width: 180px; line-height: 1.45; color: #f8fafc; font-family: inherit;">
-      <strong style="color: #60a5fa; font-size: 12px; display: block; margin-bottom: 4px;">📍 Your Current GPS Location</strong>
-      <p style="color: #cbd5e1; margin: 2px 0;">Latitude: <b>${lat.toFixed(5)}° N</b></p>
-      <p style="color: #cbd5e1; margin: 2px 0;">Longitude: <b>${lng.toFixed(5)}° E</b></p>
-      <p style="color: #cbd5e1; margin: 2px 0;">GPS Accuracy: <b>±${userLocation.accuracy ? Math.round(userLocation.accuracy) : '15'}m</b></p>
+      <strong style="color: #60a5fa; font-size: 12px; display: block; margin-bottom: 4px;">${translate('map.userLocationTitle')}</strong>
+      <p style="color: #cbd5e1; margin: 2px 0;">${translate('map.latitude')}: <b>${lat.toFixed(5)}° N</b></p>
+      <p style="color: #cbd5e1; margin: 2px 0;">${translate('map.longitude')}: <b>${lng.toFixed(5)}° E</b></p>
+      <p style="color: #cbd5e1; margin: 2px 0;">${translate('map.gpsAccuracy')}: <b>±${userLocation.accuracy ? Math.round(userLocation.accuracy) : '15'}m</b></p>
       <p style="color: #94a3b8; font-size: 10px; margin-top: 5px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 3px;">
-        Recorded: ${formattedTime}
+        ${translate('map.recorded')}: ${formattedTime}
       </p>
     </div>
   `);

@@ -6,6 +6,9 @@
 
 import L from 'leaflet';
 import { SafePlace } from '../../../types';
+import { translate } from '../../../i18n/translate';
+import { tSafePlaceType } from '../../../i18n/domain';
+import { tx } from '../../../i18n/dynamicText';
 
 export function renderSafePlacesLayer(
   layerGroup: L.LayerGroup,
@@ -29,10 +32,10 @@ export function renderSafePlacesLayer(
       ? '#64748b' 
       : place.type === 'hospital' 
       ? '#f43f5e' 
-      : place.type === 'fire_station'
-      ? '#f97316'
-      : place.type === 'police_station'
-      ? '#3b82f6'
+      : place.type === 'fire_station' 
+      ? '#f97316' 
+      : place.type === 'police_station' 
+      ? '#3b82f6' 
       : '#10b981';
 
     const iconSymbol = place.type === 'hospital' 
@@ -67,7 +70,7 @@ export function renderSafePlacesLayer(
           white-space: nowrap;
         ">
           <span>${iconSymbol}</span>
-          <span style="max-width: 90px; overflow: hidden; text-overflow: ellipsis;">${(place.name || 'Facility').split(' ')[0]}</span>
+          <span style="max-width: 90px; overflow: hidden; text-overflow: ellipsis;">${(place.name || translate('map.facility')).split(' ')[0]}</span>
           ${availableBeds > 0 ? `<span style="background: rgba(16,185,129,0.2); color: #34d399; font-size: 9px; padding: 1px 4px; border-radius: 4px; font-weight: 700;">${availableBeds}</span>` : ''}
         </div>
       `,
@@ -79,33 +82,33 @@ export function renderSafePlacesLayer(
     marker.bindPopup(`
       <div style="padding: 6px 8px; font-size: 11px; min-width: 190px; line-height: 1.4; color: #f8fafc;">
         <div style="font-size: 10px; text-transform: uppercase; font-weight: 800; color: ${markerColor}; margin-bottom: 2px;">
-          ${(place.type || 'Facility').replace('_', ' ')} ${place.is_hazard_excluded ? '(HAZARD EXCLUDED)' : ''}
+          ${tSafePlaceType(place.type || 'facility')} ${place.is_hazard_excluded ? `(${translate('map.hazardExcluded')})` : ''}
         </div>
         <h4 style="font-size: 12px; font-weight: 700; color: #ffffff; margin: 2px 0 4px;">${place.name}</h4>
         <p style="font-size: 10px; color: #94a3b8; margin-bottom: 6px;">${place.address}</p>
         
         <div style="font-size: 11px; color: #e2e8f0; display: flex; justify-content: space-between; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 4px;">
-          <span>Capacity: <b>${occ}/${tot}</b></span>
+          <span>${translate('map.capacity')}: <b>${occ}/${tot}</b></span>
           <span style="color: ${availableBeds > 0 ? '#34d399' : '#f87171'}; font-weight: 700;">
-            ${availableBeds > 0 ? `${availableBeds} beds free` : 'Full'}
+            ${availableBeds > 0 ? translate('map.bedsFree', { count: availableBeds }) : translate('map.full')}
           </span>
         </div>
 
         ${place.facilities && place.facilities.length > 0 ? `
           <div style="margin-top: 4px; font-size: 10px; color: #cbd5e1;">
-            <b>Facilities:</b> ${place.facilities.join(', ')}
+            <b>${translate('map.facilities')}:</b> ${place.facilities.map(f => tx(f)).join(', ')}
           </div>
         ` : ''}
 
         ${place.contact_number ? `
           <div style="margin-top: 4px; font-size: 10px; color: #38bdf8;">
-            <b>Contact:</b> ${place.contact_number}
+            <b>${translate('map.contact')}:</b> ${place.contact_number}
           </div>
         ` : ''}
 
         ${place.hazard_exclusion_reason ? `
           <p style="margin-top: 6px; font-size: 10px; color: #fb7185; background: rgba(244,63,94,0.15); padding: 4px; border-radius: 4px; border: 1px solid rgba(244,63,94,0.3);">
-            ⚠️ ${place.hazard_exclusion_reason}
+            ⚠️ ${tx(place.hazard_exclusion_reason)}
           </p>
         ` : ''}
       </div>

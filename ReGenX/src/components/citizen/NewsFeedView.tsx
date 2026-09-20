@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useDisasterData } from '../../context/DisasterDataContext';
+import { useLanguage } from '../../context/LanguageContext';
 import { 
   Newspaper, 
   ExternalLink, 
@@ -157,6 +158,7 @@ const HAZARD_MITIGATION_DATA: Record<string, HazardMitigationItem> = {
 
 export const NewsFeedView: React.FC = () => {
   const { newsArticles } = useDisasterData();
+  const { t, tx, tHazard } = useLanguage();
   const [activeTab, setActiveTab] = useState<'BULLETINS' | 'MITIGATION'>('BULLETINS');
   const [search, setSearch] = useState('');
   const [selectedLocality, setSelectedLocality] = useState('ALL');
@@ -183,11 +185,11 @@ export const NewsFeedView: React.FC = () => {
               <Newspaper className="w-4 h-4" />
             </span>
             <h2 className="text-xl md:text-2xl font-bold text-[#0F172A] dark:text-white">
-              Local Disaster Intelligence & Mitigation
+              {t('newsFeed.mainTitle')}
             </h2>
           </div>
           <p className="text-xs text-[#475569] dark:text-slate-400 mt-1 font-medium">
-            Bhubaneswar bulletins, hazard guidance and response precautions
+            {t('newsFeed.mainSubtitle')}
           </p>
         </div>
 
@@ -210,7 +212,7 @@ export const NewsFeedView: React.FC = () => {
                 : 'text-[#475569] dark:text-slate-400 hover:text-[#0F172A] dark:hover:text-white hover:bg-[#FFFFFF]'
             }`}
           >
-            Local Bulletins
+            {t('newsFeed.localBulletins')}
           </button>
           <button
             role="tab"
@@ -229,7 +231,7 @@ export const NewsFeedView: React.FC = () => {
                 : 'text-[#475569] dark:text-slate-400 hover:text-[#0F172A] dark:hover:text-white hover:bg-[#FFFFFF]'
             }`}
           >
-            Risk Mitigation
+            {t('newsFeed.riskMitigation')}
           </button>
         </div>
       </div>
@@ -243,7 +245,7 @@ export const NewsFeedView: React.FC = () => {
               <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
               <input
                 type="text"
-                placeholder="Search Bhubaneswar bulletins..."
+                placeholder={t('newsFeed.searchBhubaneswar')}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="w-full bg-[#FFFFFF] dark:bg-slate-900 border border-[#D1D5DB] dark:border-slate-800 rounded-md pl-9 pr-3 py-2 text-xs text-[#0F172A] dark:text-white placeholder-slate-400 focus:outline-none focus:border-[#D97706]"
@@ -262,7 +264,7 @@ export const NewsFeedView: React.FC = () => {
                       : 'bg-[#FFFFFF] dark:bg-slate-900 text-[#475569] dark:text-slate-400 border-[#D1D5DB] dark:border-slate-800 hover:bg-[#F8F9FA]'
                   }`}
                 >
-                  {loc}
+                  {loc === 'ALL' ? t('newsFeed.allLocalities') : tx(loc)}
                 </button>
               ))}
             </div>
@@ -273,10 +275,10 @@ export const NewsFeedView: React.FC = () => {
             <div className="bg-[#FFFFFF] dark:bg-slate-900 rounded-lg p-8 border border-[#D1D5DB] dark:border-slate-800 text-center space-y-2">
               <ShieldAlert className="w-8 h-8 text-[#475569] dark:text-slate-400 mx-auto opacity-60" />
               <h4 className="text-sm font-bold text-[#0F172A] dark:text-white">
-                No recent Bhubaneswar-specific disaster bulletins found.
+                {t('newsFeed.noBulletinsFound')}
               </h4>
               <p className="text-xs text-[#475569] dark:text-slate-400">
-                Check again later for new local reports.
+                {t('newsFeed.checkAgainLater')}
               </p>
             </div>
           ) : (
@@ -294,12 +296,12 @@ export const NewsFeedView: React.FC = () => {
                           ? 'bg-[#D97706]/10 text-[#D97706] border-[#D97706]/30'
                           : 'bg-[#0F172A]/10 text-[#0F172A] border-[#0F172A]/30 dark:bg-slate-800 dark:text-slate-200'
                       }`}>
-                        📍 {article.locality || 'Bhubaneswar'}
+                        📍 {tx(article.locality) || 'Bhubaneswar'}
                       </span>
 
                       {article.ward_id && (
                         <span className="text-[11px] text-[#475569] dark:text-slate-400 font-semibold">
-                          Ward #{article.ward_id}
+                          {t('common.ward')} #{article.ward_id}
                         </span>
                       )}
                     </div>
@@ -312,17 +314,17 @@ export const NewsFeedView: React.FC = () => {
 
                   {/* Title & Description */}
                   <h3 className="text-sm font-bold text-[#0F172A] dark:text-white hover:text-[#D97706] transition">
-                    {article.title}
+                    {tx(article.title)}
                   </h3>
 
                   <p className="text-xs text-[#475569] dark:text-slate-300 leading-normal">
-                    {article.summary || article.overview || article.description}
+                    {tx(article.summary || article.overview || article.description)}
                   </p>
 
                   {/* Footer with exact URL link */}
                   <div className="pt-2 border-t border-[#D1D5DB] dark:border-slate-800 flex items-center justify-between text-xs">
                     <span className="text-[#475569] dark:text-slate-400 font-medium">
-                      Source: <strong className="text-[#0F172A] dark:text-slate-300">{article.source || article.source_name || 'News Outlet'}</strong>
+                      {t('newsFeed.source', { source: article.source || article.source_name || 'News Outlet' })}
                     </span>
 
                     <a
@@ -331,7 +333,7 @@ export const NewsFeedView: React.FC = () => {
                       rel="noopener noreferrer"
                       className="text-[#D97706] hover:underline flex items-center gap-1 font-semibold cursor-pointer"
                     >
-                      <span>Read Full Bulletin</span>
+                      <span>{t('newsFeed.readFullBulletin')}</span>
                       <ExternalLink className="w-3.5 h-3.5" />
                     </a>
                   </div>
@@ -367,7 +369,7 @@ export const NewsFeedView: React.FC = () => {
                 }`}
               >
                 {item.icon}
-                <span>{item.name}</span>
+                <span>{tHazard(item.id)}</span>
               </button>
             ))}
           </div>
@@ -376,10 +378,10 @@ export const NewsFeedView: React.FC = () => {
           <div className="bg-[#FFFFFF] dark:bg-slate-900 rounded-lg p-5 border border-[#D1D5DB] dark:border-slate-800 space-y-4">
             <div className="border-b border-[#D1D5DB] dark:border-slate-800 pb-3">
               <h3 className="text-base font-bold text-[#0F172A] dark:text-white uppercase tracking-wide flex items-center gap-2">
-                <span>{selectedMitigation.name}</span>
+                <span>{tHazard(selectedMitigation.id)}</span>
               </h3>
               <p className="text-xs text-[#475569] dark:text-slate-400 font-medium mt-0.5">
-                Official safety instructions during {selectedMitigation.name.toLowerCase()} conditions
+                {t('newsFeed.safetyGuidanceTitle', { hazard: tHazard(selectedMitigation.id) })}
               </p>
             </div>
 
@@ -389,11 +391,11 @@ export const NewsFeedView: React.FC = () => {
               {selectedMitigation.before && (
                 <div className="space-y-2">
                   <h4 className="font-bold text-xs text-[#0F172A] dark:text-white uppercase tracking-wider">
-                    Before / When Expected
+                    {t('newsFeed.beforeWhenExpected')}
                   </h4>
                   <ul className="space-y-1.5 list-disc list-inside text-[#475569] dark:text-slate-300 leading-normal pl-1">
                     {selectedMitigation.before.map((point, idx) => (
-                      <li key={idx}>{point}</li>
+                      <li key={idx}>{tx(point)}</li>
                     ))}
                   </ul>
                 </div>
@@ -403,11 +405,11 @@ export const NewsFeedView: React.FC = () => {
               {selectedMitigation.during && (
                 <div className="space-y-2">
                   <h4 className="font-bold text-xs text-[#0F172A] dark:text-white uppercase tracking-wider">
-                    During {selectedMitigation.name}
+                    {t('newsFeed.duringHazard', { hazard: tHazard(selectedMitigation.id) })}
                   </h4>
                   <ul className="space-y-1.5 list-disc list-inside text-[#475569] dark:text-slate-300 leading-normal pl-1">
                     {selectedMitigation.during.map((point, idx) => (
-                      <li key={idx}>{point}</li>
+                      <li key={idx}>{tx(point)}</li>
                     ))}
                   </ul>
                 </div>
@@ -417,11 +419,11 @@ export const NewsFeedView: React.FC = () => {
               {selectedMitigation.after && (
                 <div className="space-y-2">
                   <h4 className="font-bold text-xs text-[#0F172A] dark:text-white uppercase tracking-wider">
-                    After
+                    {t('newsFeed.afterHazard')}
                   </h4>
                   <ul className="space-y-1.5 list-disc list-inside text-[#475569] dark:text-slate-300 leading-normal pl-1">
                     {selectedMitigation.after.map((point, idx) => (
-                      <li key={idx}>{point}</li>
+                      <li key={idx}>{tx(point)}</li>
                     ))}
                   </ul>
                 </div>
@@ -430,7 +432,7 @@ export const NewsFeedView: React.FC = () => {
 
             {/* Source Footer Note */}
             <div className="pt-3 border-t border-[#D1D5DB] dark:border-slate-800 text-[11px] text-[#475569] dark:text-slate-400 font-medium">
-              Safety guidance based on OSDMA, NDMA and IMD public advisories.
+              {t('newsFeed.guidanceSourceNote')}
             </div>
           </div>
         </div>

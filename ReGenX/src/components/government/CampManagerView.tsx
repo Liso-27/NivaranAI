@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useDisasterData } from '../../context/DisasterDataContext';
 import { useAuth } from '../../context/AuthContext';
+import { useLanguage } from '../../context/LanguageContext';
 import { BMC_WARDS } from '../../data/bmcWards';
 import { 
   Building2, 
@@ -17,6 +18,7 @@ import {
 export const CampManagerView: React.FC = () => {
   const { safePlaces, createGovernmentCamp, updateCampCapacity } = useDisasterData();
   const { user } = useAuth();
+  const { t, tWard, tZone, tSafePlaceStatus, tx } = useLanguage();
 
   const [isCreatingCamp, setIsCreatingCamp] = useState(false);
   const [campName, setCampName] = useState('');
@@ -58,11 +60,11 @@ export const CampManagerView: React.FC = () => {
               <Building2 className="w-5 h-5" />
             </span>
             <h2 className="text-xl md:text-2xl font-bold text-[#0F172A] dark:text-white">
-              Emergency Relief Camp & Shelter Allocator
+              {t('campManager.title')}
             </h2>
           </div>
           <p className="text-xs text-[#475569] dark:text-slate-400 mt-1 font-medium">
-            Establish temporary relief shelters, allocate bed quotas, and manage live occupancy.
+            {t('campManager.subtitle')}
           </p>
         </div>
 
@@ -71,7 +73,7 @@ export const CampManagerView: React.FC = () => {
           className="flex items-center gap-1.5 px-4 py-2 bg-[#D97706] hover:bg-[#B45309] text-white rounded-lg text-xs font-semibold transition cursor-pointer"
         >
           <Plus className="w-4 h-4" />
-          <span>Establish New Relief Camp</span>
+          <span>{t('campManager.establishNewCamp')}</span>
         </button>
       </div>
 
@@ -79,16 +81,16 @@ export const CampManagerView: React.FC = () => {
       {isCreatingCamp && (
         <form onSubmit={handleCreate} className="bg-[#FFFFFF] dark:bg-slate-900 rounded-lg p-5 border border-[#D1D5DB] dark:border-slate-800 space-y-4 text-xs">
           <h3 className="text-sm font-bold text-[#0F172A] dark:text-white uppercase tracking-wider">
-            Camp Commissioning Setup
+            {t('campManager.formTitle')}
           </h3>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-[#0F172A] dark:text-slate-300 font-semibold mb-1">Camp / Shelter Facility Name</label>
+              <label className="block text-[#0F172A] dark:text-slate-300 font-semibold mb-1">{t('campManager.facilityName')}</label>
               <input
                 type="text"
                 required
-                placeholder="e.g. BMC High School Emergency Shelter"
+                placeholder={t('campManager.facilityNamePlaceholder')}
                 value={campName}
                 onChange={(e) => setCampName(e.target.value)}
                 className="w-full bg-[#FFFFFF] dark:bg-slate-950 border border-[#D1D5DB] dark:border-slate-800 rounded-md px-3 py-2 text-[#0F172A] dark:text-white focus:outline-none focus:border-[#D97706]"
@@ -96,7 +98,7 @@ export const CampManagerView: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-[#0F172A] dark:text-slate-300 font-semibold mb-1">Assigned Ward Location</label>
+              <label className="block text-[#0F172A] dark:text-slate-300 font-semibold mb-1">{t('campManager.assignedWard')}</label>
               <select
                 value={selectedWardId}
                 onChange={(e) => setSelectedWardId(Number(e.target.value))}
@@ -104,14 +106,14 @@ export const CampManagerView: React.FC = () => {
               >
                 {BMC_WARDS.map(w => (
                   <option key={w.ward_id} value={w.ward_id}>
-                    Ward #{w.ward_id}: {w.ward_name} ({w.zone})
+                    {t('common.ward')} #{w.ward_id}: {tWard(w.ward_id, w.ward_name)} ({tZone(w.zone)})
                   </option>
                 ))}
               </select>
             </div>
 
             <div>
-              <label className="block text-[#0F172A] dark:text-slate-300 font-semibold mb-1">Bed Quota (Total Capacity)</label>
+              <label className="block text-[#0F172A] dark:text-slate-300 font-semibold mb-1">{t('campManager.bedQuota')}</label>
               <input
                 type="number"
                 min="20"
@@ -124,7 +126,7 @@ export const CampManagerView: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-[#0F172A] dark:text-slate-300 font-semibold mb-1">Emergency On-Duty Phone</label>
+              <label className="block text-[#0F172A] dark:text-slate-300 font-semibold mb-1">{t('campManager.dutyPhone')}</label>
               <input
                 type="text"
                 required
@@ -141,13 +143,13 @@ export const CampManagerView: React.FC = () => {
               onClick={() => setIsCreatingCamp(false)}
               className="px-4 py-2 text-[#475569] dark:text-slate-400 font-semibold"
             >
-              Cancel
+              {t('common.cancel')}
             </button>
             <button
               type="submit"
               className="px-4 py-2 bg-[#D97706] hover:bg-[#B45309] text-white rounded-md font-semibold transition"
             >
-              Deploy & Publish Camp
+              {t('campManager.deployCamp')}
             </button>
           </div>
         </form>
@@ -156,33 +158,33 @@ export const CampManagerView: React.FC = () => {
       {/* Summary KPI Banner */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="p-4 bg-[#FFFFFF] dark:bg-slate-900 border border-[#D1D5DB] dark:border-slate-800 rounded-lg">
-          <span className="text-xs font-semibold text-[#475569] dark:text-slate-400 uppercase">Active Relief Shelters</span>
+          <span className="text-xs font-semibold text-[#475569] dark:text-slate-400 uppercase">{t('campManager.activeShelters')}</span>
           <h3 className="text-2xl font-bold text-[#0F172A] dark:text-white mt-1">{camps.length}</h3>
-          <span className="text-[11px] text-[#059669] font-semibold">Verified Government Facilities</span>
+          <span className="text-[11px] text-[#059669] font-semibold">{t('campManager.verifiedGovFacilities')}</span>
         </div>
 
         <div className="p-4 bg-[#FFFFFF] dark:bg-slate-900 border border-[#D1D5DB] dark:border-slate-800 rounded-lg">
-          <span className="text-xs font-semibold text-[#475569] dark:text-slate-400 uppercase">Total Capacity</span>
+          <span className="text-xs font-semibold text-[#475569] dark:text-slate-400 uppercase">{t('safePlaces.totalCapacity')}</span>
           <h3 className="text-2xl font-bold text-[#0F172A] dark:text-white mt-1">
-            {camps.reduce((acc, c) => acc + (Number(c.total_capacity) || Number(c.capacity) || 0), 0)} Beds
+            {t('campManager.bedsCount', { count: camps.reduce((acc, c) => acc + (Number(c.total_capacity) || Number(c.capacity) || 0), 0) })}
           </h3>
-          <span className="text-[11px] text-[#475569] dark:text-slate-400 font-medium">Allocated Quota Across Wards</span>
+          <span className="text-[11px] text-[#475569] dark:text-slate-400 font-medium">{t('campManager.allocatedQuota')}</span>
         </div>
 
         <div className="p-4 bg-[#FFFFFF] dark:bg-slate-900 border border-[#D1D5DB] dark:border-slate-800 rounded-lg">
-          <span className="text-xs font-semibold text-[#475569] dark:text-slate-400 uppercase">Occupied Beds</span>
+          <span className="text-xs font-semibold text-[#475569] dark:text-slate-400 uppercase">{t('campManager.occupiedBeds')}</span>
           <h3 className="text-2xl font-bold text-[#0F172A] dark:text-white mt-1">
-            {camps.reduce((acc, c) => acc + (Number(c.occupied_capacity) || 0), 0)} Beds
+            {t('campManager.bedsCount', { count: camps.reduce((acc, c) => acc + (Number(c.occupied_capacity) || 0), 0) })}
           </h3>
-          <span className="text-[11px] text-[#D97706] font-semibold">Currently Housed Citizens</span>
+          <span className="text-[11px] text-[#D97706] font-semibold">{t('campManager.housedCitizens')}</span>
         </div>
 
         <div className="p-4 bg-[#FFFFFF] dark:bg-slate-900 border border-[#D1D5DB] dark:border-slate-800 rounded-lg">
-          <span className="text-xs font-semibold text-[#475569] dark:text-slate-400 uppercase">Available Buffer</span>
+          <span className="text-xs font-semibold text-[#475569] dark:text-slate-400 uppercase">{t('campManager.availableBuffer')}</span>
           <h3 className="text-2xl font-bold text-[#0F172A] dark:text-white mt-1">
-            {Math.max(0, camps.reduce((acc, c) => acc + (Number(c.total_capacity) || Number(c.capacity) || 0), 0) - camps.reduce((acc, c) => acc + (Number(c.occupied_capacity) || 0), 0))} Beds
+            {t('campManager.bedsCount', { count: Math.max(0, camps.reduce((acc, c) => acc + (Number(c.total_capacity) || Number(c.capacity) || 0), 0) - camps.reduce((acc, c) => acc + (Number(c.occupied_capacity) || 0), 0)) })}
           </h3>
-          <span className="text-[11px] text-[#059669] font-semibold">Ready for Emergency Evacuees</span>
+          <span className="text-[11px] text-[#059669] font-semibold">{t('campManager.readyForEvacuees')}</span>
         </div>
       </div>
 
@@ -190,7 +192,7 @@ export const CampManagerView: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {camps.length === 0 ? (
           <div className="col-span-full p-8 text-center bg-[#FFFFFF] dark:bg-slate-900 border border-[#D1D5DB] dark:border-slate-800 rounded-lg text-xs text-[#475569] dark:text-slate-400">
-            No active emergency relief camps registered. Click "Establish New Relief Camp" above to commission one.
+            {t('campManager.noActiveCamps')}
           </div>
         ) : (
           camps.map(camp => {
@@ -207,19 +209,21 @@ export const CampManagerView: React.FC = () => {
                 <div className="flex items-start justify-between">
                   <div>
                     <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-[#0F172A] dark:text-slate-200 uppercase">
-                      Ward #{camp.ward_id || 1} Camp
+                      {t('campManager.wardCampBadge', { ward: camp.ward_id || 1 })}
                     </span>
-                    <h3 className="text-sm font-bold text-[#0F172A] dark:text-white mt-1">{camp.name}</h3>
+                    <h3 className="text-sm font-bold text-[#0F172A] dark:text-white mt-1">{tx(camp.name)}</h3>
                   </div>
                   <span className="text-[10px] font-semibold text-[#059669] bg-[#059669]/10 px-2 py-0.5 rounded border border-[#059669]/30 uppercase">
-                    {camp.status || 'ACTIVE'}
+                    {tSafePlaceStatus(camp.status || 'ACTIVE')}
                   </span>
                 </div>
 
                 <div className="bg-[#F8F9FA] dark:bg-slate-950 p-3 rounded-md border border-[#D1D5DB] dark:border-slate-800 space-y-2 text-xs">
                   <div className="flex justify-between items-center">
-                    <span className="text-[#475569] dark:text-slate-400 font-medium">Current Occupancy:</span>
-                    <strong className="text-[#0F172A] dark:text-slate-200">{occupiedBeds} / {totalBeds} Beds</strong>
+                    <span className="text-[#475569] dark:text-slate-400 font-medium">{t('campManager.currentOccupancy')}</span>
+                    <strong className="text-[#0F172A] dark:text-slate-200">
+                      {t('govCommand.bedsOccupiedRatio', { occupied: occupiedBeds, total: totalBeds })}
+                    </strong>
                   </div>
                   <div className="w-full bg-slate-200 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
                     <div 
@@ -228,14 +232,16 @@ export const CampManagerView: React.FC = () => {
                     />
                   </div>
                   <div className="flex justify-between text-[11px]">
-                    <span className="text-[#059669] font-semibold">{availableBeds} beds remaining</span>
+                    <span className="text-[#059669] font-semibold">
+                      {t('campManager.bedsRemaining', { count: availableBeds })}
+                    </span>
                     <span className="text-[#475569] dark:text-slate-400 font-semibold">{pct}%</span>
                   </div>
                 </div>
 
                 {/* Adjust Bed Count Quick Stepper */}
                 <div className="pt-2 flex items-center justify-between gap-2 text-xs">
-                  <span className="text-[#475569] dark:text-slate-400 font-medium">Quick Adjust:</span>
+                  <span className="text-[#475569] dark:text-slate-400 font-medium">{t('campManager.quickAdjust')}</span>
                   <div className="flex items-center gap-1.5">
                     <button
                       onClick={() => updateCampCapacity(camp.id, Math.max(0, occupiedBeds - 10))}

@@ -6,6 +6,8 @@
 
 import L from 'leaflet';
 import { SafePlace } from '../../../types';
+import { translate } from '../../../i18n/translate';
+import { tx } from '../../../i18n/dynamicText';
 
 export function renderGovernmentCampsLayer(
   layerGroup: L.LayerGroup,
@@ -49,7 +51,7 @@ export function renderGovernmentCampsLayer(
           white-space: nowrap;
         ">
           <span>🏕️</span>
-          <span style="max-width: 95px; overflow: hidden; text-overflow: ellipsis;">${(camp.name || 'Camp').split(' ')[0]} Camp</span>
+          <span style="max-width: 95px; overflow: hidden; text-overflow: ellipsis;">${(camp.name || translate('map.campChip')).split(' ')[0]} ${translate('map.campChip')}</span>
           <span style="background: rgba(2,132,199,0.25); color: #38bdf8; font-size: 9px; padding: 1px 4px; border-radius: 4px;">
             ${availableBeds}
           </span>
@@ -63,33 +65,33 @@ export function renderGovernmentCampsLayer(
     marker.bindPopup(`
       <div style="padding: 6px 8px; font-size: 11px; min-width: 190px; line-height: 1.4; color: #f8fafc;">
         <div style="font-size: 10px; text-transform: uppercase; font-weight: 800; color: #38bdf8; margin-bottom: 2px;">
-          🏕️ BMC GOVERNMENT RELIEF CAMP
+          🏕️ ${translate('map.bmcGovReliefCamp')}
         </div>
-        <h4 style="font-size: 12px; font-weight: 700; color: #ffffff; margin: 2px 0 4px;">${camp.name}</h4>
-        <p style="font-size: 10px; color: #94a3b8; margin-bottom: 6px;">${camp.address}</p>
+        <h4 style="font-size: 12px; font-weight: 700; color: #ffffff; margin: 2px 0 4px;">${tx(camp.name)}</h4>
+        <p style="font-size: 10px; color: #94a3b8; margin-bottom: 6px;">${tx(camp.address)}</p>
 
         <div style="font-size: 11px; color: #e2e8f0; display: flex; justify-content: space-between; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 4px;">
-          <span>Occupancy: <b>${occ}/${tot}</b></span>
+          <span>${translate('map.occupancy')}: <b>${occ}/${tot}</b></span>
           <span style="color: ${availableBeds > 0 ? '#34d399' : '#f87171'}; font-weight: 700;">
-            ${availableBeds > 0 ? `${availableBeds} spots open` : 'Full Capacity'}
+            ${availableBeds > 0 ? translate('map.spotsOpen', { count: availableBeds }) : translate('map.fullCapacity')}
           </span>
         </div>
 
         ${camp.facilities && camp.facilities.length > 0 ? `
           <div style="margin-top: 5px; font-size: 10px; color: #cbd5e1;">
-            <b>Amenities:</b> ${camp.facilities.join(', ')}
+            <b>${translate('map.amenities')}:</b> ${camp.facilities.map(f => tx(f)).join(', ')}
           </div>
         ` : ''}
 
         ${camp.contact_number ? `
           <div style="margin-top: 4px; font-size: 10px; color: #38bdf8;">
-            <b>Camp Control:</b> ${camp.contact_number}
+            <b>${translate('map.campControl')}:</b> ${camp.contact_number}
           </div>
         ` : ''}
 
         ${camp.hazard_exclusion_reason ? `
           <p style="margin-top: 6px; font-size: 10px; color: #fb7185; background: rgba(244,63,94,0.15); padding: 4px; border-radius: 4px; border: 1px solid rgba(244,63,94,0.3);">
-            ⚠️ ${camp.hazard_exclusion_reason}
+            ⚠️ ${tx(camp.hazard_exclusion_reason)}
           </p>
         ` : ''}
       </div>

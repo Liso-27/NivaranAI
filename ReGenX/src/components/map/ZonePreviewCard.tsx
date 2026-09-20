@@ -1,5 +1,6 @@
 import React from 'react';
 import { HazardZone, SEVERITY_BG_CLASSES } from '../../types';
+import { useLanguage } from '../../context/LanguageContext';
 import { 
   Flame, 
   Waves, 
@@ -22,6 +23,8 @@ export const ZonePreviewCard: React.FC<ZonePreviewCardProps> = ({
   onClose, 
   onViewMoreDetails 
 }) => {
+  const { t, tSeverity, tWard, tx } = useLanguage();
+
   const getHazardIcon = (type: string) => {
     switch (type) {
       case 'flood': return <Waves className="w-5 h-5 text-sky-500" />;
@@ -54,14 +57,14 @@ export const ZonePreviewCard: React.FC<ZonePreviewCardProps> = ({
           <div>
             <div className="flex items-center gap-2">
               <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded border uppercase tracking-wider ${SEVERITY_BG_CLASSES[zone.severity]}`}>
-                {zone.severity}
+                {tSeverity(zone.severity)}
               </span>
               <span className="text-[11px] text-slate-500 dark:text-slate-400">
-                Ward #{zone.ward_id}
+                {t('zonePreview.wardNum', { id: zone.ward_id })}
               </span>
             </div>
             <h3 className="text-base font-black text-slate-900 dark:text-white font-heading mt-1">
-              {zone.ward_name}
+              {tWard(zone.ward_id, zone.ward_name)}
             </h3>
           </div>
         </div>
@@ -69,21 +72,21 @@ export const ZonePreviewCard: React.FC<ZonePreviewCardProps> = ({
         {/* Analytical Risk Scores */}
         <div className="grid grid-cols-3 gap-2 bg-slate-50 dark:bg-slate-950/70 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800/80 text-center">
           <div>
-            <span className="text-[10px] text-slate-500 dark:text-slate-400 block font-semibold">Risk Score</span>
+            <span className="text-[10px] text-slate-500 dark:text-slate-400 block font-semibold">{t('zonePreview.riskScore')}</span>
             <span className="text-sm md:text-base font-black" style={{ color: zone.color }}>
               {zone.risk_score}/100
             </span>
           </div>
 
           <div className="border-x border-slate-200 dark:border-slate-800/80">
-            <span className="text-[10px] text-slate-500 dark:text-slate-400 block font-semibold">Confidence</span>
+            <span className="text-[10px] text-slate-500 dark:text-slate-400 block font-semibold">{t('zonePreview.confidence')}</span>
             <span className="text-sm md:text-base font-black text-cyan-600 dark:text-cyan-400">
               {zone.confidence}%
             </span>
           </div>
 
           <div>
-            <span className="text-[10px] text-slate-500 dark:text-slate-400 block font-semibold">Radius</span>
+            <span className="text-[10px] text-slate-500 dark:text-slate-400 block font-semibold">{t('zonePreview.radius')}</span>
             <span className="text-sm md:text-base font-black text-amber-600 dark:text-amber-400">
               {zone.affected_radius_km} km
             </span>
@@ -99,14 +102,14 @@ export const ZonePreviewCard: React.FC<ZonePreviewCardProps> = ({
           }`}>
             <AlertCircle className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" />
             <p className="line-clamp-2 text-[11px] font-semibold leading-tight">
-              <strong>Action:</strong> {zone.recommended_action}
+              <strong>{t('zonePreview.action')}:</strong> {tx(zone.recommended_action)}
             </p>
           </div>
         )}
 
         {/* Hazard Summary Description */}
         <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed line-clamp-2">
-          {zone.description || zone.short_description}
+          {tx(zone.description || zone.short_description)}
         </p>
 
         {/* Action Button */}
@@ -114,7 +117,7 @@ export const ZonePreviewCard: React.FC<ZonePreviewCardProps> = ({
           onClick={onViewMoreDetails}
           className="w-full py-2.5 bg-[#8A9A86] hover:bg-[#778873] text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer active:scale-98"
         >
-          <span>VIEW FULL ASSESSMENT & SHELTERS</span>
+          <span>{t('zonePreview.btnViewFull')}</span>
           <ArrowRight className="w-3.5 h-3.5" />
         </button>
       </div>

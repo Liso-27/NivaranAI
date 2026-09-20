@@ -1,5 +1,6 @@
 import React from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { useLanguage } from '../../context/LanguageContext';
 import { 
   Map, 
   Building2, 
@@ -24,28 +25,29 @@ interface TabNavProps {
 
 export const TabNav: React.FC<TabNavProps> = ({ currentTab, onTabChange }) => {
   const { role } = useAuth();
+  const { t } = useLanguage();
 
   const citizenTabs = [
-    { id: 'CITIZEN_MAP', label: 'Interactive Hazard Map', icon: Map },
-    { id: 'SAFE_PLACES', label: 'Safe Places Near Me', icon: Building2 },
-    { id: 'CITIZEN_REPORTS', label: 'My Observation History', icon: Radio },
-    { id: 'DISASTER_NEWS', label: 'Disaster News & Bulletins', icon: Newspaper },
-    { id: 'NOTIFICATION_SETTINGS', label: 'Alert Channels (FCM/SMS)', icon: Bell }
+    { id: 'CITIZEN_MAP', label: t('nav.citizenMap'), icon: Map },
+    { id: 'SAFE_PLACES', label: t('nav.safePlaces'), icon: Building2 },
+    { id: 'CITIZEN_REPORTS', label: t('nav.citizenReports'), icon: Radio },
+    { id: 'DISASTER_NEWS', label: t('nav.disasterNews'), icon: Newspaper },
+    { id: 'NOTIFICATION_SETTINGS', label: t('nav.notificationSettings'), icon: Bell }
   ];
 
   const govTabs = [
-    { id: 'GOV_COMMAND', label: 'Command Center', icon: ShieldAlert },
-    { id: 'GOV_TRIAGE', label: 'Citizen Report Triage', icon: ClipboardCheck },
-    { id: 'GOV_CAMPS', label: 'Relief Camp Management', icon: Tent },
-    { id: 'GOV_MAP', label: 'Tactical Ward Map', icon: Layers }
+    { id: 'GOV_COMMAND', label: t('nav.govCommand'), icon: ShieldAlert },
+    { id: 'GOV_TRIAGE', label: t('nav.govTriage'), icon: ClipboardCheck },
+    { id: 'GOV_CAMPS', label: t('nav.govCamps'), icon: Tent },
+    { id: 'GOV_MAP', label: t('nav.govMap'), icon: Layers }
   ];
 
   const adminTabs = [
-    { id: 'ADMIN_OVERVIEW', label: 'Operations Overview', icon: Activity },
-    { id: 'ADMIN_SCHEDULER', label: '20-Min Scheduler Telemetry', icon: Clock },
-    { id: 'ADMIN_HEALTH', label: 'API & Service Matrix', icon: Cpu },
-    { id: 'ADMIN_USERS', label: 'Official Approvals', icon: Users },
-    { id: 'ADMIN_LOGS', label: 'Security Audit Logs', icon: FileText }
+    { id: 'ADMIN_OVERVIEW', label: t('nav.adminOverview'), icon: Activity },
+    { id: 'ADMIN_SCHEDULER', label: t('nav.adminScheduler'), icon: Clock },
+    { id: 'ADMIN_HEALTH', label: t('nav.adminHealth'), icon: Cpu },
+    { id: 'ADMIN_USERS', label: t('nav.adminUsers'), icon: Users },
+    { id: 'ADMIN_LOGS', label: t('nav.adminLogs'), icon: FileText }
   ];
 
   const activeTabsList = 
