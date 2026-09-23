@@ -287,19 +287,19 @@ export const LoginPage: React.FC = () => {
         employee_id: officialForm.idNumber || 'EMP-TEMP'
       });
       setAuthRequestSubmitted(true);
-        setTimeout(() => {
-          setIsAuthRequestOpen(false);
-          setAuthRequestSubmitted(false);
-          setOfficialForm({
-            name: '',
-            email: '',
-            phone: '',
-            department: 'BMC Disaster Response Cell',
-            designation: 'Executive Engineer',
-            idNumber: ''
-          });
-          setSuccessMessage(t('auth.successAuthSubmitted'));
-        }, 2200);
+      setTimeout(() => {
+        setIsAuthRequestOpen(false);
+        setAuthRequestSubmitted(false);
+        setOfficialForm({
+          name: '',
+          email: '',
+          phone: '',
+          department: 'BMC Disaster Response Cell',
+          designation: 'Executive Engineer',
+          idNumber: ''
+        });
+        setSuccessMessage(t('auth.successAuthSubmitted'));
+      }, 2200);
     } catch {
       setErrorMessage(t('auth.errSubmitAuth'));
     }
@@ -311,10 +311,10 @@ export const LoginPage: React.FC = () => {
       <header className="w-full border-b border-[#D1D5DB] dark:border-slate-800 bg-[#FFFFFF] dark:bg-slate-950 sticky top-0 z-30 px-4 py-3">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <img 
-              src="/nivaran-logo.png" 
-              alt="NivaranAI Logo" 
-              className="w-9 h-9 object-contain rounded-full bg-white p-0.5 shadow-xs shrink-0" 
+            <img
+              src="/nivaran-logo.png"
+              alt="NivaranAI Logo"
+              className="w-9 h-9 object-contain rounded-full bg-white p-0.5 shadow-xs shrink-0"
             />
             <div>
               <div className="flex items-center gap-2">
@@ -554,22 +554,20 @@ export const LoginPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setAuthTab('SIGN_IN')}
-                  className={`flex-1 py-3 text-sm font-bold border-b-2 transition duration-150 cursor-pointer ${
-                    authTab === 'SIGN_IN'
+                  className={`flex-1 py-3 text-sm font-bold border-b-2 transition duration-150 cursor-pointer ${authTab === 'SIGN_IN'
                       ? 'border-rose-600 text-rose-600 dark:text-rose-400'
                       : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
-                  }`}
+                    }`}
                 >
                   {t('auth.signIn')}
                 </button>
                 <button
                   type="button"
                   onClick={() => setAuthTab('SIGN_UP')}
-                  className={`flex-1 py-3 text-sm font-bold border-b-2 transition duration-150 cursor-pointer ${
-                    authTab === 'SIGN_UP'
+                  className={`flex-1 py-3 text-sm font-bold border-b-2 transition duration-150 cursor-pointer ${authTab === 'SIGN_UP'
                       ? 'border-rose-600 text-rose-600 dark:text-rose-400'
                       : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
-                  }`}
+                    }`}
                 >
                   {t('auth.signUp')}
                 </button>
@@ -858,22 +856,20 @@ export const LoginPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setAuthTab('SIGN_IN')}
-                  className={`flex-1 py-3 text-sm font-bold border-b-2 transition duration-150 cursor-pointer ${
-                    authTab === 'SIGN_IN'
+                  className={`flex-1 py-3 text-sm font-bold border-b-2 transition duration-150 cursor-pointer ${authTab === 'SIGN_IN'
                       ? 'border-[#0B3D91] dark:border-[#F58220] text-[#0B3D91] dark:text-[#F58220]'
                       : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
-                  }`}
+                    }`}
                 >
                   {t('auth.signIn')}
                 </button>
                 <button
                   type="button"
                   onClick={() => setAuthTab('SIGN_UP')}
-                  className={`flex-1 py-3 text-sm font-bold border-b-2 transition duration-150 cursor-pointer ${
-                    authTab === 'SIGN_UP'
+                  className={`flex-1 py-3 text-sm font-bold border-b-2 transition duration-150 cursor-pointer ${authTab === 'SIGN_UP'
                       ? 'border-[#0B3D91] dark:border-[#F58220] text-[#0B3D91] dark:text-[#F58220]'
                       : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
-                  }`}
+                    }`}
                 >
                   {t('auth.signUp')}
                 </button>
@@ -995,8 +991,8 @@ export const LoginPage: React.FC = () => {
                       e.preventDefault();
                       setErrorMessage(null);
                       if (!fullName || !email || !signUpPassword) {
-                         setErrorMessage(t('auth.errFillAllFields'));
-                         return;
+                        setErrorMessage(t('auth.errFillAllFields'));
+                        return;
                       }
                       try {
                         await registerCitizen({
@@ -1022,7 +1018,7 @@ export const LoginPage: React.FC = () => {
                           <input type="text" required value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder={t('auth.citizenNamePlaceholder')} className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-emerald-600 transition" />
                         </div>
                       </div>
-                      
+
                       <div>
                         <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
                           {t('auth.emailAddressReq')}
@@ -1067,7 +1063,7 @@ export const LoginPage: React.FC = () => {
                     </form>
                   </div>
                 )}
-                
+
                 {/* ========================================================================= */}
                 {authTab === 'SIGN_UP' && (
                   <div className="space-y-4">
@@ -1219,11 +1215,10 @@ export const LoginPage: React.FC = () => {
                             type="button"
                             disabled={resendTimer > 0 || isLoading}
                             onClick={() => handleSendOtp()}
-                            className={`font-bold transition cursor-pointer ${
-                              resendTimer > 0
+                            className={`font-bold transition cursor-pointer ${resendTimer > 0
                                 ? 'text-slate-400 cursor-not-allowed'
                                 : 'text-emerald-600 dark:text-emerald-400 hover:underline'
-                            }`}
+                              }`}
                           >
                             {resendTimer > 0 ? t('auth.resendOtpIn', { count: resendTimer }) : t('auth.resendOtp')}
                           </button>

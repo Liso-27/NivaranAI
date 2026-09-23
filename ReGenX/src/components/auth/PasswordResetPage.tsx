@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { KeyRound, Eye, EyeOff, ArrowLeft, Loader2, CheckCircle2, AlertTriangle, ShieldCheck } from 'lucide-react';
 import { completePasswordReset } from '../../services/appwrite';
+import { useLanguage } from '../../context/LanguageContext';
 
 export const PasswordResetPage: React.FC = () => {
+  const { t, tx } = useLanguage();
   const [userId, setUserId] = useState<string>('');
   const [secret, setSecret] = useState<string>('');
   
@@ -27,9 +29,9 @@ export const PasswordResetPage: React.FC = () => {
 
     if (!uId || !sec) {
       setIsLinkInvalid(true);
-      setErrorMessage('Invalid or missing password recovery link parameters. Please request a new link.');
+      setErrorMessage(t('auth.errInvalidLinkParams'));
     }
-  }, []);
+  }, [t]);
 
   const handleReturnToLogin = () => {
     window.location.href = '/';
@@ -40,17 +42,17 @@ export const PasswordResetPage: React.FC = () => {
     setErrorMessage(null);
 
     if (isLinkInvalid || !userId || !secret) {
-      setErrorMessage('Invalid or expired password recovery link. Please request a new link.');
+      setErrorMessage(t('auth.errInvalidExpiredLink'));
       return;
     }
 
     if (password.length < 8) {
-      setErrorMessage('Password must be at least 8 characters long.');
+      setErrorMessage(t('auth.errPasswordMinLength'));
       return;
     }
 
     if (password !== confirmPassword) {
-      setErrorMessage('Passwords do not match. Please re-enter matching passwords.');
+      setErrorMessage(t('auth.errPasswordsDoNotMatch'));
       return;
     }
 
@@ -62,7 +64,7 @@ export const PasswordResetPage: React.FC = () => {
     } catch (err: any) {
       console.error('Password reset completion error:', err);
       setErrorMessage(
-        err.message || 'Failed to reset password. The recovery link may have expired or already been used.'
+        err.message ? tx(err.message) : t('auth.errResetFailed')
       );
     } finally {
       setIsLoading(false);
@@ -80,7 +82,7 @@ export const PasswordResetPage: React.FC = () => {
               className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition cursor-pointer flex items-center gap-1.5 text-xs font-bold"
             >
               <ArrowLeft className="w-4 h-4" />
-              <span>Back to Login</span>
+              <span>{t('auth.backToLogin')}</span>
             </button>
             <div className="h-5 w-px bg-slate-300 dark:bg-slate-800 hidden sm:block" />
             <div className="flex items-center gap-2">
@@ -106,10 +108,10 @@ export const PasswordResetPage: React.FC = () => {
             </div>
             <div>
               <h1 className="text-xl font-bold text-slate-900 dark:text-white">
-                Reset Account Password
+                {t('auth.resetAccountPasswordTitle')}
               </h1>
               <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-                Set a secure new password for your account
+                {t('auth.resetAccountPasswordSubtitle')}
               </p>
             </div>
           </div>
@@ -117,7 +119,7 @@ export const PasswordResetPage: React.FC = () => {
           {errorMessage && (
             <div className="p-3.5 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-800 dark:text-rose-200 rounded-xl text-xs flex items-start gap-2.5 animate-fade-in shadow-2xs">
               <AlertTriangle className="w-4 h-4 text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" />
-              <span className="font-medium leading-relaxed">{errorMessage}</span>
+              <span className="font-medium leading-relaxed">{tx(errorMessage)}</span>
             </div>
           )}
 
@@ -128,10 +130,10 @@ export const PasswordResetPage: React.FC = () => {
               </div>
               <div className="space-y-1.5">
                 <h3 className="text-base font-bold text-slate-900 dark:text-white">
-                  Password Reset Successfully!
+                  {t('auth.passwordResetSuccessTitle')}
                 </h3>
                 <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed max-w-xs mx-auto">
-                  Your account password has been updated. You can now sign in using your new credentials.
+                  {t('auth.passwordResetSuccessDesc')}
                 </p>
               </div>
 
@@ -142,27 +144,27 @@ export const PasswordResetPage: React.FC = () => {
                   className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-xs transition shadow-md cursor-pointer flex items-center justify-center gap-2"
                 >
                   <KeyRound className="w-4 h-4" />
-                  <span>Proceed to Sign In</span>
+                  <span>{t('auth.proceedToSignIn')}</span>
                 </button>
               </div>
             </div>
           ) : isLinkInvalid ? (
             <div className="space-y-4 text-center py-2">
               <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                The password reset link is invalid or incomplete. Please request a new recovery link from the Forgot Password page.
+                {t('auth.invalidLinkDesc')}
               </p>
               <a
                 href="/forgot-password"
                 className="inline-flex items-center justify-center gap-2 w-full py-2.5 bg-[#D97706] hover:bg-[#B45309] text-white rounded-xl font-bold text-xs transition shadow-xs"
               >
-                <span>Request New Recovery Link</span>
+                <span>{t('auth.requestNewRecoveryLink')}</span>
               </a>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-                  New Password (min. 8 characters)
+                  {t('auth.newPasswordMinLength')}
                 </label>
                 <div className="relative">
                   <KeyRound className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
@@ -179,7 +181,7 @@ export const PasswordResetPage: React.FC = () => {
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3 top-3 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
-                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                    aria-label={showPassword ? t('auth.hidePassword') : t('auth.showPassword')}
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -188,7 +190,7 @@ export const PasswordResetPage: React.FC = () => {
 
               <div>
                 <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-                  Confirm New Password
+                  {t('auth.confirmNewPassword')}
                 </label>
                 <div className="relative">
                   <KeyRound className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
@@ -205,7 +207,7 @@ export const PasswordResetPage: React.FC = () => {
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     className="absolute right-3 top-3 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
-                    aria-label={showConfirmPassword ? 'Hide confirm password' : 'Show confirm password'}
+                    aria-label={showConfirmPassword ? t('auth.hideConfirmPassword') : t('auth.showConfirmPassword')}
                   >
                     {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -222,7 +224,7 @@ export const PasswordResetPage: React.FC = () => {
                 ) : (
                   <>
                     <ShieldCheck className="w-4 h-4" />
-                    <span>Reset Password</span>
+                    <span>{t('auth.resetPasswordSubmit')}</span>
                   </>
                 )}
               </button>
@@ -234,8 +236,8 @@ export const PasswordResetPage: React.FC = () => {
       {/* Footer */}
       <footer className="w-full border-t border-slate-200 dark:border-slate-800 py-4 text-center text-xs text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-900">
         <div className="max-w-md mx-auto px-4 flex items-center justify-between text-[11px]">
-          <span>NivaranAI Password Management</span>
-          <a href="/terms" className="underline hover:text-slate-800 dark:hover:text-slate-200">Terms of Service</a>
+          <span>{t('auth.passwordManagementFooter')}</span>
+          <a href="/terms" className="underline hover:text-slate-800 dark:hover:text-slate-200">{t('auth.termsOfService')}</a>
         </div>
       </footer>
     </div>
