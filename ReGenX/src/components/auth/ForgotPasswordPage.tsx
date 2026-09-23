@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Mail, ArrowLeft, Loader2, CheckCircle2, AlertTriangle, KeyRound, Shield } from 'lucide-react';
 import { sendPasswordRecovery } from '../../services/appwrite';
+import { useLanguage } from '../../context/LanguageContext';
 
 export const ForgotPasswordPage: React.FC = () => {
+  const { t, tx } = useLanguage();
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -18,7 +20,7 @@ export const ForgotPasswordPage: React.FC = () => {
 
     const cleanEmail = email.trim().toLowerCase();
     if (!cleanEmail || !cleanEmail.includes('@')) {
-      setErrorMessage('Please enter a valid email address.');
+      setErrorMessage(t('auth.errValidEmail'));
       return;
     }
 
@@ -32,7 +34,7 @@ export const ForgotPasswordPage: React.FC = () => {
       console.error('Password recovery error:', err);
       // For security, present clear guidance without leaking exact account status if Appwrite conceals it
       setErrorMessage(
-        err.message || 'Unable to process recovery request. Please verify your internet connection and email address.'
+        err.message ? tx(err.message) : t('auth.errRecoveryProcessing')
       );
     } finally {
       setIsLoading(false);
@@ -50,7 +52,7 @@ export const ForgotPasswordPage: React.FC = () => {
               className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition cursor-pointer flex items-center gap-1.5 text-xs font-bold"
             >
               <ArrowLeft className="w-4 h-4" />
-              <span>Back to Login</span>
+              <span>{t('auth.backToLogin')}</span>
             </button>
             <div className="h-5 w-px bg-slate-300 dark:bg-slate-800 hidden sm:block" />
             <div className="flex items-center gap-2">
@@ -76,10 +78,10 @@ export const ForgotPasswordPage: React.FC = () => {
             </div>
             <div>
               <h1 className="text-xl font-bold text-slate-900 dark:text-white">
-                Forgot Password
+                {t('auth.forgotPasswordTitle')}
               </h1>
               <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-                Appwrite Password Recovery Gateway
+                {t('auth.recoveryGatewaySubtitle')}
               </p>
             </div>
           </div>
@@ -87,7 +89,7 @@ export const ForgotPasswordPage: React.FC = () => {
           {errorMessage && (
             <div className="p-3.5 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-800 dark:text-rose-200 rounded-xl text-xs flex items-start gap-2.5 animate-fade-in shadow-2xs">
               <AlertTriangle className="w-4 h-4 text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" />
-              <span className="font-medium leading-relaxed">{errorMessage}</span>
+              <span className="font-medium leading-relaxed">{tx(errorMessage)}</span>
             </div>
           )}
 
@@ -98,10 +100,10 @@ export const ForgotPasswordPage: React.FC = () => {
               </div>
               <div className="space-y-2">
                 <h3 className="text-base font-bold text-slate-900 dark:text-white">
-                  Recovery Email Sent
+                  {t('auth.recoveryEmailSent')}
                 </h3>
                 <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed max-w-xs mx-auto">
-                  If an account exists for <strong>{email}</strong>, a password reset link has been dispatched. Please check your inbox and spam folder.
+                  {t('auth.recoveryEmailSentDesc', { email })}
                 </p>
               </div>
 
@@ -112,19 +114,19 @@ export const ForgotPasswordPage: React.FC = () => {
                   className="w-full py-2.5 bg-slate-900 hover:bg-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700 text-white rounded-xl font-bold text-xs transition shadow-xs cursor-pointer flex items-center justify-center gap-2"
                 >
                   <ArrowLeft className="w-4 h-4" />
-                  <span>Return to Sign In</span>
+                  <span>{t('auth.returnToSignIn')}</span>
                 </button>
               </div>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
               <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                Enter your registered account email address below. We will send an official Appwrite password recovery link to reset your credentials.
+                {t('auth.recoveryInstruction')}
               </p>
 
               <div>
                 <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-                  Account Email Address
+                  {t('auth.accountEmailAddress')}
                 </label>
                 <div className="relative">
                   <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
@@ -149,7 +151,7 @@ export const ForgotPasswordPage: React.FC = () => {
                 ) : (
                   <>
                     <Mail className="w-3.5 h-3.5" />
-                    <span>Send Password Recovery Link</span>
+                    <span>{t('auth.sendRecoveryLink')}</span>
                   </>
                 )}
               </button>
@@ -160,7 +162,7 @@ export const ForgotPasswordPage: React.FC = () => {
                   onClick={handleReturnToLogin}
                   className="font-bold text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white cursor-pointer"
                 >
-                  Remembered your password? Back to Login
+                  {t('auth.rememberPasswordBack')}
                 </button>
               </div>
             </form>
@@ -171,8 +173,8 @@ export const ForgotPasswordPage: React.FC = () => {
       {/* Footer */}
       <footer className="w-full border-t border-slate-200 dark:border-slate-800 py-4 text-center text-xs text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-900">
         <div className="max-w-md mx-auto px-4 flex items-center justify-between text-[11px]">
-          <span>NivaranAI Authentication Recovery</span>
-          <a href="/privacy-policy" className="underline hover:text-slate-800 dark:hover:text-slate-200">Privacy Policy</a>
+          <span>{t('auth.authRecoveryFooter')}</span>
+          <a href="/privacy-policy" className="underline hover:text-slate-800 dark:hover:text-slate-200">{t('auth.privacyPolicy')}</a>
         </div>
       </footer>
     </div>

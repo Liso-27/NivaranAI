@@ -3,6 +3,7 @@ import { useDisasterData } from '../../context/DisasterDataContext';
 import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { VerificationState, CrowdReport } from '../../types';
+import { TranslationKey } from '../../i18n/translations/en';
 import { 
   ClipboardCheck, 
   CheckCircle2, 
@@ -16,6 +17,33 @@ import {
   FileSpreadsheet,
   Check
 } from 'lucide-react';
+
+const SOS_PROBLEM_KEY_MAP: Record<string, TranslationKey> = {
+  'Trapped / Stuck': 'sos.problemTrapped',
+  'Medical Emergency / Injured': 'sos.problemMedical',
+  'Fire': 'sos.problemFire',
+  'Flooding / Water Rising': 'sos.problemFlooding',
+  'Building Damage': 'sos.problemBuildingDamage',
+  'Road Blocked': 'sos.problemRoadBlocked',
+  'Power Outage': 'sos.problemPowerOutage',
+  'Other': 'sos.problemOther',
+  'Citizen requesting immediate help': 'sos.citizenRequestingHelp',
+};
+
+const parseSosProblems = (desc?: string): string[] => {
+  if (!desc) return [];
+  const prefixWithSpace = '🆘 SOS EMERGENCY: ';
+  const prefixNoSpace = '🆘 SOS EMERGENCY:';
+  let text = '';
+  if (desc.startsWith(prefixWithSpace)) {
+    text = desc.slice(prefixWithSpace.length);
+  } else if (desc.startsWith(prefixNoSpace)) {
+    text = desc.slice(prefixNoSpace.length);
+  } else {
+    return [];
+  }
+  return text.split(', ').map((s) => s.trim()).filter(Boolean);
+};
 
 export const ReportTriageView: React.FC = () => {
   const { crowdReports, verifyCrowdReport } = useDisasterData();
@@ -45,10 +73,28 @@ export const ReportTriageView: React.FC = () => {
     }
   };
 
-  const filteredReports = crowdReports.filter(r => {
-    if (filterState === 'ALL') return true;
-    return r.verification_state === filterState;
-  });
+  const getSosProblemLabel = (prob: string): string => {
+    const key = SOS_PROBLEM_KEY_MAP[prob];
+    if (key) {
+      try {
+        return t(key);
+      } catch {
+        return prob;
+      }
+    }
+    return tx(prob) || prob;
+  };
+
+  const filteredReports = crowdReports
+    .filter(r => {
+      if (filterState === 'ALL') return true;
+      return r.verification_state === filterState;
+    })
+    .sort((a, b) => {
+      const aSos = a.description?.startsWith('🆘 SOS EMERGENCY:') ? 1 : 0;
+      const bSos = b.description?.startsWith('🆘 SOS EMERGENCY:') ? 1 : 0;
+      return bSos - aSos;
+    });
 
   const handleAction = async (reportId: string, newState: VerificationState) => {
     try {
@@ -148,11 +194,17 @@ export const ReportTriageView: React.FC = () => {
             })}
           </div>
         ) : (
-          filteredReports.map(report => (
-            <div
-              key={report.id}
-              className="bg-[#FFFFFF] dark:bg-slate-900 rounded-lg p-5 border border-[#D1D5DB] dark:border-slate-800 space-y-4"
-            >
+          filteredReports.map(report => {
+            const isSos = report.description?.startsWith('🆘 SOS EMERGENCY:');
+            return (
+              <div
+                key={report.id}
+                className={`bg-[#FFFFFF] dark:bg-slate-900 rounded-lg p-5 border space-y-4 ${
+                  isSos
+                    ? 'border-[#DC2626] dark:border-[#DC2626] ring-1 ring-[#DC2626]/30 shadow-md'
+                    : 'border-[#D1D5DB] dark:border-slate-800'
+                }`}
+              >
               {/* Meta */}
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#D1D5DB] dark:border-slate-800 pb-3">
                 <div className="flex items-center gap-3">
@@ -168,6 +220,12 @@ export const ReportTriageView: React.FC = () => {
                 </div>
 
                 <div className="flex items-center gap-2">
+                  {isSos && (
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded border uppercase bg-rose-100 text-rose-800 border-rose-300 dark:bg-rose-500/20 dark:text-rose-300 dark:border-rose-500/30 flex items-center gap-1">
+                      <AlertCircle className="w-3 h-3 text-[#DC2626] dark:text-rose-400 shrink-0" />
+                      <span>{t('triage.sosBadge')}</span>
+                    </span>
+                  )}
                   <span className={`text-[10px] font-bold px-2 py-0.5 rounded border uppercase ${
                     report.verification_state === 'VERIFIED'
                       ? 'bg-emerald-100 text-emerald-800 border-emerald-300 dark:bg-emerald-500/20 dark:text-emerald-300 dark:border-emerald-500/30'
@@ -187,9 +245,22 @@ export const ReportTriageView: React.FC = () => {
 
               {/* Description & Structured Answers */}
               <div className="space-y-2">
-                <p className="text-xs text-[#0F172A] dark:text-slate-300 leading-normal font-medium">
-                  "{tx(report.description)}"
-                </p>
+                {isSos && parseSosProblems(report.description).length > 0 ? (
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    {parseSosProblems(report.description).map((prob, idx) => (
+                      <span
+                        key={idx}
+                        className="px-2 py-0.5 bg-rose-100 text-rose-800 border border-rose-300 dark:bg-rose-500/20 dark:text-rose-300 dark:border-rose-500/30 rounded text-[11px] font-bold"
+                      >
+                        {getSosProblemLabel(prob)}
+                      </span>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-xs text-[#0F172A] dark:text-slate-300 leading-normal font-medium">
+                    "{tx(report.description)}"
+                  </p>
+                )}
 
                 <div className="flex flex-wrap gap-2 text-[11px]">
                   <span className="px-2 py-0.5 bg-[#F8F9FA] dark:bg-slate-800/80 rounded border border-[#D1D5DB] dark:border-slate-700 text-[#0F172A] dark:text-slate-300">
@@ -269,7 +340,8 @@ export const ReportTriageView: React.FC = () => {
                 )}
               </div>
             </div>
-          ))
+          );
+        })
         )}
       </div>
     </div>

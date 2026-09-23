@@ -6,6 +6,7 @@ import {
   saveCookiePreferences,
   acceptAllCookies
 } from '../../services/cookiePreferences';
+import { useLanguage } from '../../context/LanguageContext';
 
 interface CookiePreferencesProps {
   isOpen?: boolean;
@@ -18,6 +19,7 @@ export const CookiePreferencesModal: React.FC<CookiePreferencesProps> = ({
   onClose,
   isStandalonePage = false
 }) => {
+  const { t } = useLanguage();
   const [preferences, setPreferences] = useState<CookiePreferences>(getCookiePreferences);
   const [savedMessage, setSavedMessage] = useState(false);
 
@@ -63,10 +65,10 @@ export const CookiePreferencesModal: React.FC<CookiePreferencesProps> = ({
           </div>
           <div>
             <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              <span>Cookie & Browser Storage Preferences</span>
+              <span>{t('legal.cookiePreferencesTitle')}</span>
             </h2>
             <p className="text-xs text-slate-500 dark:text-slate-400">
-              Manage how NivaranAI stores operational data in your browser.
+              {t('legal.cookiePreferencesSubtitle')}
             </p>
           </div>
         </div>
@@ -76,7 +78,7 @@ export const CookiePreferencesModal: React.FC<CookiePreferencesProps> = ({
             className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 transition cursor-pointer flex items-center gap-1 font-bold text-xs"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span>Back</span>
+            <span>{t('common.back')}</span>
           </button>
         )}
       </div>
@@ -84,7 +86,7 @@ export const CookiePreferencesModal: React.FC<CookiePreferencesProps> = ({
       {savedMessage && (
         <div className="p-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-200 rounded-lg font-semibold flex items-center gap-2 animate-fade-in">
           <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-          <span>Cookie preferences saved successfully!</span>
+          <span>{t('legal.cookieSavedSuccess')}</span>
         </div>
       )}
 
@@ -96,15 +98,15 @@ export const CookiePreferencesModal: React.FC<CookiePreferencesProps> = ({
             <div className="flex items-center gap-2">
               <Lock className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
               <strong className="text-sm font-bold text-slate-900 dark:text-white">
-                Necessary / Essential Storage
+                {t('legal.cookieEssentialTitle')}
               </strong>
             </div>
             <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 dark:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300">
-              Always Enabled
+              {t('legal.alwaysEnabled')}
             </span>
           </div>
           <p className="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">
-            Required for authenticating user sessions, maintaining role-based access security, CSRF protection, and platform navigation. Cannot be disabled.
+            {t('legal.cookieEssentialDesc')}
           </p>
         </div>
 
@@ -114,7 +116,7 @@ export const CookiePreferencesModal: React.FC<CookiePreferencesProps> = ({
             <div className="flex items-center gap-2">
               <Shield className="w-4 h-4 text-[#D97706]" />
               <strong className="text-sm font-bold text-slate-900 dark:text-white">
-                Functional Storage
+                {t('legal.cookieFunctionalTitle')}
               </strong>
             </div>
             <label className="relative inline-flex items-center cursor-pointer">
@@ -128,7 +130,7 @@ export const CookiePreferencesModal: React.FC<CookiePreferencesProps> = ({
             </label>
           </div>
           <p className="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">
-            Saves your light/dark visual theme choice, last requested GPS location coordinates in session cache, and notification UI settings across page visits.
+            {t('legal.cookieFunctionalDesc')}
           </p>
         </div>
 
@@ -138,15 +140,15 @@ export const CookiePreferencesModal: React.FC<CookiePreferencesProps> = ({
             <div className="flex items-center gap-2">
               <Info className="w-4 h-4 text-slate-400" />
               <strong className="text-sm font-bold text-slate-900 dark:text-white">
-                Third-Party Analytics & Tracking
+                {t('legal.cookieAnalyticsTitle')}
               </strong>
             </div>
             <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
-              Not Implemented
+              {t('legal.notImplemented')}
             </span>
           </div>
           <p className="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">
-            NivaranAI does <strong>NOT</strong> integrate advertising networks, commercial behavioral trackers, or third-party marketing cookies.
+            {t('legal.cookieAnalyticsDesc')}
           </p>
         </div>
       </div>
@@ -158,20 +160,20 @@ export const CookiePreferencesModal: React.FC<CookiePreferencesProps> = ({
             onClick={onClose}
             className="w-full sm:w-auto px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl font-bold transition cursor-pointer"
           >
-            Cancel
+            {t('common.cancel')}
           </button>
         )}
         <button
           onClick={handleSave}
           className="w-full sm:w-auto px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl font-bold transition cursor-pointer"
         >
-          Save Preferences
+          {t('legal.savePreferences')}
         </button>
         <button
           onClick={handleAcceptAll}
           className="w-full sm:w-auto px-4 py-2 bg-[#D97706] hover:bg-[#B45309] text-white rounded-xl font-bold transition shadow-xs cursor-pointer"
         >
-          Accept Functional Storage
+          {t('legal.acceptFunctionalStorage')}
         </button>
       </div>
     </div>
@@ -188,7 +190,7 @@ export const CookiePreferencesModal: React.FC<CookiePreferencesProps> = ({
                 className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition cursor-pointer flex items-center gap-1.5 text-xs font-bold"
               >
                 <ArrowLeft className="w-4 h-4" />
-                <span>Back to Platform</span>
+                <span>{t('legal.backToPlatform')}</span>
               </button>
               <div className="h-5 w-px bg-slate-300 dark:bg-slate-800 hidden sm:block" />
               <div className="flex items-center gap-2">
@@ -211,10 +213,10 @@ export const CookiePreferencesModal: React.FC<CookiePreferencesProps> = ({
 
         <footer className="w-full border-t border-slate-200 dark:border-slate-800 py-4 text-center text-xs text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-900">
           <div className="max-w-5xl mx-auto px-4 flex items-center justify-between">
-            <span>© 2026 NivaranAI • Storage & Privacy Settings</span>
+            <span>{t('legal.storagePrivacyFooter')}</span>
             <div className="flex items-center gap-4 text-[11px]">
-              <a href="/privacy-policy" className="underline hover:text-slate-800 dark:hover:text-slate-200">Privacy Policy</a>
-              <a href="/terms" className="underline hover:text-slate-800 dark:hover:text-slate-200">Terms & Conditions</a>
+              <a href="/privacy-policy" className="underline hover:text-slate-800 dark:hover:text-slate-200">{t('auth.privacyPolicy')}</a>
+              <a href="/terms" className="underline hover:text-slate-800 dark:hover:text-slate-200">{t('auth.termsConditions')}</a>
             </div>
           </div>
         </footer>

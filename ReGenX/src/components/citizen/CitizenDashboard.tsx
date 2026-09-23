@@ -3,6 +3,7 @@ import { useDisasterData } from '../../context/DisasterDataContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { DisasterMap } from '../map/DisasterMap';
 import { CrowdReportModal } from './CrowdReportModal';
+import { SosButton } from './SosButton';
 import { ZoneDetailModal } from '../map/ZoneDetailModal';
 import { HazardZone, SEVERITY_BG_CLASSES } from '../../types';
 import { BMC_WARDS } from '../../data/bmcWards';
@@ -687,6 +688,8 @@ export const CitizenDashboard: React.FC = () => {
           </div>
         </div>
       )}
+      {/* Floating Emergency SOS Component */}
+      <SosButton />
     </div>
   );
 };
