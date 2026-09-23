@@ -1062,6 +1062,11 @@ export const en = {
   'sos.problemRoadBlocked': 'Road Blocked',
   'sos.problemPowerOutage': 'Power Outage',
   'sos.problemOther': 'Other',
+
+  // Offline Banner
+  'offlineBanner.offlineWithTime': "You're offline. Showing data from {time}",
+  'offlineBanner.offlineNoData': "You're offline. No cached data yet.",
+  'offlineBanner.dataStale': 'Data may be outdated. Last updated {time}.',
 };
 
 export type TranslationKey = keyof typeof en;
