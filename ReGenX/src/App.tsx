@@ -5,6 +5,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import { DisasterDataProvider, useDisasterData } from './context/DisasterDataContext';
 import { NotificationProvider } from './context/NotificationContext';
 import { Header } from './components/layout/Header';
+import OfflineBanner from './components/layout/OfflineBanner';
 import { NewsTicker } from './components/layout/NewsTicker';
 import { TabNav } from './components/layout/TabNav';
 import { CitizenDashboard } from './components/citizen/CitizenDashboard';
@@ -85,6 +86,7 @@ const MainAppContent: React.FC = () => {
     <div className="flex flex-col h-screen max-h-screen w-full overflow-hidden bg-[#F5F7FA] dark:bg-slate-950 text-slate-800 dark:text-slate-100 font-sans selection:bg-[#F58220] selection:text-white transition-colors duration-200">
       {/* Header with Theme Toggle (Fixed natural height) */}
       <Header />
+      <OfflineBanner />
 
       {/* Moving News Ticker */}
       <NewsTicker />

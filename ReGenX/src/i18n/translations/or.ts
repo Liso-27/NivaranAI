@@ -1064,6 +1064,11 @@ export const or: Record<TranslationKey, string> = {
   'sos.problemRoadBlocked': 'ରାସ୍ତା ଅବରୋଧ',
   'sos.problemPowerOutage': 'ବିଦ୍ୟୁତ ବିଭ୍ରାଟ',
   'sos.problemOther': 'ଅନ୍ୟାନ୍ୟ',
+
+  // Offline Banner
+  'offlineBanner.offlineWithTime': 'ଆପଣ ଅଫଲାଇନ୍ ଅଛନ୍ତି। {time} ର ତଥ୍ୟ ଦେଖାଯାଉଛି',
+  'offlineBanner.offlineNoData': 'ଆପଣ ଅଫଲାଇନ୍ ଅଛନ୍ତି। ଏପର୍ଯ୍ୟନ୍ତ କୌଣସି କ୍ୟାସ୍ ହୋଇଥିବା ତଥ୍ୟ ନାହିଁ।',
+  'offlineBanner.dataStale': 'ତଥ୍ୟ ପୁରୁଣା ହୋଇପାରେ। ଶେଷ ଅପଡେଟ୍ {time}।',
 };
 
 

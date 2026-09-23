@@ -18,6 +18,7 @@ import {
   getCachedLocation, 
   getGeolocationPermissionStatus 
 } from '../services/locationService';
+import { saveCache, loadCache } from '../services/offlineCache';
 
 interface DisasterDataContextType {
   hazardZones: HazardZone[];
@@ -30,6 +31,8 @@ interface DisasterDataContextType {
   userLocation: UserLocationState;
   isLoading: boolean;
   error: string | null;
+  lastSyncedAt: number | null;
+  isOffline: boolean;
   
   // Actions
   setSelectedZone: (zone: HazardZone | null) => void;
@@ -49,21 +52,29 @@ interface DisasterDataContextType {
 const DisasterDataContext = createContext<DisasterDataContextType | undefined>(undefined);
 
 export const DisasterDataProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [hazardZones, setHazardZones] = useState<HazardZone[]>(() => {
-    try {
-      const saved = localStorage.getItem('nivaran_cached_hazard_zones');
-      return saved ? JSON.parse(saved) : [];
-    } catch {
-      return [];
-    }
-  });
-  const [safePlaces, setSafePlaces] = useState<SafePlace[]>([]);
-  const [crowdReports, setCrowdReports] = useState<CrowdReport[]>([]);
-  const [newsArticles, setNewsArticles] = useState<NewsArticle[]>([]);
-  const [officialUpdates, setOfficialUpdates] = useState<OfficialFieldUpdate[]>([]);
+  const [hazardZones, setHazardZones] = useState<HazardZone[]>(() => loadCache<HazardZone[]>('hazard_zones')?.data ?? []);
+  const [safePlaces, setSafePlaces] = useState<SafePlace[]>(() => loadCache<SafePlace[]>('safe_places')?.data ?? []);
+  const [crowdReports, setCrowdReports] = useState<CrowdReport[]>(() => loadCache<CrowdReport[]>('crowd_reports')?.data ?? []);
+  const [newsArticles, setNewsArticles] = useState<NewsArticle[]>(() => loadCache<NewsArticle[]>('news_articles')?.data ?? []);
+  const [officialUpdates, setOfficialUpdates] = useState<OfficialFieldUpdate[]>(() => loadCache<OfficialFieldUpdate[]>('official_updates')?.data ?? []);
   const [selectedZone, setSelectedZone] = useState<HazardZone | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [lastSyncedAt, setLastSyncedAt] = useState<number | null>(loadCache('hazard_zones')?.timestamp ?? null);
+  const [isOffline, setIsOffline] = useState<boolean>(typeof navigator !== 'undefined' ? !navigator.onLine : false);
+
+  useEffect(() => {
+    const handleOnline = () => setIsOffline(false);
+    const handleOffline = () => setIsOffline(true);
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
 
   // Layer State
   const [layerState, setLayerState] = useState<MapLayerState>({
@@ -105,17 +116,20 @@ export const DisasterDataProvider: React.FC<{ children: React.ReactNode }> = ({ 
         disasterApi.getOfficialUpdates()
       ]);
       setHazardZones(zones);
-      try {
-        localStorage.setItem('nivaran_cached_hazard_zones', JSON.stringify(zones));
-      } catch {
-        // Safe fallback for quota or disabled storage
-      }
+      saveCache('hazard_zones', zones);
       setSafePlaces(places);
+      saveCache('safe_places', places);
       setCrowdReports(reports);
+      saveCache('crowd_reports', reports);
       setNewsArticles(news);
+      saveCache('news_articles', news);
       setOfficialUpdates(updates);
+      saveCache('official_updates', updates);
+      setLastSyncedAt(Date.now());
+      setIsOffline(false);
     } catch (err: any) {
       setError(err.message || 'Failed to load disaster data from backend');
+      setIsOffline(true);
     } finally {
       setIsLoading(false);
     }
@@ -228,6 +242,8 @@ export const DisasterDataProvider: React.FC<{ children: React.ReactNode }> = ({ 
         userLocation,
         isLoading,
         error,
+        lastSyncedAt,
+        isOffline,
         setSelectedZone,
         toggleLayer,
         setHazardFilter,
