@@ -32,6 +32,9 @@ build/
 logs/
 *.log
 
+# GPM Satellite Cache
+data/
+
 # Editor and temporary files
 .vscode/
 .idea/

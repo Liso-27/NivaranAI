@@ -628,7 +628,16 @@ export const or: Record<TranslationKey, string> = {
   'map.geoNoticeTitle': 'ଡିଭାଇସ୍ ଭୂ-ଅବସ୍ଥିତି ସୂଚନା',
   'map.retryLocation': 'ଅବସ୍ଥିତି ଅନୁରୋଧ ପୁନଃ ଚେଷ୍ଟା କରନ୍ତୁ',
   'map.layersTitle': 'ମାନଚିତ୍ର ସ୍ତର',
+  'map.baseMapTitle': 'ବେସ୍ ମ୍ୟାପ୍ ଭିଉ',
+  'map.baseMapStandard': 'ସାଧାରଣ ମ୍ୟାପ୍',
+  'map.baseMapStandardShort': 'ସାଧାରଣ',
+  'map.baseMapHighResSatellite': 'ଉଚ୍ଚ-ରେଜୋଲୁସନ୍ ସାଟେଲାଇଟ୍',
+  'map.baseMapHighResShort': 'ହାଇ-ରେଜ୍',
+  'map.baseMapNasaSatellite': 'ନାସା GIBS ସାଟେଲାଇଟ୍',
+  'map.baseMapNasaShort': 'ନାସା GIBS',
   'map.bmcLiveData': 'BMC ଲାଇଭ୍ ତଥ୍ୟ',
+
+
   'map.layerHazardZones': 'ବିପଦ କ୍ଷେତ୍ର',
   'map.layerSafePlaces': 'ନିରାପଦ ସ୍ଥାନ (ଡାକ୍ତରଖାନା, ଆଶ୍ରୟ)',
   'map.layerGovCamps': 'ସରକାରୀ ରିଲିଫ୍ ଶିବିର',

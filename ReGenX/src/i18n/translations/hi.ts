@@ -628,7 +628,16 @@ export const hi: Record<TranslationKey, string> = {
   'map.geoNoticeTitle': 'डिवाइस भू-स्थान सूचना',
   'map.retryLocation': 'स्थान अनुरोध पुनः प्रयास करें',
   'map.layersTitle': 'मानचित्र परतें',
+  'map.baseMapTitle': 'बेस मैप व्यू',
+  'map.baseMapStandard': 'मानक मानचित्र',
+  'map.baseMapStandardShort': 'मानक',
+  'map.baseMapHighResSatellite': 'उच्च-रिज़ॉल्यूशन सैटेलाइट',
+  'map.baseMapHighResShort': 'हाइ-रेज',
+  'map.baseMapNasaSatellite': 'नासा GIBS सैटेलाइट',
+  'map.baseMapNasaShort': 'नासा GIBS',
   'map.bmcLiveData': 'BMC लाइव डेटा',
+
+
   'map.layerHazardZones': 'आपदा क्षेत्र',
   'map.layerSafePlaces': 'सुरक्षित स्थान (अस्पताल, आश्रय)',
   'map.layerGovCamps': 'सरकारी राहत शिविर',

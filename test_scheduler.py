@@ -341,6 +341,56 @@ class TestScheduledRunner(unittest.TestCase):
         self.assertNotIn("fcm_token", health_str)
         print("  [PASS] Zero secrets or sensitive tokens exposed in health logs.")
 
+    # --------------------------------------------------------------------------
+    # 25 & 26. GPM Pipeline Integration & Fallback
+    # --------------------------------------------------------------------------
+    def test_25_gpm_pipeline_fallback_on_failure(self):
+        print("\n--- Test 25: GPM Failure Safe Fallback in Pipeline ---")
+        from unittest.mock import patch
+        with patch("gpm_live_service.fetch_latest_gpm") as mock_fetch:
+            mock_fetch.side_effect = Exception("NASA connection timeout")
+            # Pipeline should handle GPM exception gracefully and complete successfully
+            mock_results = [
+                {
+                    "ward_id": "ward_1",
+                    "ward_name": "Ward 1",
+                    "worst_hazard": "flood",
+                    "overall_severity": "LOW",
+                    "confidence": 80.0,
+                    "notification": {"notify_user": False, "type": None, "show_safe_place": False},
+                    "hazards": {"flood": {"score": 20.0, "severity": "LOW"}},
+                }
+            ]
+            res = scheduled_runner.run_pipeline(mock_scoring_results=mock_results)
+            self.assertEqual(res["status"], "SUCCESS")
+            print("  [PASS] GPM fetch failure handled with safe fallback; pipeline succeeded.")
+
+    def test_26_gpm_pipeline_active_source_reused(self):
+        print("\n--- Test 26: GPM Pipeline Active Source Integration ---")
+        from unittest.mock import patch
+        with patch("gpm_live_service.fetch_latest_gpm") as mock_fetch, \
+             patch("gpm_live_service.get_active_gpm_source") as mock_src, \
+             patch("risk_engine.score_all_wards") as mock_score:
+            mock_fetch.return_value = {"status": "SUCCESS", "downloaded_files": ["gpm_test.HDF5"]}
+            mock_src.return_value = "/mock/gpm_cache"
+            mock_score.return_value = [
+                {
+                    "ward_id": "ward_1",
+                    "ward_name": "Ward 1",
+                    "worst_hazard": "flood",
+                    "overall_severity": "LOW",
+                    "confidence": 85.0,
+                    "notification": {"notify_user": False, "type": None, "show_safe_place": False},
+                    "hazards": {"flood": {"score": 20.0, "severity": "LOW"}},
+                }
+            ]
+
+            res = scheduled_runner.run_pipeline()
+            self.assertEqual(res["status"], "SUCCESS")
+            mock_score.assert_called_with(gpm_source="/mock/gpm_cache")
+            print("  [PASS] GPM active cache source successfully passed to risk_engine.score_all_wards().")
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
+

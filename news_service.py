@@ -324,9 +324,25 @@ def normalize_news_article(raw_article: Dict[str, Any]) -> Optional[Dict[str, An
     description = str(raw_article.get("description") or raw_article.get("content") or "").strip()
     content = str(raw_article.get("content") or "").strip()
 
-    # Strict Bhubaneswar geographic text relevance check (title, description, or content)
     full_text = f"{title} {description} {content}".lower()
-    if "bhubaneswar" not in full_text and "bbsr" not in full_text:
+
+    # Determine hazard type
+    hazard_type, _ = classify_hazard_type(title, description)
+
+    # Determine locality and scope
+    matched_locality, matched_ward_id, location_scope = resolve_locality_and_scope(full_text)
+
+    # Geographic text relevance check (must match a locality, ward, Bhubaneswar citywide, or Odisha regional scope)
+    geo_keywords = [
+        "bhubaneswar", "bbsr", "cuttack", "khordha", "khurda", "bmc", "smart city",
+        "odisha", "orissa", "coastal odisha", "special relief commissioner", "src odisha"
+    ]
+    has_geo_match = (
+        matched_locality is not None or
+        matched_ward_id is not None or
+        any(re.search(r'\b' + re.escape(kw) + r'\b', full_text) for kw in geo_keywords)
+    )
+    if not has_geo_match:
         return None
 
     # Disaster / Weather / Hazard relevance check
@@ -351,12 +367,6 @@ def normalize_news_article(raw_article: Dict[str, Any]) -> Optional[Dict[str, An
 
     image_url = raw_article.get("urlToImage") or raw_article.get("image_url")
     published_at = raw_article.get("publishedAt") or datetime.now(timezone.utc).isoformat()
-
-    # Determine hazard type
-    hazard_type, _ = classify_hazard_type(title, description)
-
-    # Determine locality and scope
-    matched_locality, matched_ward_id, location_scope = resolve_locality_and_scope(full_text)
 
     # Calculate informational relevance
     relevance_score = calculate_news_relevance(

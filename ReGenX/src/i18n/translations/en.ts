@@ -626,7 +626,16 @@ export const en = {
   'map.geoNoticeTitle': 'Device Geolocation Notice',
   'map.retryLocation': 'Retry Location Request',
   'map.layersTitle': 'Map Layers',
+  'map.baseMapTitle': 'Base Map View',
+  'map.baseMapStandard': 'Standard Map',
+  'map.baseMapStandardShort': 'Standard',
+  'map.baseMapHighResSatellite': 'High-Resolution Satellite',
+  'map.baseMapHighResShort': 'High-Res',
+  'map.baseMapNasaSatellite': 'NASA GIBS MODIS Satellite',
+  'map.baseMapNasaShort': 'NASA GIBS',
   'map.bmcLiveData': 'BMC Live Data',
+
+
   'map.layerHazardZones': 'Hazard Zones',
   'map.layerSafePlaces': 'Safe Places (Hospitals, Shelters)',
   'map.layerGovCamps': 'Government Relief Camps',

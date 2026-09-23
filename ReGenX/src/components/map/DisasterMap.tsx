@@ -26,6 +26,8 @@ import { renderUserLocationLayer } from './layers/userLocationLayer';
 export const DisasterMap: React.FC = () => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
+  const baseTileLayerRef = useRef<L.TileLayer | null>(null);
+  const [baseMap, setBaseMap] = useState<'standard' | 'highres_satellite' | 'nasa_gibs'>('standard');
   const layerGroupsRef = useRef<{
     hazards: L.LayerGroup;
     safePlaces: L.LayerGroup;
@@ -34,6 +36,7 @@ export const DisasterMap: React.FC = () => {
     officialUpdates: L.LayerGroup;
     userLocation: L.LayerGroup;
   } | null>(null);
+
 
   const { 
     hazardZones, 
@@ -77,17 +80,6 @@ export const DisasterMap: React.FC = () => {
       attributionControl: false
     });
 
-    // OpenStreetMap Raster Tiles (Clean, free, high contrast)
-    const mapApiKey = import.meta.env.VITE_MAP_API_KEY;
-    const tileUrl = mapApiKey
-      ? `https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png?key=${mapApiKey}`
-      : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-
-    L.tileLayer(tileUrl, {
-      maxZoom: 19,
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
-
     // Zoom Controls in top-right
     L.control.zoom({ position: 'topright' }).addTo(map);
 
@@ -128,6 +120,73 @@ export const DisasterMap: React.FC = () => {
       mapInstanceRef.current = null;
     };
   }, []);
+
+const getGibsDateString = (): string => {
+  const now = new Date();
+  if (now.getUTCHours() < 4) {
+    now.setUTCDate(now.getUTCDate() - 1);
+  }
+  const year = now.getUTCFullYear();
+  const month = String(now.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(now.getUTCDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
+  // 1b. Manage Base Tile Layer (Standard Map vs High-Res ArcGIS Satellite vs NASA GIBS Satellite)
+  useEffect(() => {
+    if (!mapInstanceRef.current) return;
+    const map = mapInstanceRef.current;
+
+    if (baseTileLayerRef.current) {
+      map.removeLayer(baseTileLayerRef.current);
+    }
+
+    let tileLayer: L.TileLayer;
+    if (baseMap === 'highres_satellite') {
+      // High-Resolution ArcGIS World Imagery Satellite Basemap
+      const arcgisApiKey = import.meta.env.VITE_ARCGIS_API_KEY;
+      const tileUrl = arcgisApiKey && !arcgisApiKey.startsWith('PASTE_')
+        ? `https://basemaps-api.arcgis.com/arcgis/rest/services/styles/ArcGIS:Imagery:Standard?token=${arcgisApiKey}`
+        : 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
+
+      tileLayer = L.tileLayer(tileUrl, {
+        maxZoom: 19,
+        attribution:
+          'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+      });
+    } else if (baseMap === 'nasa_gibs') {
+      const gibsDate = getGibsDateString();
+      // Official NASA GIBS (Global Imagery Browse Services) EPSG:3857 Web Mercator MODIS Terra Satellite Layer
+      tileLayer = L.tileLayer(
+        `https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/MODIS_Terra_CorrectedReflectance_TrueColor/default/${gibsDate}/GoogleMapsCompatible_Level9/{z}/{y}/{x}.jpg`,
+        {
+          maxNativeZoom: 9,
+          maxZoom: 19,
+          attribution:
+            'Imagery &copy; <a href="https://earthdata.nasa.gov/gibs" target="_blank" rel="noreferrer">NASA GIBS</a> &mdash; MODIS Terra TrueColor'
+        }
+      );
+    } else {
+      // Standard OpenStreetMap Raster Tiles
+      const mapApiKey = import.meta.env.VITE_MAP_API_KEY;
+      const tileUrl = mapApiKey && !mapApiKey.startsWith('PASTE_')
+        ? `https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png?key=${mapApiKey}`
+        : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+
+      tileLayer = L.tileLayer(tileUrl, {
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap contributors'
+      });
+    }
+
+    tileLayer.addTo(map);
+    tileLayer.bringToBack();
+    baseTileLayerRef.current = tileLayer;
+  }, [baseMap]);
+
+
+
+
 
   // 2. Render Hazard Zones Layer (Affected Radius & Severity Badges)
   useEffect(() => {
@@ -306,7 +365,59 @@ export const DisasterMap: React.FC = () => {
             <span className="text-[10px] text-slate-500 dark:text-slate-400">{t('map.bmcLiveData')}</span>
           </div>
 
+          {/* Base Map Switcher */}
+          <div className="space-y-1.5 pb-2.5 border-b border-slate-200 dark:border-slate-800">
+            <div className="flex items-center justify-between">
+              <span className="font-bold text-slate-900 dark:text-white font-heading text-[11px]">
+                {t('map.baseMapTitle') || 'Base Map View'}
+              </span>
+              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono uppercase">
+                {baseMap}
+              </span>
+            </div>
+            <div className="grid grid-cols-3 gap-1">
+              <button
+                type="button"
+                onClick={() => setBaseMap('standard')}
+                className={`py-1.5 px-1 rounded-lg font-bold text-[10px] flex items-center justify-center gap-1 border transition-all duration-150 cursor-pointer ${
+                  baseMap === 'standard'
+                    ? 'bg-[#0B3D91] text-white border-[#0B3D91] shadow-2xs dark:bg-rose-600 dark:border-rose-500'
+                    : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:text-slate-900 dark:hover:text-white'
+                }`}
+                title={t('map.baseMapStandard') || 'Standard Map'}
+              >
+                <span>🗺️</span> {t('map.baseMapStandardShort') || 'Standard'}
+              </button>
+              <button
+                type="button"
+                onClick={() => setBaseMap('highres_satellite')}
+                className={`py-1.5 px-1 rounded-lg font-bold text-[10px] flex items-center justify-center gap-1 border transition-all duration-150 cursor-pointer ${
+                  baseMap === 'highres_satellite'
+                    ? 'bg-[#0B3D91] text-white border-[#0B3D91] shadow-2xs dark:bg-rose-600 dark:border-rose-500'
+                    : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:text-slate-900 dark:hover:text-white'
+                }`}
+                title={t('map.baseMapHighResSatellite') || 'High-Resolution Satellite'}
+              >
+                <span>🛰️</span> {t('map.baseMapHighResShort') || 'High-Res'}
+              </button>
+              <button
+                type="button"
+                onClick={() => setBaseMap('nasa_gibs')}
+                className={`py-1.5 px-1 rounded-lg font-bold text-[10px] flex items-center justify-center gap-1 border transition-all duration-150 cursor-pointer ${
+                  baseMap === 'nasa_gibs'
+                    ? 'bg-[#0B3D91] text-white border-[#0B3D91] shadow-2xs dark:bg-rose-600 dark:border-rose-500'
+                    : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:text-slate-900 dark:hover:text-white'
+                }`}
+                title={t('map.baseMapNasaSatellite') || 'NASA GIBS MODIS Satellite'}
+              >
+                <span>🚀</span> {t('map.baseMapNasaShort') || 'NASA GIBS'}
+              </button>
+            </div>
+
+          </div>
+
           <div className="space-y-2">
+
             <label className="flex items-center justify-between text-slate-700 dark:text-slate-300 cursor-pointer">
               <span className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-rose-500"></span>

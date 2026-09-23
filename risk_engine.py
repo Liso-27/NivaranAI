@@ -932,7 +932,7 @@ def score_hazards(signals, static_layers):
     return scores
 
 
-def compute_confidence(om_data, tm_data, citizen_reports=None):
+def compute_confidence(om_data, tm_data, citizen_reports=None, gpm_obs=None):
     om_rain = om_data.get("current", {}).get("precipitation", 0) if isinstance(om_data, dict) else 0
     try:
         tm_rain = tm_data["data"]["timelines"][0]["intervals"][0]["values"].get("precipitationIntensity", 0)
@@ -945,6 +945,31 @@ def compute_confidence(om_data, tm_data, citizen_reports=None):
         confidence -= 20
     elif diff > 2:
         confidence -= 10
+
+    # Satellite cross-check (NASA GPM IMERG) if valid and sufficiently recent data is available
+    if gpm_obs and isinstance(gpm_obs, dict):
+        gpm_rain = gpm_obs.get("precipitation_mm_hr")
+        ts_str = gpm_obs.get("timestamp")
+        is_fresh = False
+
+        if gpm_rain is not None and ts_str:
+            try:
+                from datetime import datetime, timezone
+                dt_str = ts_str.replace("Z", "+00:00")
+                gpm_dt = datetime.fromisoformat(dt_str)
+                now_utc = datetime.now(timezone.utc)
+                age_hours = abs((now_utc - gpm_dt).total_seconds()) / 3600.0
+                if age_hours <= 12.0:
+                    is_fresh = True
+            except Exception:
+                is_fresh = False
+
+        if is_fresh and gpm_rain is not None:
+            gpm_diff = abs(om_rain - gpm_rain)
+            if gpm_diff <= 3.0:
+                confidence += 5
+            elif gpm_diff > 10.0:
+                confidence -= 10
 
     # citizen corroboration bonus: 3+ reports of a matching hazard type
     # in this ward within the recent window bumps confidence up
@@ -1126,10 +1151,11 @@ def submit_citizen_report(ward_id, hazard_type, latitude, longitude, description
         )
 
 
-def score_all_wards():
+def score_all_wards(gpm_source=None):
     """
     Government-facing: every ward, every hazard, always.
     This is the full dataset the government dashboard consumes.
+    Accepts optional gpm_source (file path, directory, or dict of ward observations).
     """
     results = []
 
@@ -1144,6 +1170,21 @@ def score_all_wards():
     # Prefetch all citizen reports in 1 single batched Appwrite query
     reports_batch = fetch_all_recent_citizen_reports()
 
+    # Pre-extract GPM satellite observations if gpm_source is provided
+    gpm_ward_map = {}
+    if gpm_source:
+        try:
+            import gpm_extractor
+            if isinstance(gpm_source, dict):
+                gpm_ward_map = gpm_source
+            else:
+                raw_extracted = gpm_extractor.extract_gpm_for_wards(gpm_source, WARD_DATA)
+                for w_id, obs_list in raw_extracted.items():
+                    if obs_list:
+                        gpm_ward_map[w_id] = obs_list[-1]  # latest observation record
+        except Exception as e:
+            print(f"Warning: GPM extraction failed for gpm_source={gpm_source}: {e}")
+
     for ward_id, ward in WARD_DATA.items():
         lat = ward["lat"] or BHUBANESWAR_LAT
         lon = ward["lon"] or BHUBANESWAR_LON
@@ -1152,9 +1193,18 @@ def score_all_wards():
         om_data = weather_batch.get(c_key, {})
         rep_entry = reports_batch.get(ward_id, {}) if isinstance(reports_batch, dict) else {}
         citizen_reports = rep_entry.get("data", []) if isinstance(rep_entry, dict) else (rep_entry if isinstance(rep_entry, list) else [])
+        gpm_obs = gpm_ward_map.get(ward_id)
 
         signals = extract_raw_signals(om_data, tm_data)
-        confidence = compute_confidence(om_data, tm_data, citizen_reports)
+
+        # Attach GPM observation attributes to raw signals (for audit/dashboard without modifying score_hazards)
+        if gpm_obs and isinstance(gpm_obs, dict):
+            signals["gpm_precip_mm_hr"] = gpm_obs.get("precipitation_mm_hr")
+            signals["gpm_timestamp"] = gpm_obs.get("timestamp")
+            signals["gpm_matched_grid_lat"] = gpm_obs.get("matched_grid_latitude")
+            signals["gpm_matched_grid_lon"] = gpm_obs.get("matched_grid_longitude")
+
+        confidence = compute_confidence(om_data, tm_data, citizen_reports, gpm_obs=gpm_obs)
         hazard_scores = score_hazards(signals, ward["static_layers"])
         hazard_scores = apply_citizen_corroboration(hazard_scores, citizen_reports)
 
@@ -1167,7 +1217,7 @@ def score_all_wards():
         worst_hazard = max(hazard_details, key=lambda h: hazard_details[h]["score"])
         overall_severity = hazard_details[worst_hazard]["severity"]
 
-        results.append({
+        res_dict = {
             "ward_id": ward_id,
             "ward_name": ward["name"],
             "hazards": hazard_details,
@@ -1175,8 +1225,14 @@ def score_all_wards():
             "overall_severity": overall_severity,
             "confidence": confidence,
             "notification": NOTIFICATION_RULES[overall_severity],
-        })
+        }
+
+        if gpm_obs and isinstance(gpm_obs, dict):
+            res_dict["gpm_observation"] = gpm_obs
+
+        results.append(res_dict)
     return results
+
 
 
 def get_user_facing_alerts(all_ward_results):

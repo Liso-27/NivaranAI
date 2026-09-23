@@ -307,19 +307,33 @@ def run_pipeline(
         # 2. Run existing analytical engine (calling risk_engine.score_all_wards)
         weather_status = "SUCCESS"
         risk_status = "SUCCESS"
+        gpm_status = "NONE"
         error_summary = None
 
         if mock_scoring_results is not None:
             all_ward_results = mock_scoring_results
         else:
+            # GPM live downloader invocation with safe error isolation
+            gpm_source = None
             try:
-                all_ward_results = risk_engine.score_all_wards()
+                import gpm_live_service
+                report = gpm_live_service.fetch_latest_gpm(max_granules=1)
+                gpm_source = gpm_live_service.get_active_gpm_source()
+                gpm_status = report.get("status", "NONE")
+            except Exception as gpm_err:
+                print(f"[SCHEDULER] Note: GPM live download skipped (safe fallback): {gpm_err}")
+                gpm_source = None
+                gpm_status = "FALLBACK"
+
+            try:
+                all_ward_results = risk_engine.score_all_wards(gpm_source=gpm_source)
             except Exception as e:
                 print(f"[SCHEDULER] Note: Risk engine execution encountered error (safe isolation): {e}")
                 weather_status = "FAILED"
                 risk_status = "FAILED"
                 error_summary = f"Risk engine error: {str(e)}"
                 all_ward_results = []
+
 
         if not all_ward_results:
             # Failure isolation: preserve existing valid state
