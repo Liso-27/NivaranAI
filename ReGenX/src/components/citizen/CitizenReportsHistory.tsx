@@ -33,6 +33,12 @@ export const CitizenReportsHistory: React.FC = () => {
             <AlertCircle className="w-3 h-3" /> {t('reportsHistory.disputed')}
           </span>
         );
+      case 'MARKED':
+        return (
+          <span className="inline-flex items-center gap-1 text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-800 border border-indigo-300 dark:bg-indigo-500/20 dark:text-indigo-300 dark:border-indigo-500/30">
+            <Clock className="w-3 h-3" /> {t('verification.MARKED')}
+          </span>
+        );
       case 'CANCELLED':
         return (
           <span className="inline-flex items-center gap-1 text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-slate-100 text-slate-800 border border-slate-300 dark:bg-slate-500/20 dark:text-slate-300 dark:border-slate-500/30">

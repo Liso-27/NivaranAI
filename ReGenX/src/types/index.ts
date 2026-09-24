@@ -135,7 +135,8 @@ export type VerificationState =
   | 'VERIFIED'
   | 'DISPUTED'
   | 'CANCELLED'
-  | 'CORROBORATED';
+  | 'CORROBORATED'
+  | 'MARKED';
 
 export interface CrowdReport {
   id: string;

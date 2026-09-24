@@ -88,6 +88,9 @@ export const ReportTriageView: React.FC = () => {
   const filteredReports = crowdReports
     .filter(r => {
       if (filterState === 'ALL') return true;
+      if (filterState === 'UNVERIFIED') {
+        return !r.verification_state || r.verification_state === 'UNVERIFIED';
+      }
       return r.verification_state === filterState;
     })
     .sort((a, b) => {
@@ -104,7 +107,14 @@ export const ReportTriageView: React.FC = () => {
         officialNotes || `Status updated to ${newState} by ${user?.name || 'Authorized Official'}`,
         user?.name || 'BMC Duty Officer'
       );
-      setFeedback({ type: 'success', message: t('triage.feedbackUpdated', { state: tVerification(newState) }) });
+
+      let successMsg = t('triage.feedbackUpdated', { state: tVerification(newState) });
+      if (newState === 'VERIFIED') successMsg = t('triage.feedbackApproved');
+      else if (newState === 'DISPUTED') successMsg = t('triage.feedbackDisapproved');
+      else if (newState === 'MARKED') successMsg = t('triage.feedbackMarked');
+      else if (newState === 'CANCELLED') successMsg = t('triage.feedbackCancelled');
+
+      setFeedback({ type: 'success', message: successMsg });
       setTimeout(() => setFeedback(null), 4000);
       setActiveReportId(null);
       setOfficialNotes('');
@@ -154,12 +164,13 @@ export const ReportTriageView: React.FC = () => {
         </div>
 
         {/* Filter Pills */}
-        <div className="flex items-center gap-2 text-xs">
+        <div className="flex items-center gap-2 text-xs flex-wrap">
           {[
             { id: 'ALL', label: t('triage.filterAll') },
             { id: 'UNVERIFIED', label: t('triage.filterUnverified') },
             { id: 'VERIFIED', label: t('triage.filterVerified') },
             { id: 'DISPUTED', label: t('triage.filterDisputed') },
+            { id: 'MARKED', label: t('triage.filterMarked') },
             { id: 'CANCELLED', label: t('triage.filterCancelled') }
           ].map(tab => (
             <button
@@ -190,6 +201,8 @@ export const ReportTriageView: React.FC = () => {
                 ? t('triage.filterVerified')
                 : filterState === 'DISPUTED'
                 ? t('triage.filterDisputed')
+                : filterState === 'MARKED'
+                ? t('triage.filterMarked')
                 : t('triage.filterCancelled')
             })}
           </div>
@@ -231,6 +244,8 @@ export const ReportTriageView: React.FC = () => {
                       ? 'bg-emerald-100 text-emerald-800 border-emerald-300 dark:bg-emerald-500/20 dark:text-emerald-300 dark:border-emerald-500/30'
                       : report.verification_state === 'DISPUTED'
                       ? 'bg-rose-100 text-rose-800 border-rose-300 dark:bg-rose-500/20 dark:text-rose-300 dark:border-rose-500/30'
+                      : report.verification_state === 'MARKED'
+                      ? 'bg-indigo-100 text-indigo-800 border-indigo-300 dark:bg-indigo-500/20 dark:text-indigo-300 dark:border-indigo-500/30'
                       : report.verification_state === 'CANCELLED'
                       ? 'bg-slate-200 text-slate-800 border-slate-400 dark:bg-slate-700/50 dark:text-slate-300 dark:border-slate-600'
                       : 'bg-amber-100 text-amber-800 border-amber-300 dark:bg-amber-500/20 dark:text-amber-300 dark:border-amber-500/30'
@@ -289,7 +304,7 @@ export const ReportTriageView: React.FC = () => {
                       onChange={(e) => setOfficialNotes(e.target.value)}
                       className="w-full bg-[#FFFFFF] dark:bg-slate-950 border border-[#D1D5DB] dark:border-slate-800 rounded-md p-2.5 text-[#0F172A] dark:text-white focus:outline-none focus:border-[#D97706]"
                     />
-                    <div className="flex items-center gap-2 justify-end">
+                    <div className="flex items-center gap-2 justify-end flex-wrap">
                       <button
                         onClick={() => setActiveReportId(null)}
                         className="px-3 py-1.5 text-[#475569] dark:text-slate-400 hover:text-[#0F172A] dark:hover:text-white font-semibold cursor-pointer"
@@ -301,6 +316,12 @@ export const ReportTriageView: React.FC = () => {
                         className="px-3 py-1.5 bg-slate-600 hover:bg-slate-500 text-white rounded-md font-semibold flex items-center gap-1 cursor-pointer"
                       >
                         <AlertCircle className="w-3.5 h-3.5" /> {t('triage.markCancelled')}
+                      </button>
+                      <button
+                        onClick={() => handleAction(report.id, 'MARKED')}
+                        className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-md font-semibold flex items-center gap-1 cursor-pointer"
+                      >
+                        <Clock className="w-3.5 h-3.5" /> {t('triage.markAction')}
                       </button>
                       <button
                         onClick={() => handleAction(report.id, 'DISPUTED')}

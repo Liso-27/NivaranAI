@@ -424,12 +424,24 @@ class TestMapAndCrowdBackend(unittest.TestCase):
     # 13. Government Verification & Rejection
     # --------------------------------------------------------------------------
     def test_13_government_verification_lifecycle(self):
-        print("\n--- Test 13: Verify Government Verification & Rejection ---")
+        print("\n--- Test 13: Verify Government Verification & Rejection (Approve, Disapprove, Mark, Cancel) ---")
         res_v = crowd_updates.verify_crowd_update("doc_test_1", status="VERIFIED")
         self.assertEqual(res_v["status"], "VERIFIED")
 
+        res_app = crowd_updates.verify_crowd_update("doc_test_1_app", status="APPROVED")
+        self.assertEqual(res_app["status"], "VERIFIED")
+
         res_r = crowd_updates.verify_crowd_update("doc_test_2", status="REJECTED")
         self.assertEqual(res_r["status"], "REJECTED")
+
+        res_dis = crowd_updates.verify_crowd_update("doc_test_2_dis", status="DISAPPROVED")
+        self.assertEqual(res_dis["status"], "REJECTED")
+
+        res_m = crowd_updates.verify_crowd_update("doc_test_3", status="MARKED")
+        self.assertEqual(res_m["status"], "MARKED")
+
+        res_c = crowd_updates.verify_crowd_update("doc_test_4", status="CANCELLED")
+        self.assertEqual(res_c["status"], "CANCELLED")
 
         # Rejected updates are immediately inactive
         rejected_update = {
@@ -439,7 +451,7 @@ class TestMapAndCrowdBackend(unittest.TestCase):
         }
         is_act, _ = crowd_updates.is_update_active(rejected_update)
         self.assertFalse(is_act)
-        print("  [PASS] Government verification and rejection statuses successfully applied.")
+        print("  [PASS] Government triage actions (Approve, Disapprove, Mark, Cancel) successfully verified.")
 
     # --------------------------------------------------------------------------
     # 14. Crowd Markers Separate from Official Hazard Zones

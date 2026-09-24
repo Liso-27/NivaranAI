@@ -270,19 +270,23 @@ def submit_report(session):
 @require_auth
 def verify_report(session, report_id):
     if session.get("role") != "GOVERNMENT_OFFICIAL":
-        return jsonify({"error": "Forbidden"}), 403
+        return jsonify({"error": "Forbidden: Only authorized government officials can update observation triage status."}), 403
         
     data = request.json or {}
     try:
+        new_state = data.get("new_state") or data.get("status") or "VERIFIED"
+        official_remarks = data.get("official_note") or data.get("official_remarks") or data.get("official_notes")
+        official_name = data.get("official_name") or session.get("name") or "Authorized BMC Official"
+
         report = crowd_updates.verify_crowd_update(
             update_id=report_id,
-            status=data.get("new_state", "VERIFIED"),
-            verified_by=session.get("name", "Authorized BMC Official"),
-            official_remarks=data.get("official_note") or data.get("official_remarks")
+            status=new_state,
+            verified_by=official_name,
+            official_remarks=official_remarks
         )
         return jsonify(report), 200
     except Exception as e:
-        return jsonify({"error": str(e)}), 400
+        return jsonify({"error": f"Unable to update observation status: {str(e)}"}), 400
 
 @app.route("/api/reports/<report_id>/corroborate", methods=["POST"])
 @require_auth

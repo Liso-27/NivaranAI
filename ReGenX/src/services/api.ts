@@ -232,9 +232,10 @@ class DisasterApiClient {
     return raw.map(item => {
       const st = String(item.status || item.verification_state || 'PENDING').toUpperCase();
       let verState: VerificationState = 'UNVERIFIED';
-      if (st === 'VERIFIED') verState = 'VERIFIED';
-      else if (st === 'REJECTED' || st === 'DISPUTED') verState = 'DISPUTED';
+      if (st === 'VERIFIED' || st === 'APPROVED') verState = 'VERIFIED';
+      else if (st === 'REJECTED' || st === 'DISPUTED' || st === 'DISAPPROVED') verState = 'DISPUTED';
       else if (st === 'CANCELLED') verState = 'CANCELLED';
+      else if (st === 'MARKED') verState = 'MARKED';
 
       const rawWard = item.ward_id;
       const wardNum = typeof rawWard === 'number' ? rawWard : (parseInt(String(rawWard || '').replace(/\D/g, ''), 10) || 1);
@@ -296,9 +297,10 @@ class DisasterApiClient {
     
     const st = String(res.status || res.verification_state || newState).toUpperCase();
     let verState: VerificationState = 'UNVERIFIED';
-    if (st === 'VERIFIED') verState = 'VERIFIED';
-    else if (st === 'REJECTED' || st === 'DISPUTED') verState = 'DISPUTED';
+    if (st === 'VERIFIED' || st === 'APPROVED') verState = 'VERIFIED';
+    else if (st === 'REJECTED' || st === 'DISPUTED' || st === 'DISAPPROVED') verState = 'DISPUTED';
     else if (st === 'CANCELLED') verState = 'CANCELLED';
+    else if (st === 'MARKED') verState = 'MARKED';
 
     const notes = res.official_notes || res.official_note || res.official_remarks || officialNote;
     const ts = res.timestamp || res.created_at || res.updated_at || new Date().toISOString();
