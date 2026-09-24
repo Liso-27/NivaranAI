@@ -165,13 +165,14 @@ def create_camp(session):
         camp = auth_service.create_government_camp(
             official_user_id_or_token=session.get("user_id"),
             name=data.get("name", ""),
+            type=data.get("type", data.get("category", "government_camp")),
             latitude=float(data.get("latitude", 0.0)),
             longitude=float(data.get("longitude", 0.0)),
             address=data.get("address", ""),
             capacity=int(data.get("total_capacity", data.get("capacity", 0))),
             ward_id=str(data.get("ward_id", "")),
-            hazard_type=data.get("type", "all"),
-            contact_information=data.get("contact_number", data.get("contact_information", ""))
+            hazard_type=data.get("hazard_type", "all"),
+            contact_information=data.get("contact_number", data.get("contact_phone", data.get("contact_information", "")))
         )
         status = camp.get("status_code", 201) if isinstance(camp, dict) else 201
         return jsonify(camp), status

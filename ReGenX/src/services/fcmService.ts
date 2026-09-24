@@ -50,6 +50,11 @@ export async function isFCMSupported(): Promise<boolean> {
 export async function getFirebaseMessaging(): Promise<Messaging | null> {
   if (messagingInstance) return messagingInstance;
 
+  if (!app) {
+    console.warn('[FCM Service] Firebase app is not initialized (missing or invalid config). FCM push notifications will be disabled.');
+    return null;
+  }
+
   const supported = await isFCMSupported();
   if (!supported) {
     console.warn('[FCM Service] Firebase Cloud Messaging is not supported in this browser environment.');

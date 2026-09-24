@@ -35,7 +35,9 @@ VALID_LOCATION_TYPES = {
     "police_station",
     "fire_station",
     "official_shelter",
+    "cyclone_shelter",
     "government_camp",
+    "temporary_camp",
     "relief_centre",
     "other",
 }
@@ -45,6 +47,214 @@ VALID_STATUSES = {"ACTIVE", "FULL", "CLOSED"}
 VALID_HAZARDS = {"heavy_rainfall", "flood", "waterlogging", "lightning", "cyclone"}
 
 EARTH_RADIUS_KM = 6371.0088  # WGS-84 mean Earth radius
+
+DEMO_PERMANENT_LOCATIONS: List[Dict[str, Any]] = [
+    {
+        "$id": "demo_hosp_01",
+        "id": "demo_hosp_01",
+        "name": "[DEMO] AIIMS Bhubaneswar Hospital & Trauma Centre",
+        "type": "hospital",
+        "latitude": 20.2451,
+        "longitude": 85.7705,
+        "address": "Sijua, Patrapada, Bhubaneswar, Ward #61",
+        "ward_id": "61",
+        "status": "ACTIVE",
+        "capacity": 950,
+        "available_capacity": 230,
+        "total_capacity": 950,
+        "available_beds": 230,
+        "occupied_capacity": 720,
+        "hazard_type": "all",
+        "created_by": "DEMO_DATA",
+        "is_government_verified": False,
+        "contact_number": "+91-674-2476789",
+    },
+    {
+        "$id": "demo_hosp_02",
+        "id": "demo_hosp_02",
+        "name": "[DEMO] Capital Hospital (District HQ Hospital)",
+        "type": "hospital",
+        "latitude": 20.2601,
+        "longitude": 85.8242,
+        "address": "Unit 6, Forest Park, Bhubaneswar, Ward #26",
+        "ward_id": "26",
+        "status": "ACTIVE",
+        "capacity": 750,
+        "available_capacity": 140,
+        "total_capacity": 750,
+        "available_beds": 140,
+        "occupied_capacity": 610,
+        "hazard_type": "all",
+        "created_by": "DEMO_DATA",
+        "is_government_verified": False,
+        "contact_number": "+91-674-2391983",
+    },
+    {
+        "$id": "demo_hosp_03",
+        "id": "demo_hosp_03",
+        "name": "[DEMO] KIMS Medical College & Emergency Hospital",
+        "type": "hospital",
+        "latitude": 20.3541,
+        "longitude": 85.8189,
+        "address": "KIIT Road, Patia, Bhubaneswar, Ward #8",
+        "ward_id": "8",
+        "status": "ACTIVE",
+        "capacity": 850,
+        "available_capacity": 330,
+        "total_capacity": 850,
+        "available_beds": 330,
+        "occupied_capacity": 520,
+        "hazard_type": "all",
+        "created_by": "DEMO_DATA",
+        "is_government_verified": False,
+        "contact_number": "+91-674-2725182",
+    },
+    {
+        "$id": "demo_shelter_01",
+        "id": "demo_shelter_01",
+        "name": "[DEMO] Multipurpose Cyclone & Evacuation Shelter - Old Town",
+        "type": "cyclone_shelter",
+        "latitude": 20.2385,
+        "longitude": 85.8341,
+        "address": "Near Bindusagar Lake, Old Town, Ward #14",
+        "ward_id": "14",
+        "status": "ACTIVE",
+        "capacity": 650,
+        "available_capacity": 360,
+        "total_capacity": 650,
+        "available_beds": 360,
+        "occupied_capacity": 290,
+        "hazard_type": "cyclone",
+        "created_by": "DEMO_DATA",
+        "is_government_verified": False,
+        "contact_number": "+91-674-2430055",
+    },
+    {
+        "$id": "demo_shelter_02",
+        "id": "demo_shelter_02",
+        "name": "[DEMO] BMC Official Cyclone & Flood Shelter - Baramunda",
+        "type": "official_shelter",
+        "latitude": 20.2821,
+        "longitude": 85.7954,
+        "address": "Near ISBT Complex, Baramunda, Ward #35",
+        "ward_id": "35",
+        "status": "FULL",
+        "capacity": 800,
+        "available_capacity": 0,
+        "total_capacity": 800,
+        "available_beds": 0,
+        "occupied_capacity": 800,
+        "hazard_type": "flood",
+        "created_by": "DEMO_DATA",
+        "is_government_verified": False,
+        "contact_number": "+91-674-2560124",
+    },
+    {
+        "$id": "demo_shelter_03",
+        "id": "demo_shelter_03",
+        "name": "[DEMO] Niladri Vihar High-Ground Evacuation Shelter",
+        "type": "cyclone_shelter",
+        "latitude": 20.3284,
+        "longitude": 85.8142,
+        "address": "Sector 3, Niladri Vihar, Ward #4",
+        "ward_id": "4",
+        "status": "ACTIVE",
+        "capacity": 500,
+        "available_capacity": 210,
+        "total_capacity": 500,
+        "available_beds": 210,
+        "occupied_capacity": 290,
+        "hazard_type": "all",
+        "created_by": "DEMO_DATA",
+        "is_government_verified": False,
+        "contact_number": "+91-674-2740911",
+    },
+    {
+        "$id": "demo_fire_01",
+        "id": "demo_fire_01",
+        "name": "[DEMO] Odisha Fire & Disaster Response Station - Kalpana",
+        "type": "fire_station",
+        "latitude": 20.2520,
+        "longitude": 85.8450,
+        "address": "Kalpana Square, Cuttack-Puri Road, Ward #47",
+        "ward_id": "47",
+        "status": "ACTIVE",
+        "capacity": 40,
+        "available_capacity": 30,
+        "total_capacity": 40,
+        "available_beds": 30,
+        "occupied_capacity": 10,
+        "hazard_type": "all",
+        "created_by": "DEMO_DATA",
+        "is_government_verified": False,
+        "contact_number": "101 / +91-674-2430101",
+    },
+    {
+        "$id": "demo_fire_02",
+        "id": "demo_fire_02",
+        "name": "[DEMO] ODRAF Disaster Response HQ & Fire Station - Chandaka",
+        "type": "fire_station",
+        "latitude": 20.3689,
+        "longitude": 85.7892,
+        "address": "Chandaka Industrial Area, Ward #2",
+        "ward_id": "2",
+        "status": "ACTIVE",
+        "capacity": 80,
+        "available_capacity": 55,
+        "total_capacity": 80,
+        "available_beds": 55,
+        "occupied_capacity": 25,
+        "hazard_type": "all",
+        "created_by": "DEMO_DATA",
+        "is_government_verified": False,
+        "contact_number": "101 / +91-674-2744101",
+    },
+    {
+        "$id": "demo_fire_03",
+        "id": "demo_fire_03",
+        "name": "[DEMO] Secretariat Fire & Evacuation Rescue Post - Unit 5",
+        "type": "fire_station",
+        "latitude": 20.2710,
+        "longitude": 85.8310,
+        "address": "Lok Seva Marg, Unit 5, Ward #25",
+        "ward_id": "25",
+        "status": "ACTIVE",
+        "capacity": 50,
+        "available_capacity": 35,
+        "total_capacity": 50,
+        "available_beds": 35,
+        "occupied_capacity": 15,
+        "hazard_type": "all",
+        "created_by": "DEMO_DATA",
+        "is_government_verified": False,
+        "contact_number": "101 / +91-674-2390101",
+    }
+]
+
+
+def deduplicate_emergency_locations(locations: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """Deduplicates emergency locations based on identity & normalized composite key."""
+    seen = {}
+    for loc in locations:
+        name = str(loc.get("name") or "").strip().lower()
+        loc_type = str(loc.get("type") or "").strip().lower()
+        try:
+            lat = round(float(loc.get("latitude")), 4)
+            lng = round(float(loc.get("longitude")), 4)
+        except (ValueError, TypeError):
+            lat, lng = 0.0, 0.0
+
+        composite_key = (name, loc_type, lat, lng)
+
+        if composite_key in seen:
+            existing = seen[composite_key]
+            # If existing is closed/full and current is active, prefer active record
+            if existing.get("status") in ("CLOSED", "FULL") and loc.get("status") == "ACTIVE":
+                seen[composite_key] = loc
+        else:
+            seen[composite_key] = loc
+
+    return list(seen.values())
 
 
 # ==============================================================================
@@ -572,6 +782,7 @@ def create_government_emergency_camp(
     longitude: float,
     address: Optional[str] = None,
     ward_id: Optional[str] = None,
+    type: str = "government_camp",
     capacity: Optional[int] = None,
     available_capacity: Optional[int] = None,
     hazard_type: Optional[str] = None,
@@ -581,16 +792,18 @@ def create_government_emergency_camp(
 ) -> Dict[str, Any]:
     """
     Dedicated backend function for authorized government officials to create
-    and activate a temporary emergency disaster relief camp.
+    and activate a temporary emergency disaster relief camp or evacuation facility.
 
     Automatically sets:
-    - type = "government_camp"
     - is_government_verified = True
     - status = "ACTIVE"
     """
+    valid_types = {"government_camp", "temporary_camp", "official_shelter", "cyclone_shelter", "relief_centre"}
+    camp_type = type if type in valid_types else "government_camp"
+
     return create_emergency_location(
         name=name,
-        type="government_camp",
+        type=camp_type,
         latitude=latitude,
         longitude=longitude,
         address=address,
@@ -751,30 +964,52 @@ def list_emergency_locations(
     database_id: str = DATABASE_ID,
     table_id: str = TABLE_ID,
 ) -> List[Dict[str, Any]]:
-    """Lists emergency locations with optional filters."""
+    """Lists emergency locations with optional filters, merging permanent demo locations and deduplicating."""
     from appwrite.query import Query
 
     tdb = get_tables_db_service()
     queries = [Query.limit(limit)]
 
-    if status:
-        queries.append(Query.equal("status", status.upper()))
-    if type:
-        queries.append(Query.equal("type", type))
-    if ward_id:
-        queries.append(Query.equal("ward_id", ward_id))
-    if is_government_verified is not None:
-        queries.append(Query.equal("is_government_verified", bool(is_government_verified)))
-    if hazard_type:
-        queries.append(Query.equal("hazard_type", hazard_type))
-
+    db_locations = []
     try:
         response = tdb.list_rows(database_id=database_id, table_id=table_id, queries=queries)
         rows = get_items_from_response(response, "rows")
-        return [normalize_row_data(r) for r in rows]
+        db_locations = [normalize_row_data(r) for r in rows]
     except Exception as e:
         print(f"Warning: error listing emergency locations: {e}")
-        return []
+
+    # Combine DB locations with DEMO_PERMANENT_LOCATIONS
+    all_locations = db_locations + DEMO_PERMANENT_LOCATIONS
+
+    # Filter in-memory
+    filtered = []
+    for loc in all_locations:
+        loc_status = str(loc.get("status", "ACTIVE")).upper()
+        if status and loc_status != status.upper():
+            continue
+        if type:
+            loc_type = str(loc.get("type", "")).lower()
+            target_type = str(type).lower()
+            if loc_type != target_type:
+                # Handle category group matching
+                if target_type == 'cyclone_shelter' and loc_type not in ('cyclone_shelter', 'official_shelter'):
+                    continue
+                elif target_type == 'government_camp' and loc_type not in ('government_camp', 'temporary_camp', 'relief_centre'):
+                    continue
+                elif target_type == 'fire_station' and loc_type not in ('fire_station', 'police_station'):
+                    continue
+                elif target_type not in ('cyclone_shelter', 'government_camp', 'fire_station'):
+                    continue
+        if ward_id and str(loc.get("ward_id", "")) != str(ward_id):
+            continue
+        if is_government_verified is not None and bool(loc.get("is_government_verified")) != bool(is_government_verified):
+            continue
+        if hazard_type and loc.get("hazard_type") not in ("all", "any", "general", hazard_type):
+            continue
+        filtered.append(loc)
+
+    deduped = deduplicate_emergency_locations(filtered)
+    return deduped[:limit]
 
 
 def delete_emergency_location(

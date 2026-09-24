@@ -79,6 +79,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const loginWithGoogle = async () => {
     setIsLoading(true);
     try {
+      if (!auth || !googleProvider) {
+        throw new Error('Google Sign-In is unavailable because Firebase configuration is missing or invalid.');
+      }
       const userCredential = await signInWithPopup(auth, googleProvider);
       const firebaseUser = userCredential.user;
       if (!firebaseUser) throw new Error('Google Sign-In completed without user credentials.');
@@ -132,10 +135,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const logout = async () => {
-    try {
-      await signOut(auth);
-    } catch (e) {
-      console.warn('Firebase sign-out note:', e);
+    if (auth) {
+      try {
+        await signOut(auth);
+      } catch (e) {
+        console.warn('Firebase sign-out note:', e);
+      }
     }
     setUser(null);
     localStorage.removeItem('nivaran_user');

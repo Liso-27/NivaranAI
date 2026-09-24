@@ -163,28 +163,45 @@ class DisasterApiClient {
       };
     });
 
+    // Frontend Deduplication Layer
+    const seenKeys = new Set<string>();
+    const deduplicatedList = normalizedList.filter(sp => {
+      const compositeKey = `${(sp.name || '').trim().toLowerCase()}_${(sp.type || '').toLowerCase()}_${sp.latitude?.toFixed(4)}_${sp.longitude?.toFixed(4)}`;
+      const docId = sp.id || (sp as any).$id;
+
+      if ((docId && seenKeys.has(docId)) || seenKeys.has(compositeKey)) {
+        return false;
+      }
+      if (docId) seenKeys.add(docId);
+      seenKeys.add(compositeKey);
+      return true;
+    });
+
     if (userLat !== undefined && userLng !== undefined) {
-      normalizedList.forEach(sp => {
+      deduplicatedList.forEach(sp => {
         const d = this.calculateHaversineDistance(userLat, userLng, sp.latitude, sp.longitude);
         sp.distance_km = parseFloat(d.toFixed(2));
       });
-      normalizedList.sort((a, b) => (a.distance_km || 0) - (b.distance_km || 0));
+      deduplicatedList.sort((a, b) => (a.distance_km || 0) - (b.distance_km || 0));
     }
 
-    return normalizedList;
+    return deduplicatedList;
   }
 
   async createGovernmentCamp(campData: {
     name: string;
-    type: 'government_camp' | 'temporary_camp';
+    type?: string;
+    category?: string;
     address: string;
     ward_id: number;
-    ward_name: string;
+    ward_name?: string;
     latitude: number;
     longitude: number;
     total_capacity: number;
-    contact_number: string;
-    facilities: string[];
+    contact_number?: string;
+    contact_phone?: string;
+    managed_by?: string;
+    facilities?: string[];
   }): Promise<SafePlace> {
     return this.fetchApi<SafePlace>('/api/camps', {
       method: 'POST',

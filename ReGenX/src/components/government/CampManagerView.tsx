@@ -22,12 +22,13 @@ export const CampManagerView: React.FC = () => {
 
   const [isCreatingCamp, setIsCreatingCamp] = useState(false);
   const [campName, setCampName] = useState('');
+  const [campCategory, setCampCategory] = useState<string>('government_camp');
   const [selectedWardId, setSelectedWardId] = useState(57);
   const [address, setAddress] = useState('');
   const [totalCapacity, setTotalCapacity] = useState(250);
   const [contactPhone, setContactPhone] = useState('+919437099999');
 
-  const camps = safePlaces.filter(p => p.type === 'government_camp' || p.type === 'temporary_camp');
+  const camps = safePlaces.filter(p => p.type === 'government_camp' || p.type === 'temporary_camp' || p.type === 'official_shelter' || p.type === 'cyclone_shelter' || p.type === 'relief_centre');
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,6 +36,8 @@ export const CampManagerView: React.FC = () => {
 
     await createGovernmentCamp({
       name: campName,
+      type: campCategory,
+      category: campCategory,
       ward_id: selectedWardId,
       address: address || `${ward?.ward_name}, Ward #${selectedWardId}`,
       latitude: ward?.centroid_lat || 20.2961,
@@ -44,10 +47,10 @@ export const CampManagerView: React.FC = () => {
       managed_by: user?.name || 'BMC Emergency Response Officer'
     });
 
-
     setIsCreatingCamp(false);
     setCampName('');
     setAddress('');
+    setCampCategory('government_camp');
   };
 
   return (
@@ -84,7 +87,7 @@ export const CampManagerView: React.FC = () => {
             {t('campManager.formTitle')}
           </h3>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <div>
               <label className="block text-[#0F172A] dark:text-slate-300 font-semibold mb-1">{t('campManager.facilityName')}</label>
               <input
@@ -95,6 +98,21 @@ export const CampManagerView: React.FC = () => {
                 onChange={(e) => setCampName(e.target.value)}
                 className="w-full bg-[#FFFFFF] dark:bg-slate-950 border border-[#D1D5DB] dark:border-slate-800 rounded-md px-3 py-2 text-[#0F172A] dark:text-white focus:outline-none focus:border-[#D97706]"
               />
+            </div>
+
+            <div>
+              <label className="block text-[#0F172A] dark:text-slate-300 font-semibold mb-1">Camp Facility Category</label>
+              <select
+                value={campCategory}
+                onChange={(e) => setCampCategory(e.target.value)}
+                className="w-full bg-[#FFFFFF] dark:bg-slate-950 border border-[#D1D5DB] dark:border-slate-800 rounded-md px-3 py-2 text-[#0F172A] dark:text-white focus:outline-none focus:border-[#D97706]"
+              >
+                <option value="government_camp">Government Emergency Relief Camp</option>
+                <option value="temporary_camp">Temporary Evacuation Center</option>
+                <option value="cyclone_shelter">Multipurpose Cyclone / Flood Shelter</option>
+                <option value="official_shelter">Official Community Evacuation Shelter</option>
+                <option value="relief_centre">Medical & Relief Distribution Hub</option>
+              </select>
             </div>
 
             <div>

@@ -14,18 +14,69 @@ export const firebaseConfig = {
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
-// Initialize or reuse singleton Firebase App instance
-export const app: FirebaseApp = getApps().length > 0
-  ? getApp()
-  : initializeApp(firebaseConfig);
+let appInstance: FirebaseApp | null = null;
+let authInstance: Auth | null = null;
+let googleProviderInstance: GoogleAuthProvider | null = null;
+let firebaseInitialized = false;
 
-// Initialize Firebase Authentication
-export const auth: Auth = getAuth(app);
+function initFirebaseSafely(): {
+  app: FirebaseApp | null;
+  auth: Auth | null;
+  googleProvider: GoogleAuthProvider | null;
+  isAvailable: boolean;
+} {
+  try {
+    const apiKey = import.meta.env.VITE_FIREBASE_API_KEY;
+    const projectId = import.meta.env.VITE_FIREBASE_PROJECT_ID;
 
-// Initialize Google Auth Provider with custom parameters
-export const googleProvider = new GoogleAuthProvider();
+    const isPlaceholder = (val?: string) =>
+      !val ||
+      typeof val !== 'string' ||
+      val.trim() === '' ||
+      val.includes('PASTE_YOUR') ||
+      val.includes('YOUR_FIREBASE') ||
+      val === 'undefined';
 
-// Ensure Google Account Selector popup is always displayed
-googleProvider.setCustomParameters({
-  prompt: 'select_account'
-});
+    if (isPlaceholder(apiKey) || isPlaceholder(projectId)) {
+      console.warn(
+        '[Firebase Init] Configuration is missing or contains placeholder values. Firebase features will operate in safe fallback mode.'
+      );
+      return { app: null, auth: null, googleProvider: null, isAvailable: false };
+    }
+
+    if (getApps().length > 0) {
+      appInstance = getApp();
+    } else {
+      appInstance = initializeApp(firebaseConfig);
+    }
+
+    authInstance = getAuth(appInstance);
+    googleProviderInstance = new GoogleAuthProvider();
+    googleProviderInstance.setCustomParameters({
+      prompt: 'select_account',
+    });
+
+    firebaseInitialized = true;
+  } catch (err) {
+    console.error('[Firebase Init Error] Non-fatal failure initializing Firebase SDK:', err);
+    appInstance = null;
+    authInstance = null;
+    googleProviderInstance = null;
+    firebaseInitialized = false;
+  }
+
+  return {
+    app: appInstance,
+    auth: authInstance,
+    googleProvider: googleProviderInstance,
+    isAvailable: firebaseInitialized,
+  };
+}
+
+const initialized = initFirebaseSafely();
+
+export const app = initialized.app;
+export const auth = initialized.auth;
+export const googleProvider = initialized.googleProvider;
+export const isFirebaseAvailable = initialized.isAvailable;
+

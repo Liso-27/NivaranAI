@@ -1226,11 +1226,12 @@ def create_government_camp(
     address: str,
     capacity: int,
     ward_id: str,
+    type: str = "government_camp",
     hazard_type: str = "all",
     contact_information: Optional[str] = None,
 ) -> Dict[str, Any]:
     """
-    Creates a temporary government relief camp (GOVERNMENT_OFFICIAL only).
+    Creates a temporary government relief camp or shelter facility (GOVERNMENT_OFFICIAL only).
     Reuses existing emergency_locations.py logic.
     """
     user = verify_session(official_user_id_or_token) or _USER_DATABASE.get(official_user_id_or_token)
@@ -1249,6 +1250,7 @@ def create_government_camp(
     # Create camp via emergency_locations module
     camp_result = el.create_government_emergency_camp(
         name=name,
+        type=type,
         latitude=latitude,
         longitude=longitude,
         address=address,
