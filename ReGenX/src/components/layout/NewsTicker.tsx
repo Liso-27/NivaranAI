@@ -11,9 +11,9 @@ export const NewsTicker: React.FC = () => {
   if (tickerArticles.length === 0) return null;
 
   return (
-    <div className="bg-[#0F172A] border-y border-[#1E293B] text-slate-200 text-xs py-2 px-3 overflow-hidden relative flex items-center z-20 transition-colors duration-200 shrink-0">
+    <div className="bg-slate-50 dark:bg-[#0F172A] border-y border-slate-200 dark:border-[#1E293B] text-slate-700 dark:text-slate-200 text-xs py-2 px-3 overflow-hidden relative flex items-center z-20 transition-colors duration-200 shrink-0">
       {/* Ticker Label */}
-      <div className="flex items-center gap-1.5 bg-[#DC2626] text-white font-semibold px-2 py-0.5 rounded text-[11px] shrink-0 mr-3 z-20">
+      <div className="flex items-center gap-1.5 bg-[#DC2626] text-white font-semibold px-2 py-0.5 rounded text-[11px] shrink-0 mr-3 z-20 shadow-2xs">
         <span className="inline-block h-2 w-2 rounded-full bg-white mr-0.5"></span>
         <Newspaper className="w-3.5 h-3.5" />
         <span className="hidden sm:inline">{t('ticker.liveBulletins')}</span>
@@ -27,7 +27,7 @@ export const NewsTicker: React.FC = () => {
             return (
               <div
                 key={`${article.id}-${idx}`}
-                className="inline-flex items-center gap-2 mr-8 text-slate-200 hover:text-white transition-colors cursor-pointer group"
+                className="inline-flex items-center gap-2 mr-8 text-slate-700 hover:text-slate-950 dark:text-slate-200 dark:hover:text-white transition-colors cursor-pointer group"
                 onClick={() => {
                   if (article.ward_id) {
                     const zone = hazardZones.find(z => z.ward_id === article.ward_id);
@@ -35,7 +35,7 @@ export const NewsTicker: React.FC = () => {
                   }
                 }}
               >
-                <span className="px-1.5 py-0.5 rounded text-[10px] font-semibold uppercase bg-[#1E293B] text-[#D97706] border border-[#334155]">
+                <span className="px-1.5 py-0.5 rounded text-[10px] font-semibold uppercase bg-slate-200 text-slate-800 border border-slate-300 dark:bg-[#1E293B] dark:text-[#D97706] dark:border-[#334155]">
                   {article.locality ? tx(article.locality) : 'Bhubaneswar'}
                 </span>
                 

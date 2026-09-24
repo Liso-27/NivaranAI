@@ -208,16 +208,7 @@ export const SosButton: React.FC<SosButtonProps> = ({ onSmsFallback, className =
   return (
     <>
       {/* Floating Emergency SOS Button Container */}
-      <div className={`fixed bottom-6 right-6 z-40 flex flex-col items-end gap-1.5 ${className}`}>
-        {/* Secondary text link for offline citizens */}
-        <button
-          type="button"
-          onClick={() => setIsSmsFallbackOpen(true)}
-          className="text-[11px] font-medium text-slate-700 dark:text-slate-300 hover:text-red-600 dark:hover:text-red-400 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xs px-2.5 py-1 rounded-full border border-slate-200 dark:border-slate-800 shadow-sm transition hover:shadow cursor-pointer underline underline-offset-2"
-        >
-          {t('sos.noInternetSmsLink')}
-        </button>
-
+      <div className={`fixed bottom-20 right-6 z-40 flex flex-col items-end gap-1.5 ${className}`}>
         <button
           type="button"
           onClick={() => {
@@ -226,19 +217,18 @@ export const SosButton: React.FC<SosButtonProps> = ({ onSmsFallback, className =
           }}
           aria-label={t('sos.buttonLabel')}
           title={t('sos.buttonLabel')}
-          className="group relative flex items-center justify-center w-16 h-16 sm:w-18 sm:h-18 rounded-full bg-red-600 hover:bg-red-700 active:bg-red-800 text-white shadow-2xl transition-all duration-300 transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-4 focus:ring-red-400 focus:ring-offset-2 cursor-pointer select-none"
+          className="group relative flex items-center gap-2 px-4 py-2.5 rounded-lg bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 active:from-red-800 active:to-rose-800 text-white shadow-lg shadow-red-600/25 border border-red-500/40 transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-red-400 cursor-pointer select-none font-bold text-xs"
         >
-          {/* Pulsing ring animation */}
-          <span className="absolute -inset-1 sm:-inset-1.5 rounded-full bg-red-500/50 animate-ping pointer-events-none" />
-          <span className="absolute -inset-2.5 sm:-inset-3 rounded-full bg-red-600/25 animate-pulse pointer-events-none" />
+          {/* Subtle live indicator */}
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+          </span>
 
-          {/* Siren icon + SOS label */}
-          <div className="relative z-10 flex flex-col items-center justify-center">
-            <Siren className="w-7 h-7 sm:w-8 sm:h-8 text-white drop-shadow-sm" />
-            <span className="text-[10px] sm:text-[11px] font-black tracking-widest uppercase leading-none mt-0.5">
-              SOS
-            </span>
-          </div>
+          <Siren className="w-4 h-4 text-white shrink-0" />
+          <span className="tracking-wider uppercase font-extrabold">
+            {t('sos.buttonLabel') || 'Emergency SOS'}
+          </span>
         </button>
       </div>
 
@@ -341,7 +331,7 @@ export const SosButton: React.FC<SosButtonProps> = ({ onSmsFallback, className =
         <div
           role="status"
           aria-live="polite"
-          className="fixed bottom-24 right-6 z-50 max-w-sm bg-emerald-600 text-white rounded-xl p-4 shadow-2xl flex items-center gap-3 border border-emerald-400 animate-fade-in"
+          className="fixed bottom-36 right-6 z-50 max-w-sm bg-emerald-600 text-white rounded-xl p-4 shadow-2xl flex items-center gap-3 border border-emerald-400 animate-fade-in"
         >
           <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center shrink-0">
             <CheckCircle2 className="w-5 h-5 text-white" />
@@ -369,7 +359,7 @@ export const SosButton: React.FC<SosButtonProps> = ({ onSmsFallback, className =
       {showSmsFallbackNotice && (
         <div
           role="alert"
-          className="fixed bottom-24 right-6 z-50 max-w-sm bg-white dark:bg-slate-900 border-2 border-amber-500 rounded-xl p-4 shadow-2xl text-slate-900 dark:text-white space-y-3 animate-fade-in"
+          className="fixed bottom-36 right-6 z-50 max-w-sm bg-white dark:bg-slate-900 border-2 border-amber-500 rounded-xl p-4 shadow-2xl text-slate-900 dark:text-white space-y-3 animate-fade-in"
         >
           <div className="flex items-start gap-2.5">
             <div className="p-1.5 bg-amber-100 dark:bg-amber-950/70 text-amber-600 rounded-full shrink-0">

@@ -34,7 +34,7 @@ export const Header: React.FC = () => {
 
   return (
     <>
-      <header className="bg-[#0F172A] text-white border-b border-[#1E293B] sticky top-0 z-40 px-4 py-2.5 shadow-md transition-colors duration-200">
+      <header className="bg-white dark:bg-[#0F172A] text-slate-800 dark:text-white border-b border-slate-200 dark:border-[#1E293B] sticky top-0 z-40 px-4 py-2.5 shadow-xs dark:shadow-md transition-colors duration-200">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
           {/* Brand & System Status */}
           <div className="flex items-center gap-3">
@@ -50,36 +50,36 @@ export const Header: React.FC = () => {
               title={t('header.returnHome')}
             >
               <div className="flex items-center gap-2">
-                <h1 className="text-base font-bold text-white tracking-tight flex items-center gap-1 m-0 group-hover:text-[#D97706] transition-colors">
+                <h1 className="text-base font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-1 m-0 group-hover:text-[#D97706] transition-colors">
                   Nivaran<span className="text-[#D97706]">AI</span>
                 </h1>
-                <span className="hidden md:inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded bg-[#1E293B] border border-[#334155] text-emerald-400">
-                  <Radio className="w-2.5 h-2.5 text-emerald-400" />
+                <span className="hidden md:inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded bg-slate-100 dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] text-emerald-600 dark:text-emerald-400">
+                  <Radio className="w-2.5 h-2.5 text-emerald-500 dark:text-emerald-400" />
                   {t('header.liveTelemetry')}
                 </span>
               </div>
-              <p className="text-[11px] text-slate-400 hidden sm:block group-hover:text-slate-200 transition-colors">
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 hidden sm:block group-hover:text-slate-700 dark:group-hover:text-slate-200 transition-colors">
                 {t('header.bmcWardEngine')}
               </p>
             </div>
           </div>
 
           {/* Center Operational Status Element */}
-          <div className="hidden lg:flex items-center gap-2.5 px-3 py-1.5 bg-[#1E293B] rounded-lg border border-[#334155] text-xs">
+          <div className="hidden lg:flex items-center gap-2.5 px-3 py-1.5 bg-slate-100 dark:bg-[#1E293B] rounded-lg border border-slate-200 dark:border-[#334155] text-xs">
             {emergencyCount > 0 && (
-              <span className="flex items-center gap-1 text-red-400 font-semibold bg-[#DC2626]/20 px-2 py-0.5 rounded border border-[#DC2626]/40">
+              <span className="flex items-center gap-1 text-red-600 dark:text-red-400 font-semibold bg-red-100 dark:bg-[#DC2626]/20 px-2 py-0.5 rounded border border-red-200 dark:border-[#DC2626]/40">
                 <span className="inline-block h-2 w-2 rounded-full bg-red-500 mr-0.5"></span>
                 <Flame className="w-3.5 h-3.5" />
                 {t('header.emergencyRisk', { count: emergencyCount })}
               </span>
             )}
             {highCount > 0 && (
-              <span className="flex items-center gap-1 text-orange-400 font-semibold bg-[#EA580C]/20 px-2 py-0.5 rounded border border-[#EA580C]/40">
+              <span className="flex items-center gap-1 text-orange-600 dark:text-orange-400 font-semibold bg-orange-100 dark:bg-[#EA580C]/20 px-2 py-0.5 rounded border border-orange-200 dark:border-[#EA580C]/40">
                 <AlertTriangle className="w-3.5 h-3.5" />
                 {t('header.highRiskBadge', { count: highCount })}
               </span>
             )}
-            <span className="text-slate-300 text-[11px] font-medium">
+            <span className="text-slate-600 dark:text-slate-300 text-[11px] font-medium">
               {t('header.activeIncidentsBadge', { count: hazardZones.length })}
             </span>
           </div>
@@ -92,12 +92,12 @@ export const Header: React.FC = () => {
             {/* Theme Toggle (Light / Dark) */}
             <button
               onClick={toggleTheme}
-              className="p-2 bg-[#1E293B] hover:bg-[#334155] text-slate-200 border border-[#334155] rounded-lg transition duration-150 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#D97706]"
+              className="p-2 bg-slate-100 hover:bg-slate-200 dark:bg-[#1E293B] dark:hover:bg-[#334155] text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-[#334155] rounded-lg transition duration-150 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#D97706]"
               title={theme === 'light' ? t('header.switchToDark') : t('header.switchToLight')}
               aria-label={t('header.toggleTheme')}
             >
               {theme === 'light' ? (
-                <Moon className="w-4 h-4 text-slate-200" />
+                <Moon className="w-4 h-4 text-slate-700" />
               ) : (
                 <Sun className="w-4 h-4 text-amber-400" />
               )}
@@ -109,14 +109,14 @@ export const Header: React.FC = () => {
               disabled={userLocation.isLoading}
               className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-xs transition duration-150 cursor-pointer ${
                 userLocation.isLoading
-                  ? 'bg-[#D97706]/20 text-[#D97706] border-[#D97706]/40'
+                  ? 'bg-amber-50 text-amber-700 border-amber-300 dark:bg-[#D97706]/20 dark:text-[#D97706] dark:border-[#D97706]/40'
                   : userLocation.isInsideHazardZone
-                  ? 'bg-[#DC2626]/20 text-red-400 border-[#DC2626]/50 font-semibold'
+                  ? 'bg-red-50 text-red-700 border-red-200 dark:bg-[#DC2626]/20 dark:text-red-400 dark:border-[#DC2626]/50 font-semibold'
                   : userLocation.permissionGranted
-                  ? 'bg-[#1E293B] hover:bg-[#334155] text-emerald-400 border-[#059669]/50'
+                  ? 'bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-[#1E293B] dark:hover:bg-[#334155] dark:text-emerald-400 dark:border-[#059669]/50'
                   : userLocation.permissionStatus === 'denied'
-                  ? 'bg-[#DC2626]/20 text-red-400 border-[#DC2626]/40'
-                  : 'bg-[#1E293B] hover:bg-[#334155] text-slate-200 border-[#334155]'
+                  ? 'bg-red-50 text-red-700 border-red-200 dark:bg-[#DC2626]/20 dark:text-red-400 dark:border-[#DC2626]/40'
+                  : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200 dark:bg-[#1E293B] dark:hover:bg-[#334155] dark:text-slate-200 dark:border-[#334155]'
               }`}
               title={
                 userLocation.isLoading
@@ -135,12 +135,12 @@ export const Header: React.FC = () => {
               ) : (
                 <MapPin className={`w-3.5 h-3.5 ${
                   userLocation.isInsideHazardZone
-                    ? 'text-red-400'
+                    ? 'text-red-600 dark:text-red-400'
                     : userLocation.permissionGranted
-                    ? 'text-emerald-400'
+                    ? 'text-emerald-600 dark:text-emerald-400'
                     : userLocation.permissionStatus === 'denied'
-                    ? 'text-red-400'
-                    : 'text-slate-400'
+                    ? 'text-red-600 dark:text-red-400'
+                    : 'text-slate-500 dark:text-slate-400'
                 }`} />
               )}
               <span className="hidden md:inline text-[11px] font-semibold truncate max-w-[120px]">
@@ -150,7 +150,7 @@ export const Header: React.FC = () => {
                   ? t('header.gps.hazardZone') 
                   : userLocation.permissionGranted 
                   ? t('header.gps.active') 
-                  : userLocation.permissionStatus === 'denied'
+                  : userLocation.permissionStatus === 'denied' 
                   ? t('header.gps.denied') 
                   : t('header.gps.locateMe')}
               </span>
@@ -159,7 +159,7 @@ export const Header: React.FC = () => {
             {/* Notification Bell */}
             <button
               onClick={() => setIsNotifDrawerOpen(true)}
-              className="p-2 bg-[#1E293B] hover:bg-[#334155] text-slate-200 border border-[#334155] rounded-lg relative transition duration-150 cursor-pointer"
+              className="p-2 bg-slate-100 hover:bg-slate-200 dark:bg-[#1E293B] dark:hover:bg-[#334155] text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-[#334155] rounded-lg relative transition duration-150 cursor-pointer"
               title={t('header.notificationsTitle')}
               aria-label={t('header.notificationsTitle')}
             >
@@ -173,9 +173,9 @@ export const Header: React.FC = () => {
 
             {/* Authenticated Role Status Badge */}
             <div
-              className="flex items-center gap-1.5 px-2.5 py-1 rounded border text-xs font-semibold select-none bg-[#1E293B] text-slate-200 border-[#334155]"
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded border text-xs font-semibold select-none bg-slate-100 text-slate-700 border-slate-200 dark:bg-[#1E293B] dark:text-slate-200 dark:border-[#334155]"
             >
-              <span className="w-1.5 h-1.5 rounded-full shrink-0 bg-slate-400" />
+              <span className="w-1.5 h-1.5 rounded-full shrink-0 bg-slate-400 dark:bg-slate-400" />
               <span className="text-[11px] uppercase tracking-wider font-semibold">
                 {role === 'GOVERNMENT_OFFICIAL' ? t('header.role.govOfficial') : role === 'SYSTEM_ADMIN' ? t('header.role.sysAdmin') : t('header.role.citizen')}
               </span>
@@ -186,7 +186,7 @@ export const Header: React.FC = () => {
               <div className="flex items-center gap-2 pl-1">
                 <button
                   onClick={() => setIsAuthModalOpen(true)}
-                  className="flex items-center gap-1.5 p-1.5 bg-[#1E293B] hover:bg-[#334155] rounded-lg border border-[#334155] text-xs text-slate-200 transition cursor-pointer"
+                  className="flex items-center gap-1.5 p-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-[#1E293B] dark:hover:bg-[#334155] rounded-lg border border-slate-200 dark:border-[#334155] text-xs text-slate-700 dark:text-slate-200 transition cursor-pointer"
                   title={`${user?.name || ''} (${t('header.accountDetails')})`}
                 >
                   <div className="w-6 h-6 rounded bg-[#D97706] text-white flex items-center justify-center font-bold text-[11px]">

@@ -388,7 +388,7 @@ export const CitizenDashboard: React.FC = () => {
                   <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse text-xs">
                       <thead>
-                        <tr className="bg-[#0F172A] text-slate-300 border-b border-[#1E293B] text-[11px] font-semibold uppercase tracking-wider">
+                        <tr className="bg-slate-100 dark:bg-[#0F172A] text-slate-700 dark:text-slate-300 border-b border-slate-200 dark:border-[#1E293B] text-[11px] font-semibold uppercase tracking-wider">
                           <th className="py-3 px-4">{t('citizenDashboard.thHazardWard')}</th>
                           <th className="py-3 px-3">{t('citizenDashboard.thSeverity')}</th>
                           <th className="py-3 px-3">{t('citizenDashboard.thRiskScore')}</th>
